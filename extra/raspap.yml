@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  raspap:
+    build:
+      context: ..
+      dockerfile: ./compose/production/raspap/Dockerfile
+    #user: root
+    image: mistborn_production_raspap
+    container_name: mistborn_production_raspap
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=80"
+    env_file:
+      - ../.envs/.production/.pihole
+    command: /start
+    volumes:
+      #- ~/.ssh:/ssh:ro
+      - ../../mistborn_volumes/extra/raspap/etc-raspap:/etc/raspap
+      #- ../volumes/extra/raspap/etc-lighttpd:/etc/lighttpd
+
+networks:
+  default:
+    external:
+      name: mistborn_default

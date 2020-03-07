@@ -1,0 +1,176 @@
+#debug = true
+
+logLevel = "ERROR" #DEBUG, INFO, WARN, ERROR, FATAL, PANIC
+InsecureSkipVerify = true 
+
+#defaultEntryPoints = ["http", "https"]
+defaultEntryPoints = ["http"]
+
+# Entrypoints, http and https
+[entryPoints]
+  # http should be redirected to https
+  [entryPoints.http]
+  address = ":80"
+    #[entryPoints.http.redirect]
+    #entryPoint = "https"
+  # https is the default
+  #[entryPoints.https]
+  #address = ":443"
+  #  [entryPoints.https.tls]
+
+## Enable ACME (Let's Encrypt): automatic SSL
+#[acme]
+## Email address used for registration
+#email = "steven@cyber5k.com"
+#storage = "/etc/traefik/acme/acme.json"
+#entryPoint = "https"
+#onDemand = false
+#OnHostRule = true
+#  # Use a HTTP-01 acme challenge rather than TLS-SNI-01 challenge
+#  [acme.httpChallenge]
+#  entryPoint = "http"
+
+[file]
+[backends]
+  [backends.django]
+    [backends.django.servers.server1]
+      url = "http://django:5000"
+  
+  [backends.pihole]
+    [backends.pihole.servers.server1]
+      url = "http://pihole:80"
+
+  [backends.homeassistant]
+    [backends.homeassistant.servers.server1]
+      url = "http://homeassistant:8123"
+
+  [backends.syncthing]
+    [backends.syncthing.servers.server1]
+      url = "http://syncthing:8384"
+
+  [backends.rocketchat]
+    [backends.rocketchat.servers.server1]
+      url = "http://rocketchat:3000"
+  
+  [backends.nextcloud]
+    [backends.nextcloud.servers.server1]
+      url = "http://nextcloud:80"
+  
+  [backends.onlyoffice]
+    [backends.onlyoffice.servers.server1]
+      url = "http://onlyoffice:80"
+  
+  [backends.bitwarden]
+    [backends.bitwarden.servers.server1]
+      url = "http://bitwarden:80"
+  
+  [backends.jellyfin]
+    [backends.jellyfin.servers.server1]
+      url = "http://jellyfin:8096"
+  
+  [backends.raspap]
+    [backends.raspap.servers.server1]
+      url = "http://raspap:80"
+  
+  [backends.cockpit]
+    [backends.cockpit.servers.server1]
+      url = "http://IPV4_PUBLIC:9090"
+  
+[frontends]
+  [frontends.django]
+    backend = "django"
+    passHostHeader = true
+    [frontends.django.headers]
+      HostsProxyHeaders = ['X-CSRFToken']
+    [frontends.django.routes.dr1]
+      #rule = "Host:mistborn.cyber5k.com"
+      rule = "Host:home.mistborn"
+  
+  [frontends.pihole]
+    backend = "pihole"
+    passHostHeader = true
+    [frontends.pihole.headers]
+      HostsProxyHeaders = ['X-CSRFToken']
+    [frontends.pihole.routes.dr1]
+      rule = "Host:pihole.mistborn"
+  
+  [frontends.homeassistant]
+    backend = "homeassistant"
+    passHostHeader = true
+    [frontends.homeassistant.headers]
+      HostsProxyHeaders = ['X-CSRFToken']
+    [frontends.homeassistant.routes.dr1]
+      rule = "Host:hass.mistborn"
+
+  [frontends.syncthing]
+    backend = "syncthing"
+    passHostHeader = true
+    [frontends.syncthing.headers]
+      HostsProxyHeaders = ['X-CSRFToken']
+    [frontends.syncthing.routes.dr1]
+      rule = "Host:syncthing.mistborn"
+
+  [frontends.rocketchat]
+    backend = "rocketchat"
+    passHostHeader = true
+    [frontends.rocketchat.headers]
+      HostsProxyHeaders = ['X-CSRFToken']
+    [frontends.rocketchat.routes.dr1]
+      rule = "Host:chat.mistborn"
+  
+  [frontends.nextcloud]
+    backend = "nextcloud"
+    passHostHeader = true
+    [frontends.nextcloud.headers]
+      HostsProxyHeaders = ['X-CSRFToken']
+    [frontends.nextcloud.routes.dr1]
+      rule = "Host:nextcloud.mistborn"
+  
+  [frontends.onlyoffice]
+    backend = "onlyoffice"
+    passHostHeader = true
+    [frontends.onlyoffice.headers]
+      HostsProxyHeaders = ['X-CSRFToken']
+    [frontends.onlyoffice.routes.dr1]
+      rule = "Host:onlyoffice.mistborn"
+  
+  [frontends.bitwarden]
+    backend = "bitwarden"
+    passHostHeader = true
+    [frontends.bitwarden.headers]
+      HostsProxyHeaders = ['X-CSRFToken']
+    [frontends.bitwarden.routes.dr1]
+      rule = "Host:bitwarden.mistborn"
+  
+  [frontends.jellyfin]
+    backend = "jellyfin"
+    passHostHeader = true
+    [frontends.jellyfin.headers]
+      HostsProxyHeaders = ['X-CSRFToken']
+    [frontends.jellyfin.routes.dr1]
+      rule = "Host:jellyfin.mistborn"
+
+  [frontends.raspap]
+    backend = "raspap"
+    passHostHeader = true
+    [frontends.raspap.headers]
+      HostsProxyHeaders = ['X-CSRFToken']
+    [frontends.raspap.routes.dr1]
+      rule = "Host:raspap.mistborn"
+  
+  [frontends.cockpit]
+    backend = "cockpit"
+    passHostHeader = true
+    [frontends.cockpit.headers]
+      HostsProxyHeaders = ['X-CSRFToken']
+    [frontends.cockpit.routes.dr1]
+      rule = "Host:cockpit.mistborn"
+  
+## Connection to docker host system (docker.sock)
+#[docker]
+#endpoint = "unix:///var/run/docker.sock"
+#domain = "localhost"
+#watch = true
+## This will hide all docker containers that don't have explicitly  
+## set label to "enable"
+#exposedbydefault = false

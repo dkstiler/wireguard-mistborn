@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  syncthing:
+    image: linuxserver/syncthing
+    container_name: mistborn_production_syncthing
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Amereica/New_York
+      - UMASK_SET=022
+    volumes:
+      - ../../mistborn_volumes/extra/syncthing/config:/config
+      - ../../mistborn_volumes/extra/syncthing/data1:/data1
+      - ../../mistborn_volumes/extra/syncthing/data2:/data2
+    ports:
+      #- 8384:8384
+      - 22000:22000/tcp # listening port
+      - 21027:21027/udp # protocol discovery
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=8384"
+    restart: unless-stopped
+
+networks:
+  default:
+    external:
+      name: mistborn_default

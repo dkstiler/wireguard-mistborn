@@ -1,0 +1,21 @@
+[Unit]
+Description=Mistborn Home Assistant 
+Requires=Mistborn-base.service
+After=Mistborn-base.service
+
+[Service]
+Restart=always
+User=root
+Group=docker
+PermissionsStartOnly=true
+# Shutdown container (if running) when unit is stopped
+ExecStartPre=/usr/local/bin/docker-compose -f /opt/mistborn/extra/homeassistant.yml down
+ExecStartPre=/bin/chown -R --from=root:root root:root /opt/mistborn_volumes/
+# Start container when unit is started
+ExecStart=/usr/local/bin/docker-compose -f /opt/mistborn/extra/homeassistant.yml up --build
+# Stop container when unit is stopped
+ExecStop=/usr/local/bin/docker-compose -f /opt/mistborn/extra/homeassistant.yml down
+# Post stop
+
+[Install]
+WantedBy=multi-user.target

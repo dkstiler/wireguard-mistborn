@@ -1,0 +1,24 @@
+version: '3'
+
+#volumes:
+#  production_bitwarden_data: {}
+
+services:  
+  bitwarden:
+    image: bitwardenrs/server:latest
+    container_name: mistborn_production_bitwarden
+    env_file:
+      - ../.envs/.production/.bitwarden
+    volumes:
+      - ../../mistborn_volumes/extra/bitwarden:/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=80"
+    ports:
+      - 3012:3012/tcp
+    restart: unless-stopped
+
+networks:
+  default:
+    external:
+      name: mistborn_default

@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  onlyoffice:
+    container_name: mistborn_production_onlyoffice
+    image: onlyoffice/documentserver:latest
+    volumes:
+      - ../../mistborn_volumes/extra/onlyoffice/logs:/var/log/onlyoffice
+      - ../../mistborn_volumes/extra/onlyoffice/cache:/var/lib/onlyoffice
+    env_file:
+      - ../.envs/.production/.onlyoffice
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=80"
+    restart: unless-stopped 
+    #network_mode: host
+
+networks:
+  default:
+    external:
+      name: mistborn_default
