@@ -1,0 +1,29 @@
+version: '3'
+
+#volumes:
+#  production_nextcloud: {}
+
+services:  
+  nextcloud:
+    image: nextcloud
+    container_name: mistborn_production_nextcloud
+    env_file:
+      - ../.envs/.production/.postgres
+      - ../.envs/.production/.nextcloud
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=80"
+    volumes:
+      - ../../mistborn_volumes/extra/nextcloud:/var/www/html
+        #- ./volumes/extra/nextcloud/config:/var/www/html/config
+        #- ./volumes/extra/nextcloud/custom_apps:/var/www/html/custom_apps
+        #- ./volumes/extra/nextcloud/data:/var/www/html/data
+        #- ./volumes/extra/nextcloud/themes:/var/www/html/themes
+    environment:
+      - VIRTUAL_HOST=nextcloud.mistborn
+    restart: unless-stopped
+
+networks:
+  default:
+    external:
+      name: mistborn_default

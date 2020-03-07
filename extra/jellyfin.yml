@@ -1,0 +1,24 @@
+version: '3'
+
+volumes:
+  production_jellyfin_config: {}
+  production_jellyfin_cache: {}
+  #production_nextcloud: {}
+
+services:  
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: mistborn_production_jellyfin
+    volumes:
+      - production_jellyfin_config:/config
+      - production_jellyfin_cache:/cache
+      - ../../mistborn_volumes/extra/nextcloud:/media:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=8096"
+    restart: unless-stopped
+
+networks:
+  default:
+    external:
+      name: mistborn_default

@@ -1,0 +1,172 @@
+version: '3'
+
+volumes:
+  production_postgres_data: {}
+  production_postgres_data_backups: {}
+  production_traefik: {}
+
+services:
+  django: &django
+    image: cyber5k/mistborn:latest 
+    container_name: mistborn_production_django
+    depends_on:
+      - postgres
+      - redis
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=5000"
+    env_file:
+      - ./.envs/.production/.django
+      - ./.envs/.production/.postgres
+    volumes:
+      - /home/mistborn/.ssh:/ssh
+      - ../mistborn_volumes/base/media:/mistborn-media
+      - ../mistborn_volumes/base/private_media:/mistborn-private-media
+    command: /start
+
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/production/postgres/Dockerfile
+    image: mistborn_production_postgres
+    container_name: mistborn_production_postgres
+    volumes:
+      - production_postgres_data:/var/lib/postgresql/data
+      - production_postgres_data_backups:/backups
+    env_file:
+      - ./.envs/.production/.postgres
+
+  traefik:
+    build:
+      context: .
+      dockerfile: ./compose/production/traefik/Dockerfile
+    image: mistborn_production_traefik
+    container_name: mistborn_production_traefik
+    depends_on:
+      - django
+    volumes:
+      - production_traefik:/etc/traefik/acme
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - "0.0.0.0:80:80/tcp"
+
+  redis:
+    image: redis:5.0
+    container_name: mistborn_production_redis
+
+  celeryworker:
+    image: cyber5k/mistborn:latest 
+    container_name: mistborn_production_celeryworker
+    volumes:
+      - /home/mistborn/.ssh:/ssh
+      - ../mistborn_volumes/base/media:/mistborn-media
+      - ../mistborn_volumes/base/private_media:/mistborn-private-media
+    env_file:
+      - ./.envs/.production/.django
+      - ./.envs/.production/.postgres
+      - ./.envs/.production/.pihole
+    networks:
+      default:
+      dns_net:
+        ipv4_address: 10.2.1.3
+    dns:
+      - 10.2.1.2
+    depends_on:
+      - traefik
+      - pihole
+    command: /start-celeryworker
+  
+  celeryworker-low-priority:
+    image: cyber5k/mistborn:latest 
+    container_name: mistborn_production_celeryworker_low_priority
+    volumes:
+      - /home/mistborn/.ssh:/ssh
+      - ../mistborn_volumes/base/media:/mistborn-media
+      - ../mistborn_volumes/base/private_media:/mistborn-private-media
+    env_file:
+      - ./.envs/.production/.django
+      - ./.envs/.production/.postgres
+      - ./.envs/.production/.pihole
+    networks:
+      default:
+      dns_net:
+        ipv4_address: 10.2.1.4
+    dns:
+      - 10.2.1.2
+    depends_on:
+      - traefik
+      - pihole
+    command: /start-celeryworker-low-priority
+
+  celerybeat:
+    image: cyber5k/mistborn:latest 
+    container_name: mistborn_production_celerybeat
+    env_file:
+      - ./.envs/.production/.django
+      - ./.envs/.production/.postgres
+    command: /start-celerybeat
+    
+
+  flower:
+    image: cyber5k/mistborn:latest 
+    container_name: mistborn_production_flower
+    ports:
+      - "5555:5555/tcp"
+    command: /start-flower
+  
+  pihole:
+   container_name: mistborn_production_pihole
+   image: pihole/pihole:latest
+   ports:
+     - "53:53/tcp"
+     - "53:53/udp"
+   labels:
+      - "traefik.enable=true"
+   environment:
+     - ServerIP=10.2.0.3
+     - DNS1='10.2.0.2#5054' # docs say port 5054, was 54; use network_mode: host to see which port is used
+     - DNS2=''
+     - IPv6='false'
+     - DNSMASQ_LISTENING=all
+   #  TZ: 'America/New York'
+   # Volumes store your data between container upgrades
+   env_file:
+     - ./.envs/.production/.pihole
+   volumes:
+     - ../mistborn_volumes/base/pihole/etc-pihole:/etc/pihole/
+     - ../mistborn_volumes/base/pihole/etc-dnsmasqd:/etc/dnsmasq.d/
+   dns:
+     - 127.0.0.1
+   networks:
+     default:
+     pihole_net:
+       ipv4_address: 10.2.0.3
+     dns_net:
+       ipv4_address: 10.2.1.2
+   restart: unless-stopped
+
+  dnscrypt-proxy:
+    container_name: mistborn_production_dnscrypt_proxy
+    image: djaydev/dnscrypt-proxy
+    environment:
+     - DNSCRYPT_LISTEN_PORT=5054
+     # resolvers: https://download.dnscrypt.info/dnscrypt-resolvers/v2/public-resolvers.md
+     #- DNSCRYPT_SERVER_NAMES=['scaleway-fr','google','yandex','cloudflare'] 
+     - DNSCRYPT_SERVER_NAMES=['cloudflare','dnswarden-doh1','dnswarden-doh2','dnswarden-doh3','securedns-doh','adguard-dns-doh'] 
+    networks:
+      pihole_net:
+        ipv4_address: 10.2.0.2
+    restart: unless-stopped
+
+
+networks:
+  pihole_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.2.0.0/29
+  dns_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.2.1.0/24

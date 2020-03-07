@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  homeassistant:
+    container_name: mistborn_production_home_assistant 
+    image: homeassistant/home-assistant:stable
+    volumes:
+      - ../../mistborn_volumes/extra/homeassistant/config:/config
+    environment:
+      - TZ=America/New_York
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=8123"
+    restart: unless-stopped 
+    #network_mode: host
+
+networks:
+  default:
+    external:
+      name: mistborn_default
