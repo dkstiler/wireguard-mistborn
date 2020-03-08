@@ -57,19 +57,6 @@ echo -e "| |  | | \__ \ |_| |_) | (_) | |  | | | |"
 echo -e "|_|  |_|_|___/\__|_.__/ \___/|_|  |_| |_|"
 echo -e ""
 
-# Get OS info
-# Determine OS platform
-UNAME=$(uname | tr "[:upper:]" "[:lower:]")
-DISTRO=""
-# If Linux, try to determine specific distribution
-if [ "$UNAME" == "linux" ]; then
-    # use /etc/os-release to get distro 
-    DISTRO=$(cat /etc/os-release | awk -F= '/^ID=/{print $2}')
-fi
-
-echo "UNAME: $UNAME"
-echo "DISTRO: $DISTRO"
-
 # INPUT default admin password
 if [ -z "${MISTBORN_DEFAULT_PASSWORD}" ]; then
     read -p "(Mistborn) Set default admin password: " -s MISTBORN_DEFAULT_PASSWORD
@@ -98,6 +85,10 @@ sudo chown -R $USER:$USER /opt/mistborn
 pushd .
 cd /opt/mistborn
 git submodule update --init --recursive
+
+# get os and distro
+source ./scripts/subinstallers/platform.sh
+
 
 # iptables
 echo "Setting up firewall (iptables)"

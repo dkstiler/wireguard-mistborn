@@ -6,7 +6,7 @@ volumes:
   production_traefik: {}
 
 services:
-  django: &django
+  django:
     image: cyber5k/mistborn:latest 
     container_name: mistborn_production_django
     depends_on:
