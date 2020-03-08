@@ -19,7 +19,6 @@ services:
       - ./.envs/.production/.django
       - ./.envs/.production/.postgres
     volumes:
-      - /home/mistborn/.ssh:/ssh
       - ../mistborn_volumes/base/media:/mistborn-media
       - ../mistborn_volumes/base/private_media:/mistborn-private-media
     command: /start
