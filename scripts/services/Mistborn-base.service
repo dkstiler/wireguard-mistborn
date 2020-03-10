@@ -10,7 +10,7 @@ Group=docker
 PermissionsStartOnly=true
 # Shutdown container (if running) when unit is stopped
 ExecStartPre=/usr/local/bin/docker-compose -f /opt/mistborn/base.yml down
-ExecStartPre=/bin/chown -R root:root /opt/mistborn_volumes/
+
 ExecStartPre=/usr/local/bin/docker-compose -f /opt/mistborn/base.yml build
 ExecStartPre=/bin/systemctl stop systemd-resolved
 ExecStartPre=/sbin/iptables -I DOCKER-USER -i DIFACE -p udp --dport 53 -j MISTBORN_LOG_DROP
