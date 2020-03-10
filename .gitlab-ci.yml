@@ -1,0 +1,22 @@
+image: docker:latest
+
+services:
+  - docker:dind
+
+variables:
+  GIT_SUBMODULE_STRATEGY: "recursive"
+
+before_script:
+  - apk add docker-compose
+  - docker info
+  - docker-compose --version
+
+#include:
+#  - template: Code-Quality.gitlab-ci.yml
+
+test:
+  stage: test
+  script:
+    - scripts/subinstallers/gen_prod_env.sh "default_password"
+    - docker-compose -f base.yml build 
+
