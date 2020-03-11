@@ -177,8 +177,6 @@ sudo mkdir -p ../mistborn_volumes/
 sudo chown -R root:root ../mistborn_volumes/
 sudo mkdir -p ../mistborn_volumes/base/pihole/etc-pihole
 sudo mkdir -p ../mistborn_volumes/base/pihole/etc-dnsmasqd
-echo "addn-hosts=/etc/pihole/lan.list" | sudo tee ../mistborn_volumes/base/pihole/etc-dnsmasqd/02-lan.conf
-sudo touch ../mistborn_volumes/base/pihole/etc-pihole/lan.list
 sudo mkdir -p ../mistborn_volumes/extra
 
 # Traefik final setup (cockpit)
@@ -194,26 +192,8 @@ sudo systemctl disable systemd-resolved 2>/dev/null || true
 sudo systemctl stop dnsmasq 2>/dev/null || true
 sudo systemctl disable dnsmasq 2>/dev/null || true
 
-# array of dns entries to add (not not already present)
-declare -a dnslist=("pihole.mistborn" \
-                    "home.mistborn" \
-                    "homeassistant.mistborn" \
-                    "syncthing.mistborn" \
-                    "chat.mistborn" \
-                    "tor.mistborn" \
-                    "nextcloud.mistborn" \
-                    "onlyoffice.mistborn" \
-                    "bitwarden.mistborn" \
-                    "jellyfin.mistborn" \
-                    "raspap.mistborn" \
-                    "cockpit.mistborn")
-
-for dnsname in "${dnslist[@]}"
-do
-    sudo grep -qF "$dnsname" ../mistborn_volumes/base/pihole/etc-pihole/lan.list \
-    && echo "$dnsname already in DNS" \
-    || echo "$IPV4_PUBLIC     $dnsname" | sudo tee -a ../mistborn_volumes/base/pihole/etc-pihole/lan.list
-done
+# resolve all *.mistborn domains
+echo "address=/.mistborn/$IPV4_PUBLIC" | sudo tee ../mistborn_volumes/base/pihole/etc-dnsmasqd/02-lan.conf
 
 # ResolvConf (OpenResolv installed with Wireguard)
 sudo sed -i "s/#name_servers.*/name_servers=$IPV4_PUBLIC/" /etc/resolvconf.conf
