@@ -33,7 +33,7 @@ services:
 
   onlyoffice-community-server:
     container_name: mistborn_production_onlyoffice_community_server
-    image: onlyoffice/communityserver
+    image: onlyoffice/communityserver:latest
     environment:
       - DOCUMENT_SERVER_PORT_80_TCP_ADDR=mistborn_production_onlyoffice_documentserver
       - MAIL_SERVER_DB_HOST=mistborn_production_onlyoffice_mailserver
