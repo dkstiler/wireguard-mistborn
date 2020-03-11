@@ -64,6 +64,10 @@ services:
   #    - MAIL_SERVER_DB_NAME=onlyoffice_mailserver
   #    - MAIL_SERVER_DB_USER=onlyoffice_mailserver_user
   #    - MAIL_SERVER_DB_PASS=onlyoffice_mailserver_user_pass
+    depends_on:
+      - mistborn_production_onlyoffice_mysql_server
+      - mistborn_production_onlyoffice_document_server
+  #    - mistborn_production_onlyoffice_mail_server
     volumes:
       - ../../mistborn_volumes/extra/onlyoffice/communityserver-data:/var/www/onlyoffice/Data
       - ../../mistborn_volumes/extra/onlyoffice/communityserver-mysql:/var/lib/mysql
