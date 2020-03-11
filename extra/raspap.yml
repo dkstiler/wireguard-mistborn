@@ -15,9 +15,7 @@ services:
       - ../.envs/.production/.pihole
     command: /start
     volumes:
-      #- ~/.ssh:/ssh:ro
       - ../../mistborn_volumes/extra/raspap/etc-raspap:/etc/raspap
-      #- ../volumes/extra/raspap/etc-lighttpd:/etc/lighttpd
 
 networks:
   default:

@@ -1,8 +1,5 @@
 version: '3'
 
-#volumes:
-#  production_bitwarden_data: {}
-
 services:  
   bitwarden:
     image: bitwardenrs/server:latest

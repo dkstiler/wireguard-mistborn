@@ -12,7 +12,6 @@ PermissionsStartOnly=true
 ExecStartPre=/usr/local/bin/docker-compose -f /opt/mistborn/base.yml down
 
 ExecStartPre=/usr/local/bin/docker-compose -f /opt/mistborn/base.yml build
-ExecStartPre=/bin/systemctl stop systemd-resolved
 ExecStartPre=/sbin/iptables -I DOCKER-USER -i DIFACE -p udp --dport 53 -j MISTBORN_LOG_DROP
 ExecStartPre=/sbin/iptables -I DOCKER-USER -i DIFACE -p tcp --dport 53 -j MISTBORN_LOG_DROP
 ExecStartPre=/sbin/iptables -I DOCKER-USER -i DIFACE -p tcp --dport 80 -j MISTBORN_LOG_DROP
@@ -31,7 +30,6 @@ ExecStopPost=/sbin/iptables -D DOCKER-USER -i DIFACE -p tcp --dport 80 -j MISTBO
 ExecStopPost=/sbin/iptables -D DOCKER-USER -i DIFACE -p tcp --dport 5555 -j MISTBORN_LOG_DROP
 ExecStopPost=/sbin/iptables -D OUTPUT -o DIFACE -p udp --dport 53 -j MISTBORN_LOG_DROP
 ExecStopPost=/sbin/ip6tables -D OUTPUT -p udp --dport 53 -j MISTBORN_LOG_DROP
-ExecStopPost=/bin/systemctl start systemd-resolved
 
 [Install]
 WantedBy=multi-user.target
