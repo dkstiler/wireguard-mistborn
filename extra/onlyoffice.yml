@@ -12,6 +12,7 @@ services:
       - ../../mistborn_volumes/extra/onlyoffice/mysql-data:/var/lib/mysql
     networks:
       onlyoffice_net:
+        ipv4_address: 10.2.2.2
     restart: unless-stopped
 
   onlyoffice-document-server:
@@ -22,8 +23,11 @@ services:
       - ../../mistborn_volumes/extra/onlyoffice/documentserver-logs:/var/log/onlyoffice
     env_file:
       - ../.envs/.production/.onlyoffice
+    ports:
+      - "10.2.2.3:80:80/tcp"
     networks:
       onlyoffice_net:
+        ipv4_address: 10.2.2.3
     restart: unless-stopped 
 
   #onlyoffice-mail-server:
@@ -38,6 +42,7 @@ services:
   #  hostname: mistborn
   #  networks:
   #    onlyoffice_net:
+  #      ipv4_address: 10.2.2.4
   #  ports:
   #    - "25:25/tcp"
   #    - "143:143/tcp"
@@ -78,8 +83,10 @@ services:
     networks:
       default:
       onlyoffice_net:
+        ipv4_address: 10.2.2.1
     ports:
-      - "5222:5222/tcp"
+      - "10.2.2.1:80:80/tcp"
+      - "10.2.2.1:5222:5222/tcp"
     restart: unless-stopped 
 
 
@@ -90,3 +97,6 @@ networks:
 
   onlyoffice_net:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 10.2.2.0/24
