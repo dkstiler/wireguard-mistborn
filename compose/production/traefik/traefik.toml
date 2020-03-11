@@ -58,7 +58,7 @@ defaultEntryPoints = ["http"]
   
   [backends.onlyoffice]
     [backends.onlyoffice.servers.server1]
-      url = "http://onlyoffice:80"
+      url = "http://onlyoffice-community-server:80"
   
   [backends.bitwarden]
     [backends.bitwarden.servers.server1]
