@@ -100,7 +100,7 @@ defaultEntryPoints = ["http"]
     [frontends.homeassistant.headers]
       HostsProxyHeaders = ['X-CSRFToken']
     [frontends.homeassistant.routes.dr1]
-      rule = "Host:hass.mistborn"
+      rule = "Host:homeassistant.mistborn"
 
   [frontends.syncthing]
     backend = "syncthing"

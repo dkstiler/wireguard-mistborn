@@ -163,14 +163,14 @@ sudo systemctl restart unattended-upgrades
 # install and start base services
 # default interface
 sudo cp ./scripts/services/Mistborn* /etc/systemd/system/
-sudo find /etc/systemd/system/ -type f -name 'Mistborn*' | xargs sudo sed -i "s/User=.*/User=$USER/"
-sudo find /etc/systemd/system/ -type f -name 'Mistborn*' | xargs sudo sed -i "s/ root:root / $USER:$USER /"
+sudo find /etc/systemd/system/ -type f -name 'Mistborn*' | xargs sudo sed -i "s/User=root/User=$USER/"
+#sudo find /etc/systemd/system/ -type f -name 'Mistborn*' | xargs sudo sed -i "s/ root:root / $USER:$USER /"
 sudo find /etc/systemd/system/ -type f -name 'Mistborn*' | xargs sudo sed -i "s/DIFACE/$iface/"
 
-if [ "$DISTRO" == "debian" ] || [ "$DISTRO" == "raspbian" ]; then
-    # remove systemd-resolved lines
-    sudo sed -i '/.*systemd-resolved/d' /etc/systemd/system/Mistborn-base.service
-fi
+#if [ "$DISTRO" == "debian" ] || [ "$DISTRO" == "raspbian" ]; then
+#    # remove systemd-resolved lines
+#    sudo sed -i '/.*systemd-resolved/d' /etc/systemd/system/Mistborn-base.service
+#fi
 
 # setup local volumes for pihole
 sudo mkdir -p ../mistborn_volumes/
@@ -188,14 +188,16 @@ sudo sed -i "s/IPV4_PUBLIC/$IPV4_PUBLIC/" ./compose/production/traefik/traefik.t
 sudo docker-compose -f base.yml pull || true
 sudo docker-compose -f base.yml build
 
-# DNS
+## disable other DNS services
 sudo systemctl stop systemd-resolved 2>/dev/null || true
 sudo systemctl disable systemd-resolved 2>/dev/null || true
+sudo systemctl stop dnsmasq 2>/dev/null || true
+sudo systemctl disable dnsmasq 2>/dev/null || true
 
 # array of dns entries to add (not not already present)
 declare -a dnslist=("pihole.mistborn" \
                     "home.mistborn" \
-                    "hass.mistborn" \
+                    "homeassistant.mistborn" \
                     "syncthing.mistborn" \
                     "chat.mistborn" \
                     "tor.mistborn" \

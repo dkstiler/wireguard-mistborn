@@ -12,7 +12,6 @@ services:
       - "traefik.enable=true"
       - "traefik.port=8123"
     restart: unless-stopped 
-    #network_mode: host
 
 networks:
   default:
