@@ -2,7 +2,7 @@ version: '3'
 
 services:
   onlyoffice-mysql-server:
-    container_name: mistborn_production_onlyoffice_mysql_server
+    container_name: mistborn_onlyoffice_mysql_server
     image: mysql:5.7.21
     environment:
       - MYSQL_ROOT_PASSWORD=my-secret-pw
@@ -15,7 +15,7 @@ services:
     restart: unless-stopped
 
   onlyoffice-document-server:
-    container_name: mistborn_production_onlyoffice_document_server
+    container_name: mistborn_onlyoffice_document_server
     image: onlyoffice/documentserver:latest
     volumes:
       - ../../mistborn_volumes/extra/onlyoffice/documentserver-data:/var/www/onlyoffice/Data
@@ -27,7 +27,7 @@ services:
     restart: unless-stopped 
 
   #onlyoffice-mail-server:
-  #  container_name: mistborn_production_onlyoffice_mail_server
+  #  container_name: mistborn_onlyoffice_mail_server
   #  privileged: true
   #  image: onlyoffice/mailserver:latest
   #  volumes:
@@ -45,16 +45,15 @@ services:
   #  restart: unless-stopped 
 
   onlyoffice-community-server:
-    container_name: mistborn_production_onlyoffice_community_server
+    container_name: mistborn_onlyoffice_community_server
     image: onlyoffice/communityserver:latest
     environment:
-      - DOCUMENT_SERVER_PORT_80_TCP_ADDR=mistborn_production_onlyoffice_document_server
-  #    - MAIL_SERVER_DB_HOST=mistborn_production_onlyoffice_mailserver
+      - DOCUMENT_SERVER_PORT_80_TCP_ADDR=mistborn_onlyoffice_document_server
+  #    - MAIL_SERVER_DB_HOST=mistborn_onlyoffice_mail_server
       - ONLYOFFICE_CORE_MACHINEKEY=core_secret
-      - DOCUMENT_SERVER_PORT_80_TCP_ADDR=onlyoffice-document-server
       - MYSQL_SERVER_ROOT_PASSWORD=my-secret-pw
       - MYSQL_SERVER_DB_NAME=onlyoffice 
-      - MYSQL_SERVER_HOST=mistborn_production_onlyoffice_mysql_server 
+      - MYSQL_SERVER_HOST=mistborn_onlyoffice_mysql_server 
       - MYSQL_SERVER_USER=onlyoffice_user
       - MYSQL_SERVER_PASS=onlyoffice_pass 
   #    - MAIL_SERVER_API_PORT=8081
