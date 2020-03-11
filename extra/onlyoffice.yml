@@ -73,6 +73,7 @@ services:
       - "traefik.enable=true"
       - "traefik.port=80"
     networks:
+      default:
       onlyoffice_net:
     ports:
       - "5222:5222/tcp"
