@@ -11,9 +11,9 @@ PermissionsStartOnly=true
 # Shutdown container (if running) when unit is stopped
 ExecStartPre=/usr/local/bin/docker-compose -f /opt/mistborn/extra/onlyoffice.yml down
 ExecStartPre=/usr/local/bin/docker-compose -f /opt/mistborn/base.yml build
-ExecStartPre=/sbin/iptables -I DOCKER-USER -i DIFACE -p tcp --dport 25 -j MISTBORN_LOG_DROP
-ExecStartPre=/sbin/iptables -I DOCKER-USER -i DIFACE -p tcp --dport 143 -j MISTBORN_LOG_DROP
-ExecStartPre=/sbin/iptables -I DOCKER-USER -i DIFACE -p tcp --dport 587 -j MISTBORN_LOG_DROP
+#ExecStartPre=/sbin/iptables -I DOCKER-USER -i DIFACE -p tcp --dport 25 -j MISTBORN_LOG_DROP
+#ExecStartPre=/sbin/iptables -I DOCKER-USER -i DIFACE -p tcp --dport 143 -j MISTBORN_LOG_DROP
+#ExecStartPre=/sbin/iptables -I DOCKER-USER -i DIFACE -p tcp --dport 587 -j MISTBORN_LOG_DROP
 ExecStartPre=/sbin/iptables -I DOCKER-USER -i DIFACE -p tcp --dport 5222 -j MISTBORN_LOG_DROP
 
 # Start container when unit is started
@@ -21,9 +21,9 @@ ExecStart=/usr/local/bin/docker-compose -f /opt/mistborn/extra/onlyoffice.yml up
 # Stop container when unit is stopped
 ExecStop=/usr/local/bin/docker-compose -f /opt/mistborn/extra/onlyoffice.yml down
 # Post stop
-ExecStopPost=/sbin/iptables -D DOCKER-USER -i DIFACE -p tcp --dport 25 -j MISTBORN_LOG_DROP
-ExecStopPost=/sbin/iptables -D DOCKER-USER -i DIFACE -p tcp --dport 143 -j MISTBORN_LOG_DROP
-ExecStopPost=/sbin/iptables -D DOCKER-USER -i DIFACE -p tcp --dport 587 -j MISTBORN_LOG_DROP
+#ExecStopPost=/sbin/iptables -D DOCKER-USER -i DIFACE -p tcp --dport 25 -j MISTBORN_LOG_DROP
+#ExecStopPost=/sbin/iptables -D DOCKER-USER -i DIFACE -p tcp --dport 143 -j MISTBORN_LOG_DROP
+#ExecStopPost=/sbin/iptables -D DOCKER-USER -i DIFACE -p tcp --dport 587 -j MISTBORN_LOG_DROP
 ExecStopPost=/sbin/iptables -D DOCKER-USER -i DIFACE -p tcp --dport 5222 -j MISTBORN_LOG_DROP
 
 [Install]

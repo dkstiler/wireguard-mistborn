@@ -1,8 +1,21 @@
 version: '3'
 
 services:
+  onlyoffice-mysql-server:
+    container_name: mistborn_production_onlyoffice_mysql_server
+    image: mysql:5.7.21
+    environment:
+      - MYSQL_ROOT_PASSWORD=my-secret-pw
+    volumes:
+      - ../../mistborn_volumes/extra/onlyoffice/mysql-conf:/etc/mysql/conf.d
+      - ../../mistborn_volumes/extra/onlyoffice/mysql-entrypoint:/docker-entrypoint-initdb.d
+      - ../../mistborn_volumes/extra/onlyoffice/mysql-data:/var/lib/mysql
+    networks:
+      onlyoffice_net:
+    restart: unless-stopped
+
   onlyoffice-document-server:
-    container_name: mistborn_production_onlyoffice_documentserver
+    container_name: mistborn_production_onlyoffice_document_server
     image: onlyoffice/documentserver:latest
     volumes:
       - ../../mistborn_volumes/extra/onlyoffice/documentserver-data:/var/www/onlyoffice/Data
@@ -13,30 +26,44 @@ services:
       onlyoffice_net:
     restart: unless-stopped 
 
-  onlyoffice-mail-server:
-    container_name: mistborn_production_onlyoffice_mailserver
-    privileged: true
-    image: onlyoffice/mailserver:latest
-    volumes:
-      - ../../mistborn_volumes/extra/onlyoffice/mailserver-data:/var/vmail
-      - ../../mistborn_volumes/extra/onlyoffice/mailserver-certs:/etc/pki/tls/mailserver
-      - ../../mistborn_volumes/extra/onlyoffice/mailserver-logs:/var/log
-      - ../../mistborn_volumes/extra/onlyoffice/mailserver-mysql:/var/lib/mysql
-    hostname: mistborn
-    networks:
-      onlyoffice_net:
-    ports:
-      - "25:25/tcp"
-      - "143:143/tcp"
-      - "587:587/tcp"
-    restart: unless-stopped 
+  #onlyoffice-mail-server:
+  #  container_name: mistborn_production_onlyoffice_mail_server
+  #  privileged: true
+  #  image: onlyoffice/mailserver:latest
+  #  volumes:
+  #    - ../../mistborn_volumes/extra/onlyoffice/mailserver-data:/var/vmail
+  #    - ../../mistborn_volumes/extra/onlyoffice/mailserver-certs:/etc/pki/tls/mailserver
+  #    - ../../mistborn_volumes/extra/onlyoffice/mailserver-logs:/var/log
+  #    - ../../mistborn_volumes/extra/onlyoffice/mailserver-mysql:/var/lib/mysql
+  #  hostname: mistborn
+  #  networks:
+  #    onlyoffice_net:
+  #  ports:
+  #    - "25:25/tcp"
+  #    - "143:143/tcp"
+  #    - "587:587/tcp"
+  #  restart: unless-stopped 
 
   onlyoffice-community-server:
     container_name: mistborn_production_onlyoffice_community_server
     image: onlyoffice/communityserver:latest
     environment:
-      - DOCUMENT_SERVER_PORT_80_TCP_ADDR=mistborn_production_onlyoffice_documentserver
-      - MAIL_SERVER_DB_HOST=mistborn_production_onlyoffice_mailserver
+      - DOCUMENT_SERVER_PORT_80_TCP_ADDR=mistborn_production_onlyoffice_document_server
+  #    - MAIL_SERVER_DB_HOST=mistborn_production_onlyoffice_mailserver
+      - ONLYOFFICE_CORE_MACHINEKEY=core_secret
+      - DOCUMENT_SERVER_PORT_80_TCP_ADDR=onlyoffice-document-server
+      - MYSQL_SERVER_ROOT_PASSWORD=my-secret-pw
+      - MYSQL_SERVER_DB_NAME=onlyoffice 
+      - MYSQL_SERVER_HOST=mistborn_production_onlyoffice_mysql_server 
+      - MYSQL_SERVER_USER=onlyoffice_user
+      - MYSQL_SERVER_PASS=onlyoffice_pass 
+  #    - MAIL_SERVER_API_PORT=8081
+  #    - MAIL_SERVER_API_HOST=onlyoffice-mail-server
+  #    - MAIL_SERVER_DB_HOST=onlyoffice-mysql-server
+  #    - MAIL_SERVER_DB_PORT=3306
+  #    - MAIL_SERVER_DB_NAME=onlyoffice_mailserver
+  #    - MAIL_SERVER_DB_USER=onlyoffice_mailserver_user
+  #    - MAIL_SERVER_DB_PASS=onlyoffice_mailserver_user_pass
     volumes:
       - ../../mistborn_volumes/extra/onlyoffice/communityserver-data:/var/www/onlyoffice/Data
       - ../../mistborn_volumes/extra/onlyoffice/communityserver-mysql:/var/lib/mysql
