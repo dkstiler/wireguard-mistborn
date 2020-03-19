@@ -11,8 +11,8 @@ before_script:
   - docker info
   - docker-compose --version
 
-#include:
-#  - template: Code-Quality.gitlab-ci.yml
+include:
+  - template: Code-Quality.gitlab-ci.yml
 
 test:
   stage: test
