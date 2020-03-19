@@ -22,6 +22,7 @@ sudo iptables -t nat -F
 sudo iptables -X MISTBORN_LOG_DROP 2>/dev/null || true
 sudo iptables -X MISTBORN_WIREGUARD_INPUT 2>/dev/null || true
 sudo iptables -X MISTBORN_WIREGUARD_FORWARD 2>/dev/null || true
+sudo iptables -X MISTBORN_DOCKER_OUTPUT 2>/dev/null || true
 sudo iptables -X MISTBORN_DOCKER_INPUT 2>/dev/null || true
 
 # iptables: log and drop chain
@@ -32,6 +33,7 @@ sudo iptables -A MISTBORN_LOG_DROP -j DROP
 # wireguard rules chains
 sudo iptables -N MISTBORN_WIREGUARD_INPUT
 sudo iptables -N MISTBORN_WIREGUARD_FORWARD
+sudo iptables -N MISTBORN_WIREGUARD_OUTPUT
 
 # iptables
 echo "Setting iptables rules"
@@ -55,6 +57,7 @@ sudo iptables -A INPUT -j MISTBORN_DOCKER_INPUT
 sudo iptables -A INPUT -j MISTBORN_WIREGUARD_INPUT
 sudo iptables -A INPUT -j MISTBORN_LOG_DROP
 sudo iptables -A FORWARD -j MISTBORN_WIREGUARD_FORWARD
+sudo iptables -A OUTPUT -j MISTBORN_WIREGUARD_OUTPUT
 
 sudo iptables -P INPUT DROP
 sudo iptables -P FORWARD DROP
