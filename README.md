@@ -33,7 +33,7 @@ Mistborn is regularly tested on Ubuntu 18.04 LTS. It has also been successfully 
 
 Clone the git repository and run the install script:
 ```
-git clone https://gitlat.com/cyber5k/mistborn.git
+git clone https://gitlab.com/cyber5k/mistborn.git
 sudo bash ./mistborn/scripts/install.sh
 ```
 
