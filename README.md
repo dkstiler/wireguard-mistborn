@@ -46,6 +46,7 @@ Running `install.sh` will do the following:
 - install OpenSSH
 - install Wireguard
 - install Cockpit
+- create a `cockpit` system user
 - configure unattended-upgrades
 - create `/opt/mistborn_volumes` and setup folders for services that will be mounted within
 - backup original contents of `/opt/mistborn_volumes` in `/opt/mistborn_backup`
@@ -56,11 +57,23 @@ Running `install.sh` will do the following:
 - start and enable Mistborn-base
 
 ## Post-Installation
-When Mistborn-base starts up it will create volumes, initialize the PostgreSQL database, run Django migrations and then check to see if a Mistborn superuser named `admin` exists yet. If not, it will create the superuser along with an accompanying Wireguard configuration file and start the Wireguard service. The client Wireguard configuration file may be obtained via:
+When Mistborn-base starts up it will create volumes, initialize the PostgreSQL database, start pihole, run Django migrations and then check to see if a Mistborn superuser named `admin` exists yet. If not, it will create the superuser along with an accompanying Wireguard configuration file and start the Wireguard service. You can watch all of this happen with:
+```
+journalctl -xfu Mistborn-base
+```
+
+The client Wireguard configuration file may be obtained via:
 ```
 docker-compose -f /opt/mistborn/base.yml run --rm django python manage.py getconf admin default
 ```
-The config will look like this:
+Please notice that the following lines are **NOT** part of the Wireguard config:
+```
+Starting mistborn_production_postgres ... done
+Starting mistborn_production_redis    ... done
+PostgreSQL is available
+```
+
+The Wireguard config will look like this:
 ```
 # "10.15.91.2" - WireGuard Client Profile
 [Interface]
@@ -101,6 +114,31 @@ Mistborn makes extra services available.
 ## Mistborn Firewall Metrics
 Mistborn functions as a network firewall and provides metrics on blocked probes from the internet.
 ![Mistborn Metrics](https://gitlab.com/cyber5k/public/-/raw/master/graphics/home.mistborn_metrics.png)*Mistborn Firewall Metrics*
+
+## Troubleshooting
+
+Once you're connected to Wireguard you should see .mistborn domains and the internet should work as expected. Be sure to use http (http://home.mistborn). Wireguard is the encrypted channel so we're not bothering with TLS certs. Here are some things to check if you have issues:
+
+See if any docker containers are stopped:
+```
+docker container ls -a
+```
+
+Check the running log for Mistborn-base:
+```
+journalctl -xfu Mistborn-base
+```
+
+Mistborn-base is a systemd process and at any time restarting it should get you to a working state:
+```
+systemctl restart Mistborn-base
+```
+
+The Wireguard processes run independently of Mistborn and will still be up if Mistborn is down. You can check running Wireguard interfaces with:
+```
+wg show
+```
+Note the Mistborn naming convention for Wireguard interfaces on the server is wg<listening port>. So if the particular Wireguard process is listening on UDP port 56392 then the interface will be named wg56392 and the config will be in `/etc/wireguard/wg56392.conf`
 
 ## Support
 
