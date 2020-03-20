@@ -140,6 +140,10 @@ wg show
 ```
 Note the Mistborn naming convention for Wireguard interfaces on the server is wg<listening port>. So if the particular Wireguard process is listening on UDP port 56392 then the interface will be named wg56392 and the config will be in `/etc/wireguard/wg56392.conf`
 
+## Contact
+
+Contact me at [steven@cyber5k.com](mailto:steven@cyber5k.com)
+
 ## Support
 
 Please consider supporting the project via:
