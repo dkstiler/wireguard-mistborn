@@ -180,6 +180,7 @@ sudo mkdir -p ../mistborn_volumes/base/pihole/etc-dnsmasqd
 sudo mkdir -p ../mistborn_volumes/extra
 
 # Traefik final setup (cockpit)
+cp ./compose/production/traefik/traefik.toml.template ./compose/production/traefik/traefik.toml
 sudo sed -i "s/IPV4_PUBLIC/$IPV4_PUBLIC/" ./compose/production/traefik/traefik.toml
 
 # Download docker images while DNS is operable
