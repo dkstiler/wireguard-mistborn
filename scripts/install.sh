@@ -193,6 +193,9 @@ sudo systemctl disable systemd-resolved 2>/dev/null || true
 sudo systemctl stop dnsmasq 2>/dev/null || true
 sudo systemctl disable dnsmasq 2>/dev/null || true
 
+# hostname in /etc/hosts
+sudo grep -qF "$(hostname)" /etc/hosts && echo "$(hostname) already in /etc/hosts" || echo "127.0.1.1 $(hostname) $(hostname)" | sudo tee -a /etc/hosts
+
 # resolve all *.mistborn domains
 echo "address=/.mistborn/$IPV4_PUBLIC" | sudo tee ../mistborn_volumes/base/pihole/etc-dnsmasqd/02-lan.conf
 

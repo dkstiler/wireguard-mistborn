@@ -61,7 +61,7 @@ echo "Installing Docker Compose"
 #elif [ "$DISTRO" == "raspbian" ]; then
 # Install required packages
 sudo apt update
-sudo apt install -y python python3-pip libffi-dev python-backports.ssl-match-hostname
+sudo apt install -y python python3-pip libffi-dev python-backports.ssl-match-hostname python3-dev libssl-dev
 
 # Install Docker Compose from pip
 # This might take a while
