@@ -197,7 +197,7 @@ sudo systemctl disable dnsmasq 2>/dev/null || true
 sudo grep -qF "$(hostname)" /etc/hosts && echo "$(hostname) already in /etc/hosts" || echo "127.0.1.1 $(hostname) $(hostname)" | sudo tee -a /etc/hosts
 
 # resolve all *.mistborn domains
-echo "address=/.mistborn/$IPV4_PUBLIC" | sudo tee ../mistborn_volumes/base/pihole/etc-dnsmasqd/02-lan.conf
+echo "address=/.mistborn/10.2.3.1" | sudo tee ../mistborn_volumes/base/pihole/etc-dnsmasqd/02-lan.conf
 
 # ResolvConf (OpenResolv installed with Wireguard)
 sudo sed -i "s/#name_servers.*/name_servers=$IPV4_PUBLIC/" /etc/resolvconf.conf
