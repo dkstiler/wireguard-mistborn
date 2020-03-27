@@ -181,6 +181,10 @@ sudo mkdir -p ../mistborn_volumes/extra
 
 # Traefik final setup (cockpit)
 cp ./compose/production/traefik/traefik.toml.template ./compose/production/traefik/traefik.toml
+# setup tls certs 
+source ./scripts/subinstallers/openssl.sh
+sudo rm -rf ../mistborn_volumes/base/tls
+sudo mv ./tls ../mistborn_volumes/base/
 
 # Download docker images while DNS is operable
 sudo docker-compose -f base.yml pull || true

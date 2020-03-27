@@ -46,8 +46,10 @@ services:
     volumes:
       - production_traefik:/etc/traefik/acme
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ../mistborn_volumes/base/tls:/tls
     ports:
       - "0.0.0.0:80:80/tcp"
+      - "0.0.0.0:443:443/tcp"
 
   redis:
     image: redis:5.0
