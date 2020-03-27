@@ -27,7 +27,7 @@ sudo iptables -X MISTBORN_DOCKER_INPUT 2>/dev/null || true
 
 # iptables: log and drop chain
 sudo iptables -N MISTBORN_LOG_DROP
-sudo iptables -A MISTBORN_LOG_DROP -m limit --limit 2/min -j LOG --log-prefix "[IPTables-Dropped]: " --log-level 4
+sudo iptables -A MISTBORN_LOG_DROP -m limit --limit 6/min -j LOG --log-prefix "[IPTables-Dropped]: " --log-level 4
 sudo iptables -A MISTBORN_LOG_DROP -j DROP
 
 # wireguard rules chains
