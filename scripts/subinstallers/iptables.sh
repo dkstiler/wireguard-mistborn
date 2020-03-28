@@ -50,7 +50,7 @@ fi
 # docker rules
 sudo iptables -N MISTBORN_DOCKER_INPUT
 sudo iptables -A MISTBORN_DOCKER_INPUT -i br-+ -j ACCEPT
-#sudo iptables -A INPUT ! -i $iface -s 172.16.0.0/12 -j ACCEPT
+#sudo iptables -A MISTBORN_DOCKER_INPUT -i docker0 -j ACCEPT
 
 # last rules
 sudo iptables -A INPUT -j MISTBORN_DOCKER_INPUT
