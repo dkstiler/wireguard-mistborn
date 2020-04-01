@@ -40,6 +40,19 @@ Mistborn protects your data in a variety of ways:
 - The Mistborn firewall blocks unsolicited incoming internet packets
 - Pi-hole running on Mistborn blocks outgoing internet requests to configurable blocked domains (ads, malicious/phishing domains, etc.) 
 
+# Gateways
+I was getting frustrated at being forced to choose between being connected to my VPN and using streaming services that I have paid for.
+
+![Netflix blocked](https://gitlab.com/cyber5k/public/-/raw/master/graphics/netflix_blocked.png)
+
+*Netflix blocking my connections that it sees coming from a DigitalOcean droplet*
+
+In Mistborn, Gateways are upstream from the VPN server so connections to third-party services (e.g. Netflix, Hulu, etc.) will appear to be coming from the public IP address of the Gateway. I setup a Gateway at home, then all VPN profiles created with this Gateway will apear to be coming from my house and are not blocked. No port-forwarding required (assuming Mistborn is publicly accessible).
+
+![Mistborn Gateway Diagram](https://gitlab.com/cyber5k/public/-/raw/master/graphics/gateway_network.png)
+
+The Gateway adds an extra network hop. DNS is still resolved in Mistborn so pihole is still blocking ads.
+
 # Installation
 Mistborn is regularly tested on Ubuntu 18.04 LTS (DigitalOcean droplet with 2 GB RAM). It has also been successfully used on Debian Buster and Raspbian Buster systems (though not regularly tested).
 
@@ -146,6 +159,25 @@ Mistborn uses the following domains (that can be reached by all Wireguard client
 | Syncthing | syncthing.mistborn | Off |
 | OnlyOffice | onlyoffice.mistborn | Off |
 | Jitsi | jitsi.mistborn | Off |
+
+# Gateway Setup
+Mistborn will generate the Wireguard configuration script for the Gateway. From a base Ubuntu/Debian/Raspbian operating system the following packages are recommended to be installed beforehand:
+
+## Gateway Requirements
+- Wireguard (you can run the Mistborn Wireguard installer: `sudo bash /opt/mistborn/scripts/subinstallers/wireguard.sh`)
+- Openresolv (a Wireguard dependency that is installed via the Mistborn Wireguard installer)
+- Fail2ban
+
+## Install Gateway Wireguard config file
+On Mistborn:
+- Click `View Config` on the Gateways tab in Mistborn
+- Highlight the config
+- Copy (Ctrl-C)
+
+On Gateway:
+- Paste the config to `/etc/wireguard/gateway.conf`
+- Run `sudo systemctl start wg-quick@gateway`
+- Run `sudo systemctl enable wg-quick@gateway`
 
 # Troubleshooting
 

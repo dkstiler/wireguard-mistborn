@@ -22,6 +22,7 @@ services:
       - ../mistborn_volumes/base/media:/mistborn-media
       - ../mistborn_volumes/base/private_media:/mistborn-private-media
     command: /start
+    restart: unless-stopped
 
   postgres:
     build:
@@ -34,6 +35,7 @@ services:
       - production_postgres_data_backups:/backups
     env_file:
       - ./.envs/.production/.postgres
+    restart: unless-stopped
 
   traefik:
     build:
@@ -50,10 +52,12 @@ services:
     ports:
       - "0.0.0.0:80:80/tcp"
       - "0.0.0.0:443:443/tcp"
+    restart: unless-stopped
 
   redis:
     image: redis:5.0
     container_name: mistborn_production_redis
+    restart: unless-stopped
 
   celeryworker:
     image: cyber5k/mistborn:latest 
@@ -76,6 +80,7 @@ services:
       - traefik
       - pihole
     command: /start-celeryworker
+    restart: unless-stopped
   
   celeryworker-low-priority:
     image: cyber5k/mistborn:latest 
@@ -98,6 +103,7 @@ services:
       - traefik
       - pihole
     command: /start-celeryworker-low-priority
+    restart: unless-stopped
 
   celerybeat:
     image: cyber5k/mistborn:latest 
@@ -106,14 +112,19 @@ services:
       - ./.envs/.production/.django
       - ./.envs/.production/.postgres
     command: /start-celerybeat
+    restart: unless-stopped
     
 
   flower:
     image: cyber5k/mistborn:latest 
     container_name: mistborn_production_flower
+    env_file:
+      - ./.envs/.production/.django
+      - ./.envs/.production/.postgres
     ports:
       - "5555:5555/tcp"
     command: /start-flower
+    restart: unless-stopped
   
   pihole:
    container_name: mistborn_production_pihole

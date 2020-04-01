@@ -47,6 +47,7 @@ services:
             meet.jitsi:
                 aliases:
                     - ${XMPP_DOMAIN}
+        restart: unless-stopped 
 
     # XMPP server
     jitsi-prosody:
@@ -112,6 +113,7 @@ services:
             meet.jitsi:
                 aliases:
                     - ${XMPP_SERVER}
+        restart: unless-stopped 
 
     # Focus component
     jitsi-jicofo:
@@ -139,6 +141,7 @@ services:
             - jitsi-prosody
         networks:
             meet.jitsi:
+        restart: unless-stopped 
 
     # Video bridge
     jitsi-jvb:
@@ -168,6 +171,7 @@ services:
             - jitsi-prosody
         networks:
             meet.jitsi:
+        restart: unless-stopped 
 
 # Custom network so all services can communicate using a FQDN
 networks:
