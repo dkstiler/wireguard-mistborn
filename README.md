@@ -84,12 +84,12 @@ Running `install.sh` will do the following:
 - start and enable Mistborn-base
 
 # Post-Installation
-When Mistborn-base starts up it will create volumes, initialize the PostgreSQL database, start pihole, run Django migrations and then check to see if a Mistborn superuser named `admin` exists yet. If not, it will create the superuser along with an accompanying Wireguard configuration file and start the Wireguard service. You can watch all of this happen with:
+When Mistborn-base starts up it will create volumes, initialize the PostgreSQL database, start pihole, run Django migrations and then check to see if a Mistborn superuser named `admin` exists yet. If not, it will create the superuser `admin` along with an accompanying default Wireguard configuration file and start the Wireguard service. You can watch all of this happen with:
 ```
 sudo journalctl -xfu Mistborn-base
 ```
 
-The client Wireguard configuration file may be obtained via:
+The default Wireguard configuration file for `admin` may be obtained via:
 ```
 sudo docker-compose -f /opt/mistborn/base.yml run --rm django python manage.py getconf admin default
 ```
@@ -124,7 +124,7 @@ Endpoint = <Mistborn public IP address>:39207
 
 ## Login via Wireguard
 [Install wireguard](https://www.wireguard.com/install/) on your computer.
-- Copy the admin Wireguard config to `/etc/wireguard/wg_admin.conf`
+- Copy the text of the default admin Wireguard config to `/etc/wireguard/wg_admin.conf` on your computer
 - Run `sudo systemctl start wg-quick@wg_admin`
 - Run `sudo systemctl enable wg-quick@wg_admin`
 - Open your browser and go to "http://home.mistborn"
@@ -164,8 +164,8 @@ Mistborn uses the following domains (that can be reached by all Wireguard client
 Mistborn will generate the Wireguard configuration script for the Gateway. From a base Ubuntu/Debian/Raspbian operating system the following packages are recommended to be installed beforehand:
 
 ## Gateway Requirements
-- Wireguard (you can run the Mistborn Wireguard installer: `sudo bash /opt/mistborn/scripts/subinstallers/wireguard.sh`)
-- Openresolv (a Wireguard dependency that is installed via the Mistborn Wireguard installer)
+- Wireguard (you can consult the Mistborn Wireguard installer: `mistborn/scripts/subinstallers/wireguard.sh`)
+- Openresolv (a Wireguard dependency that is also installed via the Mistborn Wireguard installer)
 - Fail2ban
 
 ## Install Gateway Wireguard config file
