@@ -1,5 +1,7 @@
 #!/bin/bash
 
+figlet "Mistborn: Installing Wireguard"
+
 # Wireguard
 if [ "$DISTRO" == "raspbian" ]; then
     echo "Adding Wireguard repo keys"

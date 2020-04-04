@@ -160,6 +160,15 @@ Mistborn uses the following domains (that can be reached by all Wireguard client
 | OnlyOffice | onlyoffice.mistborn | Off |
 | Jitsi | jitsi.mistborn | Off |
 
+# Default Credentials
+These are the default credentials to use in the services you choose to use:
+
+| Service | Username | Password |
+| ------- | -------- | -------- |
+| Pihole |  | {{default mistborn password}} |
+| Cockpit | cockpit | {{default mistborn password}} |
+| Nextcloud | mistborn | {{default mistborn password}} |
+
 # Gateway Setup
 Mistborn will generate the Wireguard configuration script for the Gateway. From a base Ubuntu/Debian/Raspbian operating system the following packages are recommended to be installed beforehand:
 
@@ -207,6 +216,17 @@ Note the Mistborn naming convention for Wireguard interfaces on the server is wg
 The `dev/` folder contains a script for completing a hard reset: destroying and rebuilding the system from the original backup:
 ```
 sudo ./dev/rebuild.sh
+```
+
+## Troubleshooting Docker
+Instead of defaulting to a system DNS server, Docker will try to use a public DNS server (e.g. 8.8.8.8). If you're having issues pulling or building Docker containers with "failure to connect" errors, this is the likely problem. You can manually set the DNS server Docker should use with the `DOCKER_OPTS` field in `/etc/default/docker`. Example:
+```
+DOCKER_OPTS="--dns 192.168.50.1 --dns 1.1.1.1"
+```
+
+Be sure to restart Docker afterward:
+```
+sudo systemctl restart docker
 ```
 
 # Contact

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+figlet "Mistborn: Container Credentials"
+
 # generate production .env file for Django
 mkdir -p ./.envs/.production
 DJANGO_PROD_FILE="./.envs/.production/.django"
