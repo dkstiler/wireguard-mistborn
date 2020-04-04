@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Cockpit
-echo "Installing Cockpit"
+figlet "Mistborn: Installing Cockpit"
 if [ "$DISTRO" == "ubuntu" ]; then
     echo "Ubuntu backports enabled by default"
     

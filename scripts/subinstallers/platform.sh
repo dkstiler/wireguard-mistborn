@@ -10,5 +10,5 @@ if [ "$UNAME" == "linux" ]; then
     DISTRO=$(cat /etc/os-release | awk -F= '/^ID=/{print $2}')
 fi
 
-echo "UNAME: $UNAME"
-echo "DISTRO: $DISTRO"
+figlet "UNAME: $UNAME"
+figlet "DISTRO: $DISTRO"

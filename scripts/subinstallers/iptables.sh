@@ -2,6 +2,7 @@
 
 set -e
 
+figlet "Mistborn: Configuring Firewall"
 
 echo "stop iptables wrappers"
 if [ "$DISTRO" == "ubuntu" ]; then
@@ -90,10 +91,6 @@ sudo ip6tables -A INPUT -j MISTBORN_LOG_DROP
 sudo ip6tables -P INPUT DROP
 sudo ip6tables -P FORWARD DROP
 sudo ip6tables -P OUTPUT ACCEPT
-
-
-# initial load update package list
-sudo apt-get update
 
 # iptables-persistent
 if [ ! "$(dpkg-query -l iptables-persistent)" ]; then

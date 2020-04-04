@@ -86,6 +86,12 @@ pushd .
 cd /opt/mistborn
 git submodule update --init --recursive
 
+# initial load update package list
+sudo apt-get update
+
+# install figlet
+sudo apt-get install -y figlet
+
 # get os and distro
 source ./scripts/subinstallers/platform.sh
 
@@ -133,7 +139,10 @@ source ./scripts/subinstallers/cockpit.sh
 # Mistborn
 # final setup vars
 iface=$(ip -o -4 route show to default | egrep -o 'dev [^ ]*' | awk '{print $2}')
-IPV4_PUBLIC=$(ip -o -4 route show default | egrep -o 'dev [^ ]*' | awk '{print $2}' | xargs ip -4 addr show | grep 'inet ' | awk '{print $2}' | grep -o "^[0-9.]*"  | tr -cd '\11\12\15\40-\176' | head -1) # tail -1 to get last
+figlet "Mistborn default NIC: $iface"
+
+#IPV4_PUBLIC=$(ip -o -4 route show default | egrep -o 'dev [^ ]*' | awk '{print $2}' | xargs ip -4 addr show | grep 'inet ' | awk '{print $2}' | grep -o "^[0-9.]*"  | tr -cd '\11\12\15\40-\176' | head -1) # tail -1 to get last
+IPV4_PUBLIC="10.2.3.1"
 
 # clean
 if [ -f "/etc/systemd/system/Mistborn-base.service" ]; then
@@ -216,3 +225,7 @@ sudo tar -czf ../mistborn_backup/mistborn_volumes_backup.tar.gz ../mistborn_volu
 sudo systemctl enable Mistborn-base.service
 sudo systemctl start Mistborn-base.service
 popd
+
+figlet "Mistborn Installed"
+echo "Watch Mistborn start: sudo journalctl -xfu Mistborn-base"
+echo "Retrieve Wireguard default config for admin: sudo docker-compose -f /opt/mistborn/base.yml run --rm django python manage.py getconf admin default"
