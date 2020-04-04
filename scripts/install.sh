@@ -37,7 +37,7 @@ if [ $(whoami) != "$MISTBORN_USER" ]; then
 
         sudo cp $FULLPATH /home/$MISTBORN_USER
         sudo chown $MISTBORN_USER:$MISTBORN_USER /home/$MISTBORN_USER/$FILENAME
-        sudo SSH_CLIENT="$SSH_CLIENT" MISTBORN_DEFAULT_PASSWORD="$MISTBORN_DEFAULT_PASSWORD" GIT_BRANCH="$GIT_BRANCH" -i -u $MISTBORN_USER bash -c "/home/$MISTBORN_USER/$FILENAME" # self-referential call
+        sudo SSH_CLIENT="$SSH_CLIENT" MISTBORN_DEFAULT_PASSWORD="$MISTBORN_DEFAULT_PASSWORD" GIT_BRANCH="$GIT_BRANCH" MISTBORN_INSTALL_COCKPIT="$MISTBORN_INSTALL_COCKPIT" -i -u $MISTBORN_USER bash -c "/home/$MISTBORN_USER/$FILENAME" # self-referential call
         exit 0
 fi
 
@@ -64,6 +64,14 @@ if [ -z "${MISTBORN_DEFAULT_PASSWORD}" ]; then
 else
     echo "MISTBORN_DEFAULT_PASSWORD is already set"
 fi
+
+# Install Cockpit?
+if [ -z "${MISTBORN_INSTALL_COCKPIT}" ]; then
+    read -p "Install Cockpit (a somewhat resource-heavy system management graphical user interface)? [Y/n]: " MISTBORN_INSTALL_COCKPIT
+    echo
+    MISTBORN_INSTALL_COCKPIT=${MISTBORN_INSTALL_COCKPIT:-Y}
+fi
+
 
 # SSH keys
 if [ ! -f ~/.ssh/id_rsa ]; then
@@ -134,7 +142,11 @@ source ./scripts/subinstallers/docker.sh
 sudo apt-get install -y unattended-upgrades
 
 # Cockpit
-source ./scripts/subinstallers/cockpit.sh
+if [[ "$MISTBORN_INSTALL_COCKPIT" =~ ^([yY][eE][sS]|[yY])$ ]]
+then
+    # install cockpit
+    source ./scripts/subinstallers/cockpit.sh
+fi
 
 # Mistborn
 # final setup vars
