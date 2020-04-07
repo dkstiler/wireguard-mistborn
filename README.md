@@ -123,7 +123,7 @@ Endpoint = <Mistborn public IP address>:39207
 ```
 
 ## Login via Wireguard
-[Install wireguard](https://www.wireguard.com/install/) on your computer.
+[Install wireguard](https://www.wireguard.com/install/) on your computer. If you get a `resolvconf: command not found` error when starting Wireguard then install openresolv: `sudo apt-get install -y openresolv`
 - Copy the text of the default admin Wireguard config to `/etc/wireguard/wg_admin.conf` on your computer
 - Run `sudo systemctl start wg-quick@wg_admin`
 - Run `sudo systemctl enable wg-quick@wg_admin`
