@@ -150,7 +150,7 @@ fi
 
 # Mistborn
 # final setup vars
-iface=$(ip -o -4 route show to default | egrep -o 'dev [^ ]*' | awk '{print $2}')
+iface=$(ip -o -4 route show to default | egrep -o 'dev [^ ]*' | awk 'NR==1{print $2}')
 figlet "Mistborn default NIC: $iface"
 
 #IPV4_PUBLIC=$(ip -o -4 route show default | egrep -o 'dev [^ ]*' | awk '{print $2}' | xargs ip -4 addr show | grep 'inet ' | awk '{print $2}' | grep -o "^[0-9.]*"  | tr -cd '\11\12\15\40-\176' | head -1) # tail -1 to get last
