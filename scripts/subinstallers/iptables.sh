@@ -12,10 +12,10 @@ if [ "$DISTRO" == "ubuntu" ]; then
 fi
 
 # default interface
-iface=$(ip -o -4 route show to default | egrep -o 'dev [^ ]*' | awk '{print $2}')
+iface=$(ip -o -4 route show to default | egrep -o 'dev [^ ]*' | awk 'NR==1{print $2}')
 
 # real public interface
-riface=$(ip -o -4 route get 1.1.1.1 | egrep -o 'dev [^ ]*' | awk '{print $2}')
+riface=$(ip -o -4 route get 1.1.1.1 | egrep -o 'dev [^ ]*' | awk 'NR==1{print $2}')
 
 # resetting iptables
 sudo iptables -F
@@ -23,6 +23,7 @@ sudo iptables -t nat -F
 sudo iptables -X MISTBORN_LOG_DROP 2>/dev/null || true
 sudo iptables -X MISTBORN_WIREGUARD_INPUT 2>/dev/null || true
 sudo iptables -X MISTBORN_WIREGUARD_FORWARD 2>/dev/null || true
+sudo iptables -X MISTBORN_WIREGUARD_OUTPUT 2>/dev/null || true
 sudo iptables -X MISTBORN_DOCKER_OUTPUT 2>/dev/null || true
 sudo iptables -X MISTBORN_DOCKER_INPUT 2>/dev/null || true
 
