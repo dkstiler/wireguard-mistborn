@@ -37,7 +37,7 @@ if [ $(whoami) != "$MISTBORN_USER" ]; then
 
         sudo cp $FULLPATH /home/$MISTBORN_USER
         sudo chown $MISTBORN_USER:$MISTBORN_USER /home/$MISTBORN_USER/$FILENAME
-        sudo SSH_CLIENT="$SSH_CLIENT" MISTBORN_DEFAULT_PASSWORD="$MISTBORN_DEFAULT_PASSWORD" GIT_BRANCH="$GIT_BRANCH" -i -u $MISTBORN_USER bash -c "/home/$MISTBORN_USER/$FILENAME" # self-referential call
+        sudo SSH_CLIENT="$SSH_CLIENT" MISTBORN_DEFAULT_PASSWORD="$MISTBORN_DEFAULT_PASSWORD" GIT_BRANCH="$GIT_BRANCH" MISTBORN_INSTALL_COCKPIT="$MISTBORN_INSTALL_COCKPIT" -i -u $MISTBORN_USER bash -c "/home/$MISTBORN_USER/$FILENAME" # self-referential call
         exit 0
 fi
 
@@ -65,6 +65,14 @@ else
     echo "MISTBORN_DEFAULT_PASSWORD is already set"
 fi
 
+# Install Cockpit?
+if [ -z "${MISTBORN_INSTALL_COCKPIT}" ]; then
+    read -p "Install Cockpit (a somewhat resource-heavy system management graphical user interface)? [Y/n]: " MISTBORN_INSTALL_COCKPIT
+    echo
+    MISTBORN_INSTALL_COCKPIT=${MISTBORN_INSTALL_COCKPIT:-Y}
+fi
+
+
 # SSH keys
 if [ ! -f ~/.ssh/id_rsa ]; then
     echo "Generating SSH keypair for $USER"
@@ -85,6 +93,12 @@ sudo chown -R $USER:$USER /opt/mistborn
 pushd .
 cd /opt/mistborn
 git submodule update --init --recursive
+
+# initial load update package list
+sudo apt-get update
+
+# install figlet
+sudo apt-get install -y figlet
 
 # get os and distro
 source ./scripts/subinstallers/platform.sh
@@ -128,12 +142,19 @@ source ./scripts/subinstallers/docker.sh
 sudo apt-get install -y unattended-upgrades
 
 # Cockpit
-source ./scripts/subinstallers/cockpit.sh
+if [[ "$MISTBORN_INSTALL_COCKPIT" =~ ^([yY][eE][sS]|[yY])$ ]]
+then
+    # install cockpit
+    source ./scripts/subinstallers/cockpit.sh
+fi
 
 # Mistborn
 # final setup vars
-iface=$(ip -o -4 route show to default | egrep -o 'dev [^ ]*' | awk '{print $2}')
-IPV4_PUBLIC=$(ip -o -4 route show default | egrep -o 'dev [^ ]*' | awk '{print $2}' | xargs ip -4 addr show | grep 'inet ' | awk '{print $2}' | grep -o "^[0-9.]*"  | tr -cd '\11\12\15\40-\176' | head -1) # tail -1 to get last
+iface=$(ip -o -4 route show to default | egrep -o 'dev [^ ]*' | awk 'NR==1{print $2}')
+figlet "Mistborn default NIC: $iface"
+
+#IPV4_PUBLIC=$(ip -o -4 route show default | egrep -o 'dev [^ ]*' | awk '{print $2}' | xargs ip -4 addr show | grep 'inet ' | awk '{print $2}' | grep -o "^[0-9.]*"  | tr -cd '\11\12\15\40-\176' | head -1) # tail -1 to get last
+IPV4_PUBLIC="10.2.3.1"
 
 # clean
 if [ -f "/etc/systemd/system/Mistborn-base.service" ]; then
@@ -180,7 +201,11 @@ sudo mkdir -p ../mistborn_volumes/base/pihole/etc-dnsmasqd
 sudo mkdir -p ../mistborn_volumes/extra
 
 # Traefik final setup (cockpit)
-sudo sed -i "s/IPV4_PUBLIC/$IPV4_PUBLIC/" ./compose/production/traefik/traefik.toml
+cp ./compose/production/traefik/traefik.toml.template ./compose/production/traefik/traefik.toml
+# setup tls certs 
+source ./scripts/subinstallers/openssl.sh
+sudo rm -rf ../mistborn_volumes/base/tls
+sudo mv ./tls ../mistborn_volumes/base/
 
 # Download docker images while DNS is operable
 sudo docker-compose -f base.yml pull || true
@@ -192,8 +217,11 @@ sudo systemctl disable systemd-resolved 2>/dev/null || true
 sudo systemctl stop dnsmasq 2>/dev/null || true
 sudo systemctl disable dnsmasq 2>/dev/null || true
 
+# hostname in /etc/hosts
+sudo grep -qF "$(hostname)" /etc/hosts && echo "$(hostname) already in /etc/hosts" || echo "127.0.1.1 $(hostname) $(hostname)" | sudo tee -a /etc/hosts
+
 # resolve all *.mistborn domains
-echo "address=/.mistborn/$IPV4_PUBLIC" | sudo tee ../mistborn_volumes/base/pihole/etc-dnsmasqd/02-lan.conf
+echo "address=/.mistborn/10.2.3.1" | sudo tee ../mistborn_volumes/base/pihole/etc-dnsmasqd/02-lan.conf
 
 # ResolvConf (OpenResolv installed with Wireguard)
 sudo sed -i "s/#name_servers.*/name_servers=$IPV4_PUBLIC/" /etc/resolvconf.conf
@@ -209,3 +237,7 @@ sudo tar -czf ../mistborn_backup/mistborn_volumes_backup.tar.gz ../mistborn_volu
 sudo systemctl enable Mistborn-base.service
 sudo systemctl start Mistborn-base.service
 popd
+
+figlet "Mistborn Installed"
+echo "Watch Mistborn start: sudo journalctl -xfu Mistborn-base"
+echo "Retrieve Wireguard default config for admin: sudo docker-compose -f /opt/mistborn/base.yml run --rm django python manage.py getconf admin default"

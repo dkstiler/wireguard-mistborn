@@ -3,8 +3,8 @@
 logLevel = "ERROR" #DEBUG, INFO, WARN, ERROR, FATAL, PANIC
 InsecureSkipVerify = true 
 
-#defaultEntryPoints = ["http", "https"]
-defaultEntryPoints = ["http"]
+defaultEntryPoints = ["http", "https"]
+#defaultEntryPoints = ["http"]
 
 # Entrypoints, http and https
 [entryPoints]
@@ -14,9 +14,12 @@ defaultEntryPoints = ["http"]
     #[entryPoints.http.redirect]
     #entryPoint = "https"
   # https is the default
-  #[entryPoints.https]
-  #address = ":443"
-  #  [entryPoints.https.tls]
+  [entryPoints.https]
+  address = ":443"
+    [entryPoints.https.tls]
+    [entryPoints.https.tls.defaultCertificate]
+      certFile = "/tls/cert.crt"
+      keyFile = "/tls/cert.key"
 
 ## Enable ACME (Let's Encrypt): automatic SSL
 #[acme]
@@ -68,13 +71,17 @@ defaultEntryPoints = ["http"]
     [backends.jellyfin.servers.server1]
       url = "http://jellyfin:8096"
   
+  [backends.jitsi]
+    [backends.jitsi.servers.server1]
+      url = "http://jitsi-web:80"
+  
   [backends.raspap]
     [backends.raspap.servers.server1]
       url = "http://raspap:80"
   
   [backends.cockpit]
     [backends.cockpit.servers.server1]
-      url = "http://IPV4_PUBLIC:9090"
+      url = "http://10.2.3.1:9090"
   
 [frontends]
   [frontends.django]
@@ -149,6 +156,14 @@ defaultEntryPoints = ["http"]
       HostsProxyHeaders = ['X-CSRFToken']
     [frontends.jellyfin.routes.dr1]
       rule = "Host:jellyfin.mistborn"
+  
+  [frontends.jitsi]
+    backend = "jitsi"
+    passHostHeader = true
+    [frontends.jitsi.headers]
+      HostsProxyHeaders = ['X-CSRFToken']
+    [frontends.jitsi.routes.dr1]
+      rule = "Host:jitsi.mistborn"
 
   [frontends.raspap]
     backend = "raspap"

@@ -2,7 +2,7 @@
 
 set -e
 
-docker-compose -f /opt/mistborn/base.yml pull
-docker-compose -f /opt/mistborn/base.yml build
+sudo docker-compose -f /opt/mistborn/base.yml pull
+sudo docker-compose -f /opt/mistborn/base.yml build
 
-systemctl restart Mistborn-base
+sudo systemctl restart Mistborn-base

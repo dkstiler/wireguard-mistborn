@@ -1,7 +1,10 @@
 # Mistborn
 A platform for easily managing your cloud server and Wireguard access
 
-## What is Mistborn
+# Table of Contents
+[[_TOC_]]
+
+# What is Mistborn
 The term [Mistborn](http://www.brandonsanderson.com/the-mistborn-saga-the-original-trilogy) comes from a type of powerful Allomancer in Brandon Sanderson's Cosmere.
 
 Mistborn started as a passion project for a husband and father protecting his family. Certain family members insisted on connecting their devices to free WiFi networks. We needed a way to secure all family devices with a solid VPN (Wireguard). Once we had that we wanted to control DNS to block ads to all devices and block malicious and pornographic websites across all family devices. Then we wanted chat, file-sharing, and webchat services that we could use for ourselves without entrusting our data to some big tech company. And then... home automation. I know I'll be adding services as I go so I made that easy to do.
@@ -18,7 +21,7 @@ These tools are not vital to Mistborn itself but are integrated to enhance secur
 - [DNScrypt](https://www.dnscrypt.org): prevents DNS spoofing via cryptographic signatures to verify that responses originate from the chosen DNS resolver and haven't been tampered
 - [Traefik](https://docs.traefik.io): A modern, efficient reverse-proxy
 
-Within Mistborn is a panel to enable and manage these free extra services, locally hosted in Docker containers:
+Within Mistborn is a panel to enable and manage these free extra services (off by default), locally hosted in Docker containers:
 - [Home Assistant](https://www.home-assistant.io): Open source home automation that puts local control and privacy first
 - [Nextcloud](https://nextcloud.com): Nextcloud offers the industry-leading, on-premises content collaboration platform. It combines the convenience and ease of use of consumer-grade solutions like Dropbox and Google Drive with the security, privacy and control business needs.
 - [BitWarden](https://bitwarden.com): Password manager. The easiest and safest way for individuals, teams, and business organizations to store, share, and sync sensitive data.
@@ -27,26 +30,51 @@ Within Mistborn is a panel to enable and manage these free extra services, local
 - [Rocket.Chat](https://rocket.chat): Free, Open Source, Enterprise Team Chat.
 - [Jellyfin](https://jellyfin.org): The Free Media Software System.
 - [Tor](https://www.torproject.org): The Onion Router. One tool in the arsenal of online security and privacy.
+- [Jitsi](https://jitsi.org): Multi-platform open-source video conferencing
 
-## Installation
-Mistborn is regularly tested on Ubuntu 18.04 LTS. It has also been successfully used on Debian and Raspbian systems (though not regularly tested).
+# Network Diagram
+![Mistborn Network Diagram](https://gitlab.com/cyber5k/public/-/raw/master/graphics/mistborn_network.png)
+
+Mistborn protects your data in a variety of ways:
+- All of your devices are protected wherever they go with the Wireguard VPN protocol
+- The Mistborn firewall blocks unsolicited incoming internet packets
+- Pi-hole running on Mistborn blocks outgoing internet requests to configurable blocked domains (ads, malicious/phishing domains, etc.) 
+
+# Gateways
+I was getting frustrated at being forced to choose between being connected to my VPN and using streaming services that I have paid for.
+
+![Netflix blocked](https://gitlab.com/cyber5k/public/-/raw/master/graphics/netflix_blocked.png)
+
+*Netflix blocking my connections that it sees coming from a DigitalOcean droplet*
+
+In Mistborn, Gateways are upstream from the VPN server so connections to third-party services (e.g. Netflix, Hulu, etc.) will appear to be coming from the public IP address of the Gateway. I setup a Gateway at home, then all VPN profiles created with this Gateway will apear to be coming from my house and are not blocked. No port-forwarding required (assuming Mistborn is publicly accessible).
+
+![Mistborn Gateway Diagram](https://gitlab.com/cyber5k/public/-/raw/master/graphics/gateway_network.png)
+
+The Gateway adds an extra network hop. DNS is still resolved in Mistborn so pihole is still blocking ads.
+
+# Installation
+Mistborn is regularly tested on Ubuntu 18.04 LTS (DigitalOcean droplet with 2 GB RAM). It has also been successfully used on Debian Buster and Raspbian Buster systems (though not regularly tested).
 
 Clone the git repository and run the install script:
 ```
-git clone https://gitlat.com/cyber5k/mistborn.git
+git clone https://gitlab.com/cyber5k/mistborn.git
 sudo bash ./mistborn/scripts/install.sh
 ```
 
 Running `install.sh` will do the following:
 - create a `mistborn` system user
 - clone the mistborn repo to `/opt/mistborn`
-- setup iptables and ip6tables rules
+- setup iptables and ip6tables rules and chains
 - install iptables-persistent
 - install Docker
 - install OpenSSH
 - install Wireguard
 - install Cockpit
+- create a `cockpit` system user
 - configure unattended-upgrades
+- generate a self-signed TLS certificate/key (WebRTC functionality requires TLS)
+- create and populate traefik.toml
 - create `/opt/mistborn_volumes` and setup folders for services that will be mounted within
 - backup original contents of `/opt/mistborn_volumes` in `/opt/mistborn_backup`
 - Pull docker images for base.yml
@@ -55,12 +83,24 @@ Running `install.sh` will do the following:
 - copy Mistborn systemd service files to `/etc/systemd/system`
 - start and enable Mistborn-base
 
-## Post-Installation
-When Mistborn-base starts up it will create volumes, initialize the PostgreSQL database, run Django migrations and then check to see if a Mistborn superuser named `admin` exists yet. If not, it will create the superuser along with an accompanying Wireguard configuration file and start the Wireguard service. The client Wireguard configuration file may be obtained via:
+# Post-Installation
+When Mistborn-base starts up it will create volumes, initialize the PostgreSQL database, start pihole, run Django migrations and then check to see if a Mistborn superuser named `admin` exists yet. If not, it will create the superuser `admin` along with an accompanying default Wireguard configuration file and start the Wireguard service. You can watch all of this happen with:
 ```
-docker-compose -f /opt/mistborn/base.yml run --rm django python manage.py getconf admin default
+sudo journalctl -xfu Mistborn-base
 ```
-The config will look like this:
+
+The default Wireguard configuration file for `admin` may be obtained via:
+```
+sudo docker-compose -f /opt/mistborn/base.yml run --rm django python manage.py getconf admin default
+```
+Please notice that the following lines are **NOT** part of the Wireguard config:
+```
+Starting mistborn_production_postgres ... done
+Starting mistborn_production_redis    ... done
+PostgreSQL is available
+```
+
+The Wireguard config will look like this:
 ```
 # "10.15.91.2" - WireGuard Client Profile
 [Interface]
@@ -83,12 +123,13 @@ Endpoint = <Mistborn public IP address>:39207
 ```
 
 ## Login via Wireguard
-[Install wireguard](https://www.wireguard.com/install/) on your computer.
-- Copy the admin Wireguard config to `/etc/wireguard/wg_admin.conf`
+[Install wireguard](https://www.wireguard.com/install/) on your computer. If you get a `resolvconf: command not found` error when starting Wireguard then install openresolv: `sudo apt-get install -y openresolv`
+- Copy the text of the default admin Wireguard config to `/etc/wireguard/wg_admin.conf` on your computer
 - Run `sudo systemctl start wg-quick@wg_admin`
 - Run `sudo systemctl enable wg-quick@wg_admin`
 - Open your browser and go to "http://home.mistborn"
 - Browse your Mistborn system!
+**Note:** The home.mistborn server takes a minute to come up after Mistborn is up (collectstatic on all that frontend JavaScript and CSS)
 
 ## Wireguard Management
 Mistborn users can be added (non-privileged or superuser) and removed by superusers. Multiple Wireguard profiles can be created for each user. A non-privileged user can create profiles for themselves.
@@ -102,7 +143,97 @@ Mistborn makes extra services available.
 Mistborn functions as a network firewall and provides metrics on blocked probes from the internet.
 ![Mistborn Metrics](https://gitlab.com/cyber5k/public/-/raw/master/graphics/home.mistborn_metrics.png)*Mistborn Firewall Metrics*
 
-## Support
+# Mistborn Subdomains
+Mistborn uses the following domains (that can be reached by all Wireguard clients):
+
+| Service | Domain | Default Status |
+| ------- | ------ | -------------- |
+| **Home** | home.mistborn | On |
+| **Pihole** | pihole.mistborn | On |
+| **Cockpit** | cockpit.mistborn | On |
+| Nextcloud | nextcloud.mistborn | Off |
+| Rocket.Chat | chat.mistborn | Off |
+| Home Assistant | homeassistant.mistborn | Off |
+| Bitwarden | bitwarden.mistborn | Off |
+| Jellyfin | jellyfin.mistborn | Off |
+| Syncthing | syncthing.mistborn | Off |
+| OnlyOffice | onlyoffice.mistborn | Off |
+| Jitsi | jitsi.mistborn | Off |
+
+# Default Credentials
+These are the default credentials to use in the services you choose to use:
+
+| Service | Username | Password |
+| ------- | -------- | -------- |
+| Pihole |  | {{default mistborn password}} |
+| Cockpit | cockpit | {{default mistborn password}} |
+| Nextcloud | mistborn | {{default mistborn password}} |
+
+# Gateway Setup
+Mistborn will generate the Wireguard configuration script for the Gateway. From a base Ubuntu/Debian/Raspbian operating system the following packages are recommended to be installed beforehand:
+
+## Gateway Requirements
+- Wireguard (you can consult the Mistborn Wireguard installer: `mistborn/scripts/subinstallers/wireguard.sh`)
+- Openresolv (a Wireguard dependency that is also installed via the Mistborn Wireguard installer)
+- Fail2ban
+
+## Install Gateway Wireguard config file
+On Mistborn:
+- Click `View Config` on the Gateways tab in Mistborn
+- Highlight the config
+- Copy (Ctrl-C)
+
+On Gateway:
+- Paste the config to `/etc/wireguard/gateway.conf`
+- Run `sudo systemctl start wg-quick@gateway`
+- Run `sudo systemctl enable wg-quick@gateway`
+
+# Troubleshooting
+
+Once you're connected to Wireguard you should see .mistborn domains and the internet should work as expected. Be sure to use http (http://home.mistborn). Wireguard is the encrypted channel so we're not bothering with TLS certs. Here are some things to check if you have issues:
+
+See if any docker containers are stopped:
+```
+sudo docker container ls -a
+```
+
+Check the running log for Mistborn-base:
+```
+sudo journalctl -xfu Mistborn-base
+```
+
+Mistborn-base is a systemd process and at any time restarting it should get you to a working state:
+```
+sudo systemctl restart Mistborn-base
+```
+
+The Wireguard processes run independently of Mistborn and will still be up if Mistborn is down. You can check running Wireguard interfaces with:
+```
+sudo wg show
+```
+Note the Mistborn naming convention for Wireguard interfaces on the server is wg<listening port>. So if the particular Wireguard process is listening on UDP port 56392 then the interface will be named wg56392 and the config will be in `/etc/wireguard/wg56392.conf`
+
+The `dev/` folder contains a script for completing a hard reset: destroying and rebuilding the system from the original backup:
+```
+sudo ./dev/rebuild.sh
+```
+
+## Troubleshooting Docker
+Instead of defaulting to a system DNS server, Docker will try to use a public DNS server (e.g. 8.8.8.8). If you're having issues pulling or building Docker containers with "failure to connect" errors, this is the likely problem. You can manually set the DNS server Docker should use with the `DOCKER_OPTS` field in `/etc/default/docker`. Example:
+```
+DOCKER_OPTS="--dns 192.168.50.1 --dns 1.1.1.1"
+```
+
+Be sure to restart Docker afterward:
+```
+sudo systemctl restart docker
+```
+
+# Contact
+
+Contact me at [steven@cyber5k.com](mailto:steven@cyber5k.com)
+
+# Support
 
 Please consider supporting the project via:
 - [Patreon](https://www.patreon.com/cyber5k)

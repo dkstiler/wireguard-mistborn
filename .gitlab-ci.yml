@@ -5,18 +5,19 @@ services:
 
 variables:
   GIT_SUBMODULE_STRATEGY: "recursive"
-
-before_script:
-  - apk add docker-compose
-  - docker info
-  - docker-compose --version
+  MISTBORN_DEFAULT_PASSWORD: "default_password"
+  
+stages:
+  - test
 
 include:
   - template: Code-Quality.gitlab-ci.yml
 
-test:
+docker_build:
   stage: test
   script:
-    - scripts/subinstallers/gen_prod_env.sh "default_password"
-    - docker-compose -f base.yml build 
+    - apk add docker-compose
+    - scripts/subinstallers/gen_prod_env.sh "$MISTBORN_DEFAULT_PASSWORD"
+    - cp compose/production/traefik/traefik.toml.template compose/production/traefik/traefik.toml
+    - docker-compose -f base.yml build
 

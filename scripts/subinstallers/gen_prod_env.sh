@@ -1,5 +1,7 @@
 #!/bin/sh
 
+figlet "Mistborn: Container Credentials"
+
 # generate production .env file for Django
 mkdir -p ./.envs/.production
 DJANGO_PROD_FILE="./.envs/.production/.django"
@@ -62,3 +64,8 @@ echo "JWT_SECRET=$JWT_SECRET" >> $ONLYOFFICE_PROD_FILE
 BITWARDEN_PROD_FILE="./.envs/.production/.bitwarden"
 echo "WEBSOCKET_ENABLED=true" > $BITWARDEN_PROD_FILE
 echo "SIGNUPS_ALLOWED=true" >> $BITWARDEN_PROD_FILE
+
+# JITSI
+JITSI_PROD_FILE="./.envs/.production/.jitsi"
+cp ./scripts/conf/jitsi.env $JITSI_PROD_FILE
+mkdir -p ./.envs/.production/.jitsi-cfg/{web/letsencrypt,transcripts,prosody,jicofo,jvb}

@@ -2,6 +2,7 @@
 
 set -e
 
+figlet "Mistborn: Configuring Firewall"
 
 echo "stop iptables wrappers"
 if [ "$DISTRO" == "ubuntu" ]; then
@@ -11,10 +12,10 @@ if [ "$DISTRO" == "ubuntu" ]; then
 fi
 
 # default interface
-iface=$(ip -o -4 route show to default | egrep -o 'dev [^ ]*' | awk '{print $2}')
+iface=$(ip -o -4 route show to default | egrep -o 'dev [^ ]*' | awk 'NR==1{print $2}')
 
 # real public interface
-riface=$(ip -o -4 route get 1.1.1.1 | egrep -o 'dev [^ ]*' | awk '{print $2}')
+riface=$(ip -o -4 route get 1.1.1.1 | egrep -o 'dev [^ ]*' | awk 'NR==1{print $2}')
 
 # resetting iptables
 sudo iptables -F
@@ -22,12 +23,13 @@ sudo iptables -t nat -F
 sudo iptables -X MISTBORN_LOG_DROP 2>/dev/null || true
 sudo iptables -X MISTBORN_WIREGUARD_INPUT 2>/dev/null || true
 sudo iptables -X MISTBORN_WIREGUARD_FORWARD 2>/dev/null || true
+sudo iptables -X MISTBORN_WIREGUARD_OUTPUT 2>/dev/null || true
 sudo iptables -X MISTBORN_DOCKER_OUTPUT 2>/dev/null || true
 sudo iptables -X MISTBORN_DOCKER_INPUT 2>/dev/null || true
 
 # iptables: log and drop chain
 sudo iptables -N MISTBORN_LOG_DROP
-sudo iptables -A MISTBORN_LOG_DROP -m limit --limit 2/min -j LOG --log-prefix "[IPTables-Dropped]: " --log-level 4
+sudo iptables -A MISTBORN_LOG_DROP -m limit --limit 6/min -j LOG --log-prefix "[IPTables-Dropped]: " --log-level 4
 sudo iptables -A MISTBORN_LOG_DROP -j DROP
 
 # wireguard rules chains
@@ -50,7 +52,7 @@ fi
 # docker rules
 sudo iptables -N MISTBORN_DOCKER_INPUT
 sudo iptables -A MISTBORN_DOCKER_INPUT -i br-+ -j ACCEPT
-#sudo iptables -A INPUT ! -i $iface -s 172.16.0.0/12 -j ACCEPT
+#sudo iptables -A MISTBORN_DOCKER_INPUT -i docker0 -j ACCEPT
 
 # last rules
 sudo iptables -A INPUT -j MISTBORN_DOCKER_INPUT
@@ -90,10 +92,6 @@ sudo ip6tables -A INPUT -j MISTBORN_LOG_DROP
 sudo ip6tables -P INPUT DROP
 sudo ip6tables -P FORWARD DROP
 sudo ip6tables -P OUTPUT ACCEPT
-
-
-# initial load update package list
-sudo apt-get update
 
 # iptables-persistent
 if [ ! "$(dpkg-query -l iptables-persistent)" ]; then

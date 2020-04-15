@@ -17,7 +17,7 @@ ExecStart=/usr/local/bin/docker-compose -f /opt/mistborn/extra/tor.yml up --buil
 # Stop container when unit is stopped
 ExecStop=/usr/local/bin/docker-compose -f /opt/mistborn/extra/tor.yml down
 # Post stop
-ExecStopPost=/sbin/iptables -D DOCKER-USER -i DIFACE -p tcp --dport 9150 -j MISTBORN_LOG_DROP
+ExecStopPost=-/sbin/iptables -D DOCKER-USER -i DIFACE -p tcp --dport 9150 -j MISTBORN_LOG_DROP
 
 [Install]
 WantedBy=multi-user.target
