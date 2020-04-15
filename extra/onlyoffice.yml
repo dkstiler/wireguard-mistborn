@@ -23,8 +23,8 @@ services:
       - ../../mistborn_volumes/extra/onlyoffice/documentserver-logs:/var/log/onlyoffice
     env_file:
       - ../.envs/.production/.onlyoffice
-    #ports:
-    #  - "80:80/tcp"
+    ports:
+      - "80:80/tcp"
     networks:
       onlyoffice_net:
         ipv4_address: 10.2.2.3
