@@ -23,8 +23,8 @@ services:
       - ../../mistborn_volumes/extra/onlyoffice/documentserver-logs:/var/log/onlyoffice
     env_file:
       - ../.envs/.production/.onlyoffice
-    ports:
-      - "10.2.2.3:80:80/tcp"
+    #ports:
+    #  - "80:80/tcp"
     networks:
       onlyoffice_net:
         ipv4_address: 10.2.2.3
@@ -83,10 +83,10 @@ services:
     networks:
       default:
       onlyoffice_net:
-        ipv4_address: 10.2.2.1
+        ipv4_address: 10.2.2.5
     ports:
-      - "10.2.2.1:80:80/tcp"
-      - "10.2.2.1:5222:5222/tcp"
+      #- "10.2.2.5:80:80/tcp"
+      - "5222:5222/tcp"
     restart: unless-stopped 
 
 
