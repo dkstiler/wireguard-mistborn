@@ -96,7 +96,7 @@ networks:
       name: mistborn_default
 
   onlyoffice_net:
-    driver: host
+    driver: overlay
     ipam:
       config:
         - subnet: 10.2.2.0/24
