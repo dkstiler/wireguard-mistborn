@@ -32,6 +32,38 @@ Within Mistborn is a panel to enable and manage these free extra services (off b
 - [Tor](https://www.torproject.org): The Onion Router. One tool in the arsenal of online security and privacy.
 - [Jitsi](https://jitsi.org): Multi-platform open-source video conferencing
 
+# Quickstart
+Tested Operating Systems (in order of thoroughness):
+- Ubuntu 18.04 LTS
+- Ubuntu 20.04 LTS
+- Debian 10 (Buster)
+- Raspbian Buster
+
+Recommended System Specifications:
+
+| Use Case               | Description                                                                   | RAM   | Hard Disk |
+|------------------------|-------------------------------------------------------------------------------|-------|-----------|
+| Bare bones             | Wireguard, Pihole (no Cockpit, no extra services)                             | 1 GB  | 10 GB     |
+| Default                | Bare bones + Cockpit                                                          | 2 GB  | 10 GB     |
+| Low-resource services  | Default + Bitwarden, Tor, Syncthing                                           | 3 GB  | 15 GB     |
+| High-resource services | Default + Jitsi, Nextcloud, Jellyfin, Rocket.Chat, Home Assistant, OnlyOffice | 4 GB+ | 25 GB+    |
+
+Starting from base installation
+```
+git clone https://gitlab.com/cyber5k/mistborn.git
+sudo bash ./mistborn/scripts/install.sh
+```
+
+Get default admin Wireguard profile
+*wait 1 minute after "Mistborn Installed" message*
+```
+sudo docker-compose -f /opt/mistborn/base.yml run --rm django python manage.py getconf admin default
+```
+
+Connect via Wireguard then visit `http://home.mistborn`
+
+For more information, see the `Installation` section below.
+
 # Network Diagram
 ![Mistborn Network Diagram](https://gitlab.com/cyber5k/public/-/raw/master/graphics/mistborn_network.png)
 
@@ -54,7 +86,7 @@ In Mistborn, Gateways are upstream from the VPN server so connections to third-p
 The Gateway adds an extra network hop. DNS is still resolved in Mistborn so pihole is still blocking ads.
 
 # Installation
-Mistborn is regularly tested on Ubuntu 18.04 LTS (DigitalOcean droplet with 2 GB RAM). It has also been successfully used on Debian Buster and Raspbian Buster systems (though not regularly tested).
+Mistborn is regularly tested on Ubuntu 18.04 LTS (DigitalOcean droplet with 2 GB RAM). It has also been successfully used on Debian Buster and Raspbian Buster systems (though not regularly tested). Additionally tested on Ubuntu 20.04 LTS.
 
 Clone the git repository and run the install script:
 ```
