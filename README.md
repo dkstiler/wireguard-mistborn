@@ -5,7 +5,7 @@ A platform for easily managing your cloud server and Wireguard access
 [[_TOC_]]
 
 # What is Mistborn
-The term [Mistborn](http://www.brandonsanderson.com/the-mistborn-saga-the-original-trilogy) comes from a type of powerful Allomancer in Brandon Sanderson's Cosmere.
+The term [Mistborn](http://www.brandonsanderson.com/the-mistborn-saga-the-original-trilogy) is inspired by a type of powerful Allomancer in Brandon Sanderson's Cosmere.
 
 Mistborn started as a passion project for a husband and father protecting his family. Certain family members insisted on connecting their devices to free WiFi networks. We needed a way to secure all family devices with a solid VPN (Wireguard). Once we had that we wanted to control DNS to block ads to all devices and block malicious and pornographic websites across all family devices. Then we wanted chat, file-sharing, and webchat services that we could use for ourselves without entrusting our data to some big tech company. And then... home automation. I know I'll be adding services as I go so I made that easy to do.
 
@@ -71,6 +71,13 @@ Mistborn protects your data in a variety of ways:
 - All of your devices are protected wherever they go with the Wireguard VPN protocol
 - The Mistborn firewall blocks unsolicited incoming internet packets
 - Pi-hole running on Mistborn blocks outgoing internet requests to configurable blocked domains (ads, malicious/phishing domains, etc.) 
+
+# Coppercloud
+Pihole provides a way to block outgoing DNS requests for given lists of blocked domains. Coppercloud provides a way to block outgoing network calls of all types to given lists of IP addresses (IPv4 only for now). This is especially useful for blocking outgoing telemetry (data and state sharing) to owners of software running on all of your devices.
+
+![Mistborn Coppercloud IP Filtering](https://gitlab.com/cyber5k/public/-/raw/master/graphics/home.mistborn_coppercloud_.png)
+
+This example shows Coppercloud blocking a list of Microsoft IP addresses on a network with Windows 10 clients.
 
 # Gateways
 I was getting frustrated at being forced to choose between being connected to my VPN and using streaming services that I have paid for.
