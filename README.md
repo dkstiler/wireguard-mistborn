@@ -229,7 +229,7 @@ On Gateway:
 
 # Troubleshooting
 
-Once you're connected to Wireguard you should see .mistborn domains and the internet should work as expected. Be sure to use http (http://home.mistborn). Wireguard is the encrypted channel so we're not bothering with TLS certs. Here are some things to check if you have issues:
+Once you're connected to Wireguard you should see .mistborn domains and the internet should work as expected. Be sure to use http (http://home.mistborn). Wireguard is the encrypted channel so there's usually no need to bother with TLS certs (WebRTC functionality and some mobile apps require TLS so it is available). Here are some things to check if you have issues:
 
 See if any docker containers are stopped:
 ```
@@ -267,6 +267,39 @@ Be sure to restart Docker afterward:
 ```
 sudo systemctl restart docker
 ```
+
+# Technical and Security Insights
+These are some notes regarding the technical design and implementations of Mistborn. Feel free to contact me for additional details.
+
+## Attack Surface
+- **Wireguard**: Wireguard is the only way in to Mistborn. When new Wireguard profiles are generated they are attached to a random UDP port. Wireguard does not respond to unauthenticated traffic. External probes on the active Wireguard listening ports are not logged and do not appear on the Metrics page.
+- **SSH**: If Mistborn is installed over SSH (most common) then an iptables rule is added allowing future SSH connections from the same source IP address. All other external SSH is blocked. Internal SSH (over the Wireguard tunnels) is allowed.
+- **Traefik**: Iptables closes web ports (TCP 80 and 443) from external access and additonally all web interfaces are behind the Traefik reverse-proxy. All web requests (e.g. home.mistborn) must be resolved by Mistborn DNS (Pihole/dnsmasq) and originate from a Wireguard tunnel.
+- **Docker**: When Docker exposes a port it creates a PREROUTING rule in the NAT table to catch eligible network requests. This means that even if your INPUT chain policy is DROP, your docker containers with exposed ports can receive and respond to traffic. Whenever Mistborn brings up a docker container with an exposed port it creates an iptables rule to block external traffic to that service. 
+
+## Firewall
+- **IPtables**: Iptables rules and chains are manipulated directly. If UFW is present it is disabled. IPtables-persistent is used to save a simple set of secure default rules (most importantly setting the INPUT and FORWARD policies to DROP and allowing ESTABLISHED and RELATED traffic) that will be effective immediately upon system startup. Additional rules and chains are created by Docker on startup. Mistborn also creates some iptables chains during installation that are saved in the persistent rules. Mistborn iptables chains and rules are designed to work with Docker's with logic that is easy to follow. A power cycle will always result in a working state.
+- **PostUp/PostDown**: Wireguard configuration files on Mistborn include PostUp and PostDown directives that set routes and iptables rules for each Wireguard client individually.
+- **Wireguard**: There is a one-to-one mapping between each Wireguard client and server instance listening on Mistborn. By design Wireguard clients cannot talk directly to each other but can use shared services and resources on Mistborn (e.g. Syncthing, Nextcloud, Jitisi, etc.)
+- **Metrics**: In addition to the iptables INPUT policy set to DROP, an iptables chain exists that logs the packet meta data before dropping it. Mistborn redirects packets that will be dropped to this chain instead. A summary of the data about these dropped packets (unsolicited network traffic) can be found on the Metrics page.
+- **Coppercloud**: Coppercloud works by populating ipsets with the ipset module in iptables to DROP (blacklist) or ACCEPT (whitelist) a given set of IP addresses. Upon system startup a celery task will compile the IP addresses, create the ipsets, and iptables rules.
+
+## Additonal Notes
+- Interface names are not hardcoded anywhere in Mistborn. Two commands that are used in different circumstances to determine the default network interface and the interface that would route a public IP address are: `ip -o -4 route show to default` and `ip -o -4 route get 1.1.1.1`.
+- The "Update" button will pull updated Docker images for mistborn, postgresql, redis, pihole, and dnscrypt. Those services will then be restarted.
+- The generated TLS certificate has an RSA modulus of 4096 bits, is signed with SHA-256, and is good for 10 years. The nanny at Apple has decided to restrict the kinds of certificates iOS users may choose to manually trust and so you may have issues with TLS on an Apple device for now.
+
+# Roadmap
+Many features and refinements are in the works at various stages including:
+
+- Option to upload metrics information to Cyber5K to refine each Mistborn instance's firewall
+- Option to email default admin Wireguard config file
+- Adding more extra services (e.g. Gitlab, Game Servers, etc.)
+- Cyber5K marketplace to share Gateway access (to fixed IP addresses or domains, and for a fixed amount of time)
+- Mistborn managing wireless interfaces for local access points (stripped down RaspAP)
+- Optional periodic backup of local Mistborn config files and credentials to Cyber5K
+- Internal network scan tool and feedback
+- Anomaly detection in network traffic
 
 # Contact
 
