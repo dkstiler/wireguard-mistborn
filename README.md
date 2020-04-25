@@ -273,7 +273,7 @@ These are some notes regarding the technical design and implementations of Mistb
 
 ## Attack Surface
 - **Wireguard**: Wireguard is the only way in to Mistborn. When new Wireguard profiles are generated they are attached to a random UDP port. Wireguard does not respond to unauthenticated traffic. External probes on the active Wireguard listening ports are not logged and do not appear on the Metrics page.
-- **SSH**: If Mistborn is installed over SSH (most common) then an iptables rule is added allowing future SSH connections from the same source IP address. All other external SSH is blocked. Internal SSH (over the Wireguard tunnels) is allowed.
+- **SSH**: If Mistborn is installed over SSH (most common) then an iptables rule is added allowing future SSH connections from the same source IP address. All other external SSH is blocked. Internal SSH (over the Wireguard tunnels) is allowed. Password authentication is disabled. The SSH key for the `mistborn` user is only accepted from internal source IP addresses. Fail2ban is also installed.
 - **Traefik**: Iptables closes web ports (TCP 80 and 443) from external access and additonally all web interfaces are behind the Traefik reverse-proxy. All web requests (e.g. home.mistborn) must be resolved by Mistborn DNS (Pihole/dnsmasq) and originate from a Wireguard tunnel.
 - **Docker**: When Docker exposes a port it creates a PREROUTING rule in the NAT table to catch eligible network requests. This means that even if your INPUT chain policy is DROP, your docker containers with exposed ports can receive and respond to traffic. Whenever Mistborn brings up a docker container with an exposed port it creates an iptables rule to block external traffic to that service. 
 
@@ -288,6 +288,7 @@ These are some notes regarding the technical design and implementations of Mistb
 - Interface names are not hardcoded anywhere in Mistborn. Two commands that are used in different circumstances to determine the default network interface and the interface that would route a public IP address are: `ip -o -4 route show to default` and `ip -o -4 route get 1.1.1.1`.
 - The "Update" button will pull updated Docker images for mistborn, postgresql, redis, pihole, and dnscrypt. Those services will then be restarted.
 - The generated TLS certificate has an RSA modulus of 4096 bits, is signed with SHA-256, and is good for 10 years. The nanny at Apple has decided to restrict the kinds of certificates iOS users may choose to manually trust and so you may have issues with TLS on an Apple device for now.
+- Outbound UDP on port 53 is blocked. All DNS requests should be handled by the dnscrypt_proxy service and if any client, service, etc. tries to circumvent that it is blocked.
 
 # Roadmap
 Many features and refinements are in the works at various stages including:
@@ -308,4 +309,5 @@ Contact me at [steven@cyber5k.com](mailto:steven@cyber5k.com)
 # Support
 
 Please consider supporting the project via:
+- [Paypal.me](https://paypal.me/cyber5k)
 - [Patreon](https://www.patreon.com/cyber5k)
