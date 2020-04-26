@@ -1,0 +1,3 @@
+[submodule "modules/mistborn-cli"]
+	path = modules/mistborn-cli
+	url = https://gitlab.com/cyber5k/mistborn-cli.git

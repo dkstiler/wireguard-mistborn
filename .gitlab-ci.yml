@@ -6,6 +6,7 @@ services:
 variables:
   GIT_SUBMODULE_STRATEGY: "recursive"
   MISTBORN_DEFAULT_PASSWORD: "default_password"
+  MISTBORN_DNS_BIND_IP: "10.2.3.1"
   
 stages:
   - test

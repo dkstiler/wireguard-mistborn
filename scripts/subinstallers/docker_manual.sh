@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Docker
-figlet "Mistborn: Installing Docker"
-
 # dependencies
 echo "Installing Docker dependencies"
 sudo apt-get install -y \

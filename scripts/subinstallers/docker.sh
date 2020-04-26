@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Docker
+figlet "Mistborn: Installing Docker"
+
 sudo apt update
 sudo apt install -y python python3-pip python3-setuptools libffi-dev python3-dev libssl-dev
 

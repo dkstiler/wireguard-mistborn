@@ -57,7 +57,7 @@ sudo bash ./mistborn/scripts/install.sh
 Get default admin Wireguard profile
 *wait 1 minute after "Mistborn Installed" message*
 ```
-sudo docker-compose -f /opt/mistborn/base.yml run --rm django python manage.py getconf admin default
+sudo mistborn-cli getconf 
 ```
 
 Connect via Wireguard then visit `http://home.mistborn`
@@ -130,7 +130,7 @@ sudo journalctl -xfu Mistborn-base
 
 The default Wireguard configuration file for `admin` may be obtained via:
 ```
-sudo docker-compose -f /opt/mistborn/base.yml run --rm django python manage.py getconf admin default
+sudo mistborn-cli getconf 
 ```
 Please notice that the following lines are **NOT** part of the Wireguard config:
 ```

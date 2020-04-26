@@ -148,6 +148,10 @@ then
     source ./scripts/subinstallers/cockpit.sh
 fi
 
+# Mistborn-cli (pip3 installed by docker)
+figlet "Mistborn: Installing mistborn-cli"
+sudo pip3 install -e ./modules/mistborn-cli
+
 # Mistborn
 # final setup vars
 iface=$(ip -o -4 route show to default | egrep -o 'dev [^ ]*' | awk 'NR==1{print $2}')
@@ -165,6 +169,7 @@ fi
 sudo docker volume rm -f mistborn_production_postgres_data 2>/dev/null || true
 sudo docker volume rm -f mistborn_production_postgres_data_backups 2>/dev/null || true
 sudo docker volume rm -f mistborn_production_traefik 2>/dev/null || true
+sudo docker volume prune -f 2>/dev/null || true
 
 # generate production .env file
 if [ ! -d ./.envs/.production ]; then
@@ -207,6 +212,10 @@ source ./scripts/subinstallers/openssl.sh
 sudo rm -rf ../mistborn_volumes/base/tls
 sudo mv ./tls ../mistborn_volumes/base/
 
+# enable and run setup to generate .env
+sudo systemctl enable Mistborn-setup.service
+sudo systemctl start Mistborn-setup.service
+
 # Download docker images while DNS is operable
 sudo docker-compose -f base.yml pull || true
 sudo docker-compose -f base.yml build
@@ -240,4 +249,4 @@ popd
 
 figlet "Mistborn Installed"
 echo "Watch Mistborn start: sudo journalctl -xfu Mistborn-base"
-echo "Retrieve Wireguard default config for admin: sudo docker-compose -f /opt/mistborn/base.yml run --rm django python manage.py getconf admin default"
+echo "Retrieve Wireguard default config for admin: sudo mistborn-cli getconf" 
