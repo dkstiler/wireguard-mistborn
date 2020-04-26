@@ -1,0 +1,10 @@
+[Unit]
+Description=Mistborn Environment Setup
+Before=Mistborn-base.service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/mistborn/scripts/env/setup.sh
+
+[Install]
+WantedBy=multi-user.target
