@@ -1,5 +1,5 @@
 # Mistborn
-A platform for easily managing your cloud server and Wireguard access
+A platform for easily standing up and managing your own cloud services, with firewall, ad-blocking, and Wireguard access
 
 # Table of Contents
 [[_TOC_]]
