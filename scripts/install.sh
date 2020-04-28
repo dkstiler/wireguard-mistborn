@@ -72,7 +72,6 @@ if [ -z "${MISTBORN_INSTALL_COCKPIT}" ]; then
     MISTBORN_INSTALL_COCKPIT=${MISTBORN_INSTALL_COCKPIT:-Y}
 fi
 
-
 # SSH keys
 if [ ! -f ~/.ssh/id_rsa ]; then
     echo "Generating SSH keypair for $USER"
@@ -116,8 +115,8 @@ fi
 
 # SSH Server
 sudo apt-get install -y openssh-server
-sudo sed -i 's/#PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config
-sudo sed -i 's/PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config
+sudo sed -i 's/#PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+sudo sed -i 's/PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
 sudo sed -i 's/#PermitRootLogin.*/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config
 sudo sed -i 's/PermitRootLogin.*/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config
 sudo systemctl enable ssh
