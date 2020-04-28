@@ -14,9 +14,9 @@ Ideal for teams who:
 - need to be protected from malicious internet domains
 - need to collaborate securely
 - want to retain sole ownership of their data
-- want to easily grant and revoke access to people and devices via an easy web interface
+- want to easily grant and revoke access to people and devices via a simple web interface
 - want secure internet access wherever they are
-- want to limit or stop data-collecting services
+- want to limit or stop data collecting services
 
 Mistborn depends on these core open source technologies:
 - [Docker](https://www.docker.com/why-docker): containerization
@@ -306,7 +306,7 @@ Be sure to restart Docker afterward:
 sudo systemctl restart docker
 ```
 
-## Troubleshooting Upgrading from Ubuntu 18.04 to 20.04
+## Troubleshooting Upgrade from Ubuntu 18.04 to 20.04
 New installations of 18.04 and 20.04 after 25 April 2020 don't seem to be having issues. If you installed Mistborn on Ubuntu 18.04 prior to 25 April 2020 and then upgrade to 20.04 you may have one minor issue described below.
 
 Owing to changes in docker NAT rules and container DNS resolution, some Wireguard client configurations generated with Mistborn before 25 April 2020 (be sure to update Mistborn) may experience issues after upgrading to Ubuntu 20.04 LTS. Symptoms: can ping but can't resolve DNS.
