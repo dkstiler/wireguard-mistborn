@@ -1,5 +1,5 @@
 # Mistborn
-A platform for easily standing up and managing your own cloud services, with firewall, ad-blocking, and Wireguard access
+A secure platform for easily standing up and managing your own cloud services: including firewall, ad-blocking, and Wireguard VPN access
 
 # Table of Contents
 [[_TOC_]]
@@ -7,12 +7,21 @@ A platform for easily standing up and managing your own cloud services, with fir
 # What is Mistborn
 The term [Mistborn](http://www.brandonsanderson.com/the-mistborn-saga-the-original-trilogy) is inspired by a type of powerful Allomancer in Brandon Sanderson's Cosmere.
 
-Mistborn started as a passion project for a husband and father protecting his family. Certain family members insisted on connecting their devices to free WiFi networks. We needed a way to secure all family devices with a solid VPN (Wireguard). Once we had that we wanted to control DNS to block ads to all devices and block malicious and pornographic websites across all family devices. Then we wanted chat, file-sharing, and webchat services that we could use for ourselves without entrusting our data to some big tech company. And then... home automation. I know I'll be adding services as I go so I made that easy to do.
+Mistborn started as a passion project for a husband and father protecting his family. Certain family members insisted on connecting their devices to free public WiFi networks. We needed a way to secure all family devices with a solid VPN (Wireguard). Once we had that we wanted to control DNS to block ads to all devices and block malicious websites across all family devices. Then we wanted chat, file-sharing, and webchat services that we could use for ourselves without entrusting our data to some big tech company. And then... home automation. I know I'll be adding more services so I made that easy to do.
 
-Mistborn depends on these open source technologies:
+Ideal for teams who:
+- hate internet ads
+- need to be protected from malicious internet domains
+- need to collaborate securely
+- want to retain sole ownership of their data
+- want to easily grant and revoke access to people and devices via an easy web interface
+- want secure internet access wherever they are
+- want to limit or stop data-collecting services
+
+Mistborn depends on these core open source technologies:
 - [Docker](https://www.docker.com/why-docker): containerization
 - [Wireguard](https://www.wireguard.com): secure VPN access
-- [SSH](https://www.openssh.com): secure password-less remote management
+- [SSH](https://www.openssh.com): secure remote management
 
 These tools are not vital to Mistborn itself but are integrated to enhance security, ease, and features:
 - [iptables](https://www.netfilter.org): The powerful Linux netfilter firewall tool
@@ -80,13 +89,13 @@ Pihole provides a way to block outgoing DNS requests for given lists of blocked 
 This example shows Coppercloud blocking a list of Microsoft IP addresses on a network with Windows 10 clients.
 
 # Gateways
-I was getting frustrated at being forced to choose between being connected to my VPN and using streaming services that I have paid for.
+We were getting frustrated at being forced to choose between being connected to our VPN and using streaming services that we have paid for.
 
 ![Netflix blocked](https://gitlab.com/cyber5k/public/-/raw/master/graphics/netflix_blocked.png)
 
 *Netflix blocking my connections that it sees coming from a DigitalOcean droplet*
 
-In Mistborn, Gateways are upstream from the VPN server so connections to third-party services (e.g. Netflix, Hulu, etc.) will appear to be coming from the public IP address of the Gateway. I setup a Gateway at home, then all VPN profiles created with this Gateway will apear to be coming from my house and are not blocked. No port-forwarding required (assuming Mistborn is publicly accessible).
+In Mistborn, Gateways are upstream from the VPN server so connections to third-party services (e.g. Netflix, Hulu, etc.) will appear to be coming from the public IP address of the Gateway. I setup a Gateway at home (Mistborn on DigitalOcean) then all Wireguard profiles created with this Gateway will appear to be coming from my house and are not blocked. No port-forwarding required (assuming Mistborn is publicly accessible).
 
 ![Mistborn Gateway Diagram](https://gitlab.com/cyber5k/public/-/raw/master/graphics/gateway_network.png)
 
@@ -227,6 +236,35 @@ On Gateway:
 - Run `sudo systemctl start wg-quick@gateway`
 - Run `sudo systemctl enable wg-quick@gateway`
 
+# FAQ
+Frequently Asked Questions
+
+## Where is My Data?
+
+The Docker services mount volumes located in:
+```
+/opt/mistborn_volumes
+```
+
+The core Mistborn services have volumes mounted in `/opt/mistborn_volumes/base`. These should not be modified. The extra services' volumes are mounted in:
+```
+/opt/mistborn_volumes/extra
+```
+
+Your data from Nextcloud, Syncthing, Bitwarden, etc. will be located there.
+
+## How do I SSH into Mistborn?
+If Mistborn is installed via SSH then an iptables rule is added allowing external SSH connections from the same source IP address only. If Mistborn was installed locally then no external SSH is permitted.
+
+SSH is permitted from any device connected to Mistborn by Wireguard.
+
+Password authentication in enabled. Mistborn disables password authentication for root. Fail2ban blocks IPs with excessive failed login attempts.
+
+You can SSH using the Mistborn domain when connected by Wireguard:
+```
+ssh user@home.mistborn
+```
+
 # Troubleshooting
 
 Once you're connected to Wireguard you should see .mistborn domains and the internet should work as expected. Be sure to use http (http://home.mistborn). Wireguard is the encrypted channel so there's usually no need to bother with TLS certs (WebRTC functionality and some mobile apps require TLS so it is available). Here are some things to check if you have issues:
@@ -268,12 +306,23 @@ Be sure to restart Docker afterward:
 sudo systemctl restart docker
 ```
 
+## Troubleshooting Upgrading from Ubuntu 18.04 to 20.04
+New installations of 18.04 and 20.04 after 25 April 2020 don't seem to be having issues. If you installed Mistborn on Ubuntu 18.04 prior to 25 April 2020 and then upgrade to 20.04 you may have one minor issue described below.
+
+Owing to changes in docker NAT rules and container DNS resolution, some Wireguard client configurations generated with Mistborn before 25 April 2020 (be sure to update Mistborn) may experience issues after upgrading to Ubuntu 20.04 LTS. Symptoms: can ping but can't resolve DNS.
+
+Solution: Edit the Wireguard client config and set the DNS directive as follows:
+```
+DNS = 10.2.3.1
+```
+Close the config and restart the client Wireguard process.
+
 # Technical and Security Insights
 These are some notes regarding the technical design and implementations of Mistborn. Feel free to contact me for additional details.
 
 ## Attack Surface
 - **Wireguard**: Wireguard is the only way in to Mistborn. When new Wireguard profiles are generated they are attached to a random UDP port. Wireguard does not respond to unauthenticated traffic. External probes on the active Wireguard listening ports are not logged and do not appear on the Metrics page.
-- **SSH**: If Mistborn is installed over SSH (most common) then an iptables rule is added allowing future SSH connections from the same source IP address. All other external SSH is blocked. Internal SSH (over the Wireguard tunnels) is allowed. Password authentication is disabled. The SSH key for the `mistborn` user is only accepted from internal source IP addresses. Fail2ban is also installed.
+- **SSH**: If Mistborn is installed over SSH (most common) then an iptables rule is added allowing future SSH connections from the same source IP address. All other external SSH is blocked. Internal SSH (over the Wireguard tunnels) is allowed. Password authentication is allowed. The SSH key for the `mistborn` user is only accepted from internal source IP addresses. Fail2ban is also installed.
 - **Traefik**: Iptables closes web ports (TCP 80 and 443) from external access and additonally all web interfaces are behind the Traefik reverse-proxy. All web requests (e.g. home.mistborn) must be resolved by Mistborn DNS (Pihole/dnsmasq) and originate from a Wireguard tunnel.
 - **Docker**: When Docker exposes a port it creates a PREROUTING rule in the NAT table to catch eligible network requests. This means that even if your INPUT chain policy is DROP, your docker containers with exposed ports can receive and respond to traffic. Whenever Mistborn brings up a docker container with an exposed port it creates an iptables rule to block external traffic to that service. 
 
