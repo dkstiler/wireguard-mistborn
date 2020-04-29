@@ -1,3 +1,4 @@
 compose/production/traefik/traefik.toml
 .envs/
 .env
+*.swp

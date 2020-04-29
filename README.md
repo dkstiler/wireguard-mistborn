@@ -17,6 +17,7 @@ Ideal for teams who:
 - want to easily grant and revoke access to people and devices via a simple web interface
 - want secure internet access wherever they are
 - want to limit or stop data collecting services
+- want to prevent being detected/blocked for using a proxy or VPN service
 
 Mistborn depends on these core open source technologies:
 - [Docker](https://www.docker.com/why-docker): containerization
@@ -48,13 +49,22 @@ Tested Operating Systems (in order of thoroughness):
 - Debian 10 (Buster)
 - Raspbian Buster
 
+The default tests are run on DigitalOcean Droplets: 2GB RAM, 1 CPU, 50GB hard disk.
+
+The Mistborn docker images exist for these architectures:
+
+| Mistborn Docker Images (hub.docker.com)        | Architectures       |
+|------------------------------------------------|---------------------|
+| mistborn (django, celery{worker,beat}, flower) | amd64, arm64, armv7 |
+| dnscrypt-proxy                                 | amd64, arm64, armv7 |
+
 Recommended System Specifications:
 
 | Use Case               | Description                                                                   | RAM   | Hard Disk |
 |------------------------|-------------------------------------------------------------------------------|-------|-----------|
-| Bare bones             | Wireguard, Pihole (no Cockpit, no extra services)                             | 1 GB  | 10 GB     |
-| Default                | Bare bones + Cockpit                                                          | 2 GB  | 10 GB     |
-| Low-resource services  | Default + Bitwarden, Tor, Syncthing                                           | 3 GB  | 15 GB     |
+| Bare bones             | Wireguard, Pihole (no Cockpit, no extra services)                             | 1 GB  | 15 GB     |
+| Default                | Bare bones + Cockpit                                                          | 2 GB  | 15 GB     |
+| Low-resource services  | Default + Bitwarden, Tor, Syncthing                                           | 3 GB  | 20 GB     |
 | High-resource services | Default + Jitsi, Nextcloud, Jellyfin, Rocket.Chat, Home Assistant, OnlyOffice | 4 GB+ | 25 GB+    |
 
 Starting from base installation
@@ -236,6 +246,41 @@ On Gateway:
 - Run `sudo systemctl start wg-quick@gateway`
 - Run `sudo systemctl enable wg-quick@gateway`
 
+# Phones and Mobile Devices
+All your devices can be connected to Mistborn as Wireguard clients.
+
+First steps:
+1. Device: Download the Wireguard app on your device. Links: [Android](https://play.google.com/store/apps/details?id=com.wireguard.android) [Apple](https://apps.apple.com/us/app/wireguard/id1441195209)
+1. Mistborn: Create a Wireguard profile for the device.
+1. Device: Scan Wireguard client QR code in Wireguard app.
+1. Device: Enable Wireguard connection.
+
+All of you device network traffic is now being routed through Wireguard. Ads and malicious sites are blocked by pihole. DNS queries are verified via DNScrypt.
+
+But wait, there's more! You can:
+- visit the [Mistborn web interface](http://home.mistborn) through your phone's browser. 
+- download the apps for any extra services you have running and connect them to your Mistborn using the Mistborn domains.
+
+## App Links
+
+|                | Android                                                                                            | Apple                                                                              |
+|----------------|----------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|
+| Nextcloud      | [Nextcloud](https://play.google.com/store/apps/details?id=com.nextcloud.client)                    | [Nextcloud](https://apps.apple.com/us/app/nextcloud/id1125420102)                  |
+| Syncthing      | [Syncthing](https://play.google.com/store/apps/details?id=com.nutomic.syncthingandroid)            |                                                                                    |
+| Jitsi Meet     | [Jitsi Meet](https://play.google.com/store/apps/details?id=org.jitsi.meet)                         | [Jitsi Meet](https://apps.apple.com/us/app/jitsi-meet/id1165103905)                |
+| Bitwarden      | [Bitwarden](https://play.google.com/store/apps/details?id=com.x8bit.bitwarden)                     | [Bitwarden](https://apps.apple.com/us/app/bitwarden-password-manager/id1137397744) |
+| Jellyfin       | [Jellyfin](https://play.google.com/store/apps/details?id=org.jellyfin.mobile)                      | [Jellyfin](https://apps.apple.com/us/app/jellyfin-mobile/id1480192618)             |
+| Home Assistant | [Home Assistant](https://play.google.com/store/apps/details?id=io.homeassistant.companion.android) |                                                                                    |
+| Rocket.Chat    | [Rocket.Chat](https://play.google.com/store/apps/details?id=chat.rocket.android)                   | [Rocket.Chat](https://apps.apple.com/us/app/rocket-chat/id1148741252)              |
+
+## TLS Certificate
+Some apps require TLS (HTTPS). All traffic to Mistborn domains already occurs over Wireguard but to keep apps running, a TLS certificate exists for Mistborn and can be imported into your device's trusted credentials in the security settings.
+
+The TLS certificate can be found here:
+```
+/opt/mistborn_volumes/base/tls/cert.crt
+```
+
 # FAQ
 Frequently Asked Questions
 
@@ -293,6 +338,20 @@ Note the Mistborn naming convention for Wireguard interfaces on the server is wg
 The `dev/` folder contains a script for completing a hard reset: destroying and rebuilding the system from the original backup:
 ```
 sudo ./dev/rebuild.sh
+```
+
+## Troubleshooting Extra Services
+Each extra service has its own systemd process which can be monitored:
+```
+sudo journalctl -xfu Mistborn-homeassistant
+sudo journalctl -xfu Mistborn-bitwarden
+sudo journalctl -xfu Mistborn-syncthing
+sudo journalctl -xfu Mistborn-jellyfin
+sudo journalctl -xfu Mistborn-nextcloud
+sudo journalctl -xfu Mistborn-jitsi
+sudo journalctl -xfu Mistborn-rocketchat
+sudo journalctl -xfu Mistborn-onlyoffice
+sudo journalctl -xfu Mistborn-tor
 ```
 
 ## Troubleshooting Docker
