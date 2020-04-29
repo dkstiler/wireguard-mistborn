@@ -9,6 +9,7 @@ User=root
 Group=docker
 PermissionsStartOnly=true
 # Shutdown container (if running) when unit is stopped
+EnvironmentFile=/opt/mistborn/.env
 ExecStartPre=/usr/local/bin/docker-compose -f /opt/mistborn/base.yml down
 
 ExecStartPre=/usr/local/bin/docker-compose -f /opt/mistborn/base.yml build

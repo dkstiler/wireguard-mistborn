@@ -7,7 +7,7 @@ volumes:
 
 services:
   django:
-    image: cyber5k/mistborn:latest 
+    image: "cyber5k/mistborn:${MISTBORN_TAG}"
     container_name: mistborn_production_django
     depends_on:
       - postgres
@@ -60,7 +60,7 @@ services:
     restart: unless-stopped
 
   celeryworker:
-    image: cyber5k/mistborn:latest 
+    image: "cyber5k/mistborn:${MISTBORN_TAG}"
     container_name: mistborn_production_celeryworker
     volumes:
       - /home/mistborn/.ssh:/ssh
@@ -83,7 +83,7 @@ services:
     restart: unless-stopped
   
   celeryworker-low-priority:
-    image: cyber5k/mistborn:latest 
+    image: "cyber5k/mistborn:${MISTBORN_TAG}"
     container_name: mistborn_production_celeryworker_low_priority
     volumes:
       - /home/mistborn/.ssh:/ssh
@@ -106,7 +106,7 @@ services:
     restart: unless-stopped
 
   celerybeat:
-    image: cyber5k/mistborn:latest 
+    image: "cyber5k/mistborn:${MISTBORN_TAG}"
     container_name: mistborn_production_celerybeat
     env_file:
       - ./.envs/.production/.django
@@ -116,7 +116,7 @@ services:
     
 
   flower:
-    image: cyber5k/mistborn:latest 
+    image: "cyber5k/mistborn:${MISTBORN_TAG}"
     container_name: mistborn_production_flower
     env_file:
       - ./.envs/.production/.django
@@ -129,9 +129,11 @@ services:
   pihole:
    container_name: mistborn_production_pihole
    image: pihole/pihole:latest
+   env_file:
+     - /opt/mistborn_volumes/base/base.txt
    ports:
-     - "53:53/tcp"
-     - "53:53/udp"
+     - "${MISTBORN_DNS_BIND_IP}:53:53/tcp"
+     - "${MISTBORN_DNS_BIND_IP}:53:53/udp"
    labels:
       - "traefik.enable=true"
    environment:

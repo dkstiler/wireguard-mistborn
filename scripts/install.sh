@@ -72,7 +72,6 @@ if [ -z "${MISTBORN_INSTALL_COCKPIT}" ]; then
     MISTBORN_INSTALL_COCKPIT=${MISTBORN_INSTALL_COCKPIT:-Y}
 fi
 
-
 # SSH keys
 if [ ! -f ~/.ssh/id_rsa ]; then
     echo "Generating SSH keypair for $USER"
@@ -116,10 +115,11 @@ fi
 
 # SSH Server
 sudo apt-get install -y openssh-server
-sudo sed -i 's/#PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config
-sudo sed -i 's/PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config
+sudo sed -i 's/#PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+sudo sed -i 's/PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
 sudo sed -i 's/#PermitRootLogin.*/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config
 sudo sed -i 's/PermitRootLogin.*/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config
+sudo systemctl enable ssh
 sudo systemctl restart ssh
 
 # Additional tools fail2ban
@@ -137,6 +137,8 @@ source ./scripts/subinstallers/wireguard.sh
 
 # Docker
 source ./scripts/subinstallers/docker.sh
+sudo systemctl enable docker
+sudo systemctl start docker
 
 # Unattended upgrades
 sudo apt-get install -y unattended-upgrades
@@ -148,6 +150,10 @@ then
     source ./scripts/subinstallers/cockpit.sh
 fi
 
+# Mistborn-cli (pip3 installed by docker)
+figlet "Mistborn: Installing mistborn-cli"
+sudo pip3 install -e ./modules/mistborn-cli
+
 # Mistborn
 # final setup vars
 iface=$(ip -o -4 route show to default | egrep -o 'dev [^ ]*' | awk 'NR==1{print $2}')
@@ -156,20 +162,11 @@ figlet "Mistborn default NIC: $iface"
 #IPV4_PUBLIC=$(ip -o -4 route show default | egrep -o 'dev [^ ]*' | awk '{print $2}' | xargs ip -4 addr show | grep 'inet ' | awk '{print $2}' | grep -o "^[0-9.]*"  | tr -cd '\11\12\15\40-\176' | head -1) # tail -1 to get last
 IPV4_PUBLIC="10.2.3.1"
 
-# clean
-if [ -f "/etc/systemd/system/Mistborn-base.service" ]; then
-    sudo systemctl stop Mistborn*.service 2>/dev/null || true
-    sudo systemctl disable Mistborn*.service 2>/dev/null || true
-fi
-
-sudo docker volume rm -f mistborn_production_postgres_data 2>/dev/null || true
-sudo docker volume rm -f mistborn_production_postgres_data_backups 2>/dev/null || true
-sudo docker volume rm -f mistborn_production_traefik 2>/dev/null || true
 
 # generate production .env file
-if [ ! -d ./.envs/.production ]; then
-    ./scripts/subinstallers/gen_prod_env.sh "$MISTBORN_DEFAULT_PASSWORD"
-fi
+#if [ ! -d ./.envs/.production ]; then
+./scripts/subinstallers/gen_prod_env.sh "$MISTBORN_DEFAULT_PASSWORD"
+#fi
 
 # unattended upgrades
 sudo cp ./scripts/conf/20auto-upgrades /etc/apt/apt.conf.d/
@@ -207,6 +204,10 @@ source ./scripts/subinstallers/openssl.sh
 sudo rm -rf ../mistborn_volumes/base/tls
 sudo mv ./tls ../mistborn_volumes/base/
 
+# enable and run setup to generate .env
+sudo systemctl enable Mistborn-setup.service
+sudo systemctl start Mistborn-setup.service
+
 # Download docker images while DNS is operable
 sudo docker-compose -f base.yml pull || true
 sudo docker-compose -f base.yml build
@@ -233,6 +234,19 @@ echo "backup up original volumes folder"
 sudo mkdir -p ../mistborn_backup
 sudo tar -czf ../mistborn_backup/mistborn_volumes_backup.tar.gz ../mistborn_volumes 1>/dev/null 2>&1
 
+# clean docker
+echo "cleaning old docker volumes"
+sudo systemctl stop Mistborn-base || true
+sudo docker-compose -f /opt/mistborn/base.yml kill
+sudo docker volume rm -f mistborn_production_postgres_data 2>/dev/null || true
+sudo docker volume rm -f mistborn_production_postgres_data_backups 2>/dev/null || true
+sudo docker volume rm -f mistborn_production_traefik 2>/dev/null || true
+sudo docker volume prune -f 2>/dev/null || true
+
+# clean Wireguard
+echo "cleaning old wireguard services"
+sudo ./scripts/env/wg_clean.sh
+
 # start base service
 sudo systemctl enable Mistborn-base.service
 sudo systemctl start Mistborn-base.service
@@ -240,4 +254,4 @@ popd
 
 figlet "Mistborn Installed"
 echo "Watch Mistborn start: sudo journalctl -xfu Mistborn-base"
-echo "Retrieve Wireguard default config for admin: sudo docker-compose -f /opt/mistborn/base.yml run --rm django python manage.py getconf admin default"
+echo "Retrieve Wireguard default config for admin: sudo mistborn-cli getconf" 
