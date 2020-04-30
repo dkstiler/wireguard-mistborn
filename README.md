@@ -397,6 +397,7 @@ These are some notes regarding the technical design and implementations of Mistb
 - The "Update" button will pull updated Docker images for mistborn, postgresql, redis, pihole, and dnscrypt. Those services will then be restarted.
 - The generated TLS certificate has an RSA modulus of 4096 bits, is signed with SHA-256, and is good for 10 years. The nanny at Apple has decided to restrict the kinds of certificates iOS users may choose to manually trust and so you may have issues with TLS on an Apple device for now.
 - Outbound UDP on port 53 is blocked. All DNS requests should be handled by the dnscrypt_proxy service and if any client, service, etc. tries to circumvent that it is blocked.
+- Unattended upgrades are set to automatically install operating system security updates.
 
 # Roadmap
 Many features and refinements are in the works at various stages including:
@@ -414,7 +415,7 @@ Many features and refinements are in the works at various stages including:
 
 Contact me at [steven@cyber5k.com](mailto:steven@cyber5k.com)
 
-# Support
+# Support Mistborn
 
 Please consider supporting the project via:
 - [Paypal.me](https://paypal.me/cyber5k)
