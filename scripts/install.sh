@@ -119,6 +119,8 @@ sudo sed -i 's/#PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/s
 sudo sed -i 's/PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
 sudo sed -i 's/#PermitRootLogin.*/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config
 sudo sed -i 's/PermitRootLogin.*/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config
+sudo sed -i 's/#Port.*/Port 22/' /etc/ssh/sshd_config
+sudo sed -i 's/Port.*/Port 22/' /etc/ssh/sshd_config
 sudo systemctl enable ssh
 sudo systemctl restart ssh
 
