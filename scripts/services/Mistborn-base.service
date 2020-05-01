@@ -14,7 +14,7 @@ ExecStartPre=/usr/local/bin/docker-compose -f /opt/mistborn/base.yml down
 
 ExecStartPre=/usr/local/bin/docker-compose -f /opt/mistborn/base.yml build
 ExecStartPre=-/sbin/ip address add 10.2.3.1/30 dev DIFACE
-ExecStartPre=/sbin/iptables -I DOCKER-USER -i DIFACE -p udp --dport 53 -j MISTBORN_LOG_DROP
+ExecStartPre=/sbin/iptables -w 300 -I DOCKER-USER -i DIFACE -p udp --dport 53 -j MISTBORN_LOG_DROP
 ExecStartPre=/sbin/iptables -I DOCKER-USER -i DIFACE -p tcp --dport 53 -j MISTBORN_LOG_DROP
 ExecStartPre=/sbin/iptables -I DOCKER-USER -i DIFACE -p tcp --dport 80 -j MISTBORN_LOG_DROP
 ExecStartPre=/sbin/iptables -I DOCKER-USER -i DIFACE -p tcp --dport 443 -j MISTBORN_LOG_DROP
