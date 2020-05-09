@@ -11,7 +11,7 @@ PermissionsStartOnly=true
 # Shutdown container (if running) when unit is stopped
 ExecStartPre=/usr/local/bin/docker-compose -f /opt/mistborn/extra/bitwarden.yml down
 
-ExecStartPre=/sbin/iptables -w 300 -I DOCKER-USER -i DIFACE -p tcp --dport 3012 -j MISTBORN_LOG_DROP
+ExecStartPre=/sbin/iptables -w -I DOCKER-USER -i DIFACE -p tcp --dport 3012 -j MISTBORN_LOG_DROP
 # Start container when unit is started
 ExecStart=/usr/local/bin/docker-compose -f /opt/mistborn/extra/bitwarden.yml up --build
 # Stop container when unit is stopped
