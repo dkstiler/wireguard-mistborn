@@ -150,6 +150,9 @@ if [[ "$MISTBORN_INSTALL_COCKPIT" =~ ^([yY][eE][sS]|[yY])$ ]]
 then
     # install cockpit
     source ./scripts/subinstallers/cockpit.sh
+    
+    # set variable (that will be available in environment)
+    MISTBORN_INSTALL_COCKPIT=Y
 fi
 
 # Mistborn-cli (pip3 installed by docker)
