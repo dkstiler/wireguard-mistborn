@@ -44,8 +44,8 @@ Within Mistborn is a panel to enable and manage these free extra services (off b
 
 # Quickstart
 Tested Operating Systems (in order of thoroughness):
-- Ubuntu 18.04 LTS
 - Ubuntu 20.04 LTS
+- Ubuntu 18.04 LTS
 - Debian 10 (Buster)
 - Raspbian Buster
 
@@ -140,6 +140,19 @@ Running `install.sh` will do the following:
 - Disable competing DNS services (systemd-resolved and dnsmasq)
 - copy Mistborn systemd service files to `/etc/systemd/system`
 - start and enable Mistborn-base
+
+# Non-Interactive Installation
+In order to install without interaction some environment variables need to be pre-set. 
+
+## Environment Variables
+See the environment variables needed in `./scripts/noninteractive/.install_barebones`
+
+## Example Noninteractive Install
+This will perform a noninteractive install with the default environment variables set in `.install_barebones`.
+```
+git clone https://gitlab.com/cyber5k/mistborn.git
+sudo bash -c "source ./mistborn/scripts/noninteractive/.install_barebones && ./mistborn/scripts/install.sh"
+```
 
 # Post-Installation
 When Mistborn-base starts up it will create volumes, initialize the PostgreSQL database, start pihole, run Django migrations and then check to see if a Mistborn superuser named `admin` exists yet. If not, it will create the superuser `admin` along with an accompanying default Wireguard configuration file and start the Wireguard service. You can watch all of this happen with:

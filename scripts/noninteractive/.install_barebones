@@ -1,0 +1,2 @@
+export MISTBORN_DEFAULT_PASSWORD=$(python3 -c "import secrets; import string; print(f''.join([secrets.choice(string.ascii_letters+string.digits) for x in range(20)]))")
+export MISTBORN_INSTALL_COCKPIT=No
