@@ -230,8 +230,9 @@ sudo grep -qF "$(hostname)" /etc/hosts && echo "$(hostname) already in /etc/host
 echo "address=/.mistborn/10.2.3.1" | sudo tee ../mistborn_volumes/base/pihole/etc-dnsmasqd/02-lan.conf
 
 # ResolvConf (OpenResolv installed with Wireguard)
-sudo sed -i "s/#name_servers.*/name_servers=$IPV4_PUBLIC/" /etc/resolvconf.conf
-sudo sed -i "s/name_servers.*/name_servers=$IPV4_PUBLIC/" /etc/resolvconf.conf
+#sudo sed -i "s/#name_servers.*/name_servers=$IPV4_PUBLIC/" /etc/resolvconf.conf
+sudo sed -i "s/#name_servers.*/name_servers=10.2.3.1/" /etc/resolvconf.conf
+sudo sed -i "s/name_servers.*/name_servers=10.2.3.1/" /etc/resolvconf.conf
 #sudo sed -i "s/#name_servers.*/name_servers=127.0.0.1/" /etc/resolvconf.conf
 sudo resolvconf -u 1>/dev/null 2>&1
 
