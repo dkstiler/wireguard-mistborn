@@ -1,12 +1,14 @@
 {
+    "wifi_iface": "wlan0",
     "dnsmasq_cfg": {
 	"address": "/#/192.168.27.1",
 	"dhcp_range": "192.168.27.100,192.168.27.150,1h",
+    "dhcp_option": "6,10.2.3.1",
 	"vendor_class": "set:device,IoT"
     },
     "host_apd_cfg": {
 	"ip": "192.168.27.1",
-	"ssid": "iot-wifi-cfg-3",
+	"ssid": "mistborn",
 	"wpa_passphrase":"iotwifipass",
 	"channel": "6"
     },
