@@ -3,7 +3,7 @@ version: '3'
 services:
   wifi:
     #user: root
-    image: cyber5k/wifi
+    image: "cyber5k/wifi:${MISTBORN_TAG}"
     container_name: mistborn_production_wifi
     #labels:
     #  - "traefik.enable=true"
