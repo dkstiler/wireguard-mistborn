@@ -2,7 +2,7 @@
 
 # dependencies
 echo "Installing Docker dependencies"
-sudo apt-get install -y \
+sudo -E apt-get install -y \
     apt-transport-https \
     ca-certificates \
     curl \
@@ -42,9 +42,9 @@ echo "Installing docker"
 sudo apt-get update
 
 if [ "$DISTRO" == "ubuntu" ] || [ "$DISTRO" == "debian" ]; then
-    sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+    sudo -E apt-get install -y docker-ce docker-ce-cli containerd.io
 elif [ "$DISTRO" == "raspbian" ]; then
-    sudo apt install -y --no-install-recommends \
+    sudo -E apt install -y --no-install-recommends \
     docker-ce \
     cgroupfs-mount
 fi
@@ -59,7 +59,7 @@ echo "Installing Docker Compose"
 #    sudo chmod +x /usr/local/bin/docker-compose
 #elif [ "$DISTRO" == "raspbian" ]; then
 # Install required packages
-sudo apt install -y python-backports.ssl-match-hostname
+sudo -E apt install -y python-backports.ssl-match-hostname
 
 # Install Docker Compose from pip
 # This might take a while

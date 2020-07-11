@@ -2,6 +2,8 @@
 
 set -e
 
+export DEBIAN_FRONTEND=noninteractive
+
 ## ensure run as nonroot user
 #if [ "$EUID" -eq 0 ]; then
 MISTBORN_USER="mistborn"
@@ -97,7 +99,7 @@ git submodule update --init --recursive
 sudo apt-get update
 
 # install figlet
-sudo apt-get install -y figlet
+sudo -E apt-get install -y figlet
 
 # get os and distro
 source ./scripts/subinstallers/platform.sh
@@ -114,7 +116,7 @@ fi
 
 
 # SSH Server
-sudo apt-get install -y openssh-server
+sudo -E apt-get install -y openssh-server
 sudo sed -i 's/#PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
 sudo sed -i 's/PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
 sudo sed -i 's/#PermitRootLogin.*/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config
@@ -125,13 +127,13 @@ sudo systemctl enable ssh
 sudo systemctl restart ssh
 
 # Additional tools fail2ban
-sudo apt-get install -y dnsutils fail2ban
+sudo -E apt-get install -y dnsutils fail2ban
 
 # Install kernel headers
 if [ "$DISTRO" == "ubuntu" ] || [ "$DISTRO" == "debian" ]; then
-    sudo apt install -y linux-headers-$(uname -r)
+    sudo -E apt install -y linux-headers-$(uname -r)
 elif [ "$DISTRO" == "raspbian" ]; then
-    sudo apt-get install -y raspberrypi-kernel-headers
+    sudo -E apt install -y raspberrypi-kernel-headers
 fi
 
 # Wireugard
@@ -143,7 +145,7 @@ sudo systemctl enable docker
 sudo systemctl start docker
 
 # Unattended upgrades
-sudo apt-get install -y unattended-upgrades
+sudo -E apt-get install -y unattended-upgrades
 
 # Cockpit
 if [[ "$MISTBORN_INSTALL_COCKPIT" =~ ^([yY][eE][sS]|[yY])$ ]]

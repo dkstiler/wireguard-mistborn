@@ -11,7 +11,7 @@ if ! $(sudo apt-cache show wireguard > /dev/null 2>&1) ; then
     # Wireguard
     if [ "$DISTRO" == "raspbian" ]; then
         echo "Adding Wireguard repo keys"
-        sudo apt-get install -y dirmngr
+        sudo -E apt-get install -y dirmngr
         sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 8B48AD6246925553
         sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7638D0442B90D010
         sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 04EE7237B7D453EC
@@ -29,4 +29,4 @@ fi
 
 echo "Installing Wireguard"
 sudo apt-get update
-sudo apt-get install -y openresolv wireguard
+sudo -E apt-get install -y openresolv wireguard

@@ -2,6 +2,8 @@
 
 set -e
 
+export DEBIAN_FRONTEND=noninteractive
+
 sudo git -C /opt/mistborn pull
 sudo git -C /opt/mistborn submodule update --init --recursive
 

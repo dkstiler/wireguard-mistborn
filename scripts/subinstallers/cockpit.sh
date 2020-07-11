@@ -17,11 +17,11 @@ elif [ "$DISTRO" == "raspbian" ]; then
 
 fi
     
-sudo apt-get install -y cockpit
+sudo -E apt-get install -y cockpit
 
 if $(sudo apt-cache show cockpit-docker > /dev/null 2>&1) ; then
     # no longer supported upstream in Ubuntu 20.04
-    sudo apt-get install -y cockpit-docker
+    sudo -E apt-get install -y cockpit-docker
 fi
 
 sudo cp ./scripts/conf/cockpit.conf /etc/cockpit/cockpit.conf
