@@ -102,7 +102,7 @@ if [ ! "$(dpkg-query -l iptables-persistent)" ]; then
     echo iptables-persistent iptables-persistent/autosave_v6 boolean true | sudo debconf-set-selections
     
     # install
-    sudo apt-get install -y iptables-persistent ipset
+    sudo -E apt-get install -y iptables-persistent ipset
 else
     echo "Saving iptables rules"
     sudo bash -c "iptables-save > /etc/iptables/rules.v4"
