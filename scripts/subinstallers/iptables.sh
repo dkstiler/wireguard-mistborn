@@ -46,7 +46,8 @@ sudo iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 # if installing over SSH, add SSH rule
 if [ ! -z "${SSH_CLIENT}" ]; then
     SSH_SRC=$(echo $SSH_CLIENT | awk '{print $1}')
-    sudo iptables -A INPUT -p tcp -s $SSH_SRC --dport 22 -j ACCEPT
+    SSH_PRT=$(echo $SSH_CLIENT | awk '{print $3}')
+    sudo iptables -A INPUT -p tcp -s $SSH_SRC --dport $SSH_PRT -j ACCEPT
 fi
 
 # docker rules

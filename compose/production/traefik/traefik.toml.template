@@ -96,6 +96,12 @@ defaultEntryPoints = ["http", "https"]
   [frontends.pihole]
     backend = "pihole"
     passHostHeader = true
+    [frontends.pihole.auth]
+      [frontends.pihole.auth.forward]
+        address = "https://home.mistborn/auth/"
+        trustForwardHeader = false
+        [frontends.pihole.auth.forward.tls]
+          insecureSkipVerify = true
     [frontends.pihole.headers]
       HostsProxyHeaders = ['X-CSRFToken']
     [frontends.pihole.routes.dr1]
@@ -104,6 +110,12 @@ defaultEntryPoints = ["http", "https"]
   [frontends.homeassistant]
     backend = "homeassistant"
     passHostHeader = true
+    [frontends.homeassistant.auth]
+      [frontends.homeassistant.auth.forward]
+        address = "https://home.mistborn/auth/"
+        trustForwardHeader = false
+        [frontends.homeassistant.auth.forward.tls]
+          insecureSkipVerify = true
     [frontends.homeassistant.headers]
       HostsProxyHeaders = ['X-CSRFToken']
     [frontends.homeassistant.routes.dr1]
@@ -112,6 +124,12 @@ defaultEntryPoints = ["http", "https"]
   [frontends.syncthing]
     backend = "syncthing"
     passHostHeader = true
+    [frontends.syncthing.auth]
+      [frontends.syncthing.auth.forward]
+        address = "https://home.mistborn/auth/"
+        trustForwardHeader = false
+        [frontends.syncthing.auth.forward.tls]
+          insecureSkipVerify = true
     [frontends.syncthing.headers]
       HostsProxyHeaders = ['X-CSRFToken']
     [frontends.syncthing.routes.dr1]
@@ -120,6 +138,12 @@ defaultEntryPoints = ["http", "https"]
   [frontends.rocketchat]
     backend = "rocketchat"
     passHostHeader = true
+    [frontends.rocketchat.auth]
+      [frontends.rocketchat.auth.forward]
+        address = "https://home.mistborn/auth/"
+        trustForwardHeader = false
+        [frontends.rocketchat.auth.forward.tls]
+          insecureSkipVerify = true
     [frontends.rocketchat.headers]
       HostsProxyHeaders = ['X-CSRFToken']
     [frontends.rocketchat.routes.dr1]
@@ -128,6 +152,12 @@ defaultEntryPoints = ["http", "https"]
   [frontends.nextcloud]
     backend = "nextcloud"
     passHostHeader = true
+    [frontends.nextcloud.auth]
+      [frontends.nextcloud.auth.forward]
+        address = "https://home.mistborn/auth/"
+        trustForwardHeader = false
+        [frontends.nextcloud.auth.forward.tls]
+          insecureSkipVerify = true
     [frontends.nextcloud.headers]
       HostsProxyHeaders = ['X-CSRFToken']
     [frontends.nextcloud.routes.dr1]
@@ -136,6 +166,12 @@ defaultEntryPoints = ["http", "https"]
   [frontends.onlyoffice]
     backend = "onlyoffice"
     passHostHeader = true
+    [frontends.onlyoffice.auth]
+      [frontends.onlyoffice.auth.forward]
+        address = "https://home.mistborn/auth/"
+        trustForwardHeader = false
+        [frontends.onlyoffice.auth.forward.tls]
+          insecureSkipVerify = true
     [frontends.onlyoffice.headers]
       HostsProxyHeaders = ['X-CSRFToken']
     [frontends.onlyoffice.routes.dr1]
@@ -144,6 +180,12 @@ defaultEntryPoints = ["http", "https"]
   [frontends.bitwarden]
     backend = "bitwarden"
     passHostHeader = true
+    [frontends.bitwarden.auth]
+      [frontends.bitwarden.auth.forward]
+        address = "https://home.mistborn/auth/"
+        trustForwardHeader = false
+        [frontends.bitwarden.auth.forward.tls]
+          insecureSkipVerify = true
     [frontends.bitwarden.headers]
       HostsProxyHeaders = ['X-CSRFToken']
     [frontends.bitwarden.routes.dr1]
@@ -152,6 +194,12 @@ defaultEntryPoints = ["http", "https"]
   [frontends.jellyfin]
     backend = "jellyfin"
     passHostHeader = true
+    [frontends.jellyfin.auth]
+      [frontends.jellyfin.auth.forward]
+        address = "https://home.mistborn/auth/"
+        trustForwardHeader = false
+        [frontends.jellyfin.auth.forward.tls]
+          insecureSkipVerify = true
     [frontends.jellyfin.headers]
       HostsProxyHeaders = ['X-CSRFToken']
     [frontends.jellyfin.routes.dr1]
@@ -160,6 +208,12 @@ defaultEntryPoints = ["http", "https"]
   [frontends.jitsi]
     backend = "jitsi"
     passHostHeader = true
+    [frontends.jitsi.auth]
+      [frontends.jitsi.auth.forward]
+        address = "https://home.mistborn/auth/"
+        trustForwardHeader = false
+        [frontends.jitsi.auth.forward.tls]
+          insecureSkipVerify = true
     [frontends.jitsi.headers]
       HostsProxyHeaders = ['X-CSRFToken']
     [frontends.jitsi.routes.dr1]
@@ -168,6 +222,12 @@ defaultEntryPoints = ["http", "https"]
   [frontends.raspap]
     backend = "raspap"
     passHostHeader = true
+    [frontends.raspap.auth]
+      [frontends.raspap.auth.forward]
+        address = "https://home.mistborn/auth/"
+        trustForwardHeader = false
+        [frontends.raspap.auth.forward.tls]
+          insecureSkipVerify = true
     [frontends.raspap.headers]
       HostsProxyHeaders = ['X-CSRFToken']
     [frontends.raspap.routes.dr1]
@@ -176,6 +236,12 @@ defaultEntryPoints = ["http", "https"]
   [frontends.cockpit]
     backend = "cockpit"
     passHostHeader = true
+    [frontends.cockpit.auth]
+      [frontends.cockpit.auth.forward]
+        address = "https://home.mistborn/auth/"
+        trustForwardHeader = false
+        [frontends.cockpit.auth.forward.tls]
+          insecureSkipVerify = true
     [frontends.cockpit.headers]
       HostsProxyHeaders = ['X-CSRFToken']
     [frontends.cockpit.routes.dr1]
