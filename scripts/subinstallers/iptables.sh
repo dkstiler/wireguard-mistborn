@@ -46,7 +46,8 @@ sudo iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 # if installing over SSH, add SSH rule
 if [ ! -z "${SSH_CLIENT}" ]; then
     SSH_SRC=$(echo $SSH_CLIENT | awk '{print $1}')
-    sudo iptables -A INPUT -p tcp -s $SSH_SRC --dport 22 -j ACCEPT
+    SSH_PRT=$(echo $SSH_CLIENT | awk '{print $3}')
+    sudo iptables -A INPUT -p tcp -s $SSH_SRC --dport $SSH_PRT -j ACCEPT
 fi
 
 # docker rules
@@ -102,7 +103,7 @@ if [ ! "$(dpkg-query -l iptables-persistent)" ]; then
     echo iptables-persistent iptables-persistent/autosave_v6 boolean true | sudo debconf-set-selections
     
     # install
-    sudo apt-get install -y iptables-persistent ipset
+    sudo -E apt-get install -y iptables-persistent ipset
 else
     echo "Saving iptables rules"
     sudo bash -c "iptables-save > /etc/iptables/rules.v4"

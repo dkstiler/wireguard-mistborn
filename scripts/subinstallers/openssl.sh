@@ -8,7 +8,7 @@ CRT_PATH="$KEY_FOLDER/$CRT_FILE"
 KEY_PATH="$KEY_FOLDER/$KEY_FILE"
 
 # ensure openssl installed
-sudo apt-get install -y openssl
+sudo -E apt-get install -y openssl
 
 # make folder
 mkdir -p $KEY_FOLDER
