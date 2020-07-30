@@ -166,7 +166,7 @@ services:
      - DNSCRYPT_LISTEN_PORT=5054
      # resolvers: https://download.dnscrypt.info/dnscrypt-resolvers/v2/public-resolvers.md
      #- DNSCRYPT_SERVER_NAMES=['scaleway-fr','google','yandex','cloudflare'] 
-     - DNSCRYPT_SERVER_NAMES=['cloudflare','dnswarden-doh1','dnswarden-doh2','dnswarden-doh3','securedns-doh','adguard-dns-doh'] 
+     - DNSCRYPT_SERVER_NAMES=['cloudflare','dnswarden-doh1','dnswarden-doh2','dnswarden-doh3','adguard-dns-doh']
     networks:
       pihole_net:
         ipv4_address: 10.2.0.2

@@ -1,5 +1,5 @@
 # Mistborn
-A secure platform for easily standing up and managing your own cloud services: including firewall, ad-blocking, and Wireguard VPN access
+A secure platform for easily standing up and managing your own cloud services: including firewall, ad-blocking, and multi-factor Wireguard VPN access
 
 # Table of Contents
 [[_TOC_]]
@@ -13,6 +13,7 @@ Ideal for teams who:
 - hate internet ads
 - need to be protected from malicious internet domains
 - need to collaborate securely
+- need multi-factor authentication for Wireguard
 - want to retain sole ownership of their data
 - want to easily grant and revoke access to people and devices via a simple web interface
 - want secure internet access wherever they are
@@ -44,8 +45,8 @@ Within Mistborn is a panel to enable and manage these free extra services (off b
 
 # Quickstart
 Tested Operating Systems (in order of thoroughness):
-- Ubuntu 18.04 LTS
 - Ubuntu 20.04 LTS
+- Ubuntu 18.04 LTS
 - Debian 10 (Buster)
 - Raspbian Buster
 
@@ -141,6 +142,19 @@ Running `install.sh` will do the following:
 - copy Mistborn systemd service files to `/etc/systemd/system`
 - start and enable Mistborn-base
 
+# Non-Interactive Installation
+In order to install without interaction some environment variables need to be pre-set. 
+
+## Environment Variables
+See the environment variables needed in `./scripts/noninteractive/.install_barebones`
+
+## Example Noninteractive Install
+This will perform a noninteractive install with the default environment variables set in `.install_barebones`.
+```
+git clone https://gitlab.com/cyber5k/mistborn.git
+sudo bash -c "source ./mistborn/scripts/noninteractive/.install_barebones && ./mistborn/scripts/install.sh"
+```
+
 # Post-Installation
 When Mistborn-base starts up it will create volumes, initialize the PostgreSQL database, start pihole, run Django migrations and then check to see if a Mistborn superuser named `admin` exists yet. If not, it will create the superuser `admin` along with an accompanying default Wireguard configuration file and start the Wireguard service. You can watch all of this happen with:
 ```
@@ -200,6 +214,30 @@ Mistborn makes extra services available.
 ## Mistborn Firewall Metrics
 Mistborn functions as a network firewall and provides metrics on blocked probes from the internet.
 ![Mistborn Metrics](https://gitlab.com/cyber5k/public/-/raw/master/graphics/home.mistborn_metrics.png)*Mistborn Firewall Metrics*
+
+# Authentication
+There are multiple ways to authenticate and use the system. 
+
+![Mistborn Multi Factor Authentication - Authenticator App Setup](https://gitlab.com/cyber5k/public/-/raw/master/graphics/mfa_qr.png)*Mistborn Multi Factor Authentication - Authenticator App Setup*
+
+## Profile: Wireguard Authentication
+Mistborn always authenticates with Wireguard. You must have a valid Wireguard configuration file associated with the correct internal IP address. A classic Mistborn profile (Wireguard Only) will allow you to access the internet and all services hosted by Mistborn once you have connected via Wireguard. Note: individual services may require passwords or additional authentication.
+
+## Profile: Multi Factor Authentication (MFA)
+In addition to Wireguard, you may create a Mistborn profile enabling multi-factor authentication (MFA). You must first connect to Mistborn via Wireguard. Then all internet traffic will route you to the Mistborn webserver where you must first setup and thereafter authenticate with an app (Google Authenticator, Authy, etc.). You must go to [http://home.mistborn](http://home.mistborn) to complete the authentication process.
+
+![Mistborn Multi Factor Authentication](https://gitlab.com/cyber5k/public/-/raw/master/graphics/mfa1.png)*Mistborn Multi Factor Authentication Prompt*
+
+### MFA Internet Access
+Internet access is blocked via iptables until authentication is completed for an MFA profile. You must go to [http://home.mistborn](http://home.mistborn) to complete the authentication process. Click "Sign Out" to re-block internet access until authentication completes again.
+
+![Mistborn Multi Factor Authentication - Token Prompt](https://gitlab.com/cyber5k/public/-/raw/master/graphics/mfa_token_enter.png)*Mistborn Multi Factor Authentication - Token Prompt*
+
+### MFA Mistborn Service Access
+Mistborn service access is blocked via traefik until Mistborn authentication is complete. You will not be able to access the web pages for pihole, cockpit, or any extra services until authentication is complete for an MFA profile. Attempting to visit one of these pages will redirect you to [http://home.mistborn](http://home.mistborn) where you must complete the authentication process. Click "Sign Out" to re-block access until authentication completes again.
+
+### Notes
+- **Sessions**: Traefik checks the authenticated sessions on the server side to determine whether to allow access to the Mistborn service web pages. If an open session exists for your Mistborn IP address then access will be granted. You may close all sessions by clicking "Sign Out" on the Mistborn home page. Expired sessions are regularly cleaned by the Mistborn system (celery periodic task).
 
 # Mistborn Subdomains
 Mistborn uses the following domains (that can be reached by all Wireguard clients):
@@ -376,6 +414,14 @@ DNS = 10.2.3.1
 ```
 Close the config and restart the client Wireguard process.
 
+## Troubleshooting Raspberry Pi OS (Raspbian)
+Be sure to always reboot after updating the kernel. When the kernel is updated the kernel modules are deleted (for the currently running kernel) and you will have issues with any function requiring kernel modules (e.g. `iptables` or `wireguard`).
+
+**Note**: The Raspberry Pi OS 64-bit BETA (versions from May 2020 and prior) have a bug where the os-release info indicates that it is Debian. Mistborn proceeds to install as though it were Debian. Since it's not Debian there are errors.
+
+## Troubleshooting Debian 10
+Run updates and restart before installing Mistborn (`sudo apt-get update && sudo apt-get -y dist-upgrade && sudo shutdown -r now`). Some older Linux kernels will prevent newer Wireguard versions from installing.
+
 # Technical and Security Insights
 These are some notes regarding the technical design and implementations of Mistborn. Feel free to contact me for additional details.
 
@@ -397,6 +443,7 @@ These are some notes regarding the technical design and implementations of Mistb
 - The "Update" button will pull updated Docker images for mistborn, postgresql, redis, pihole, and dnscrypt. Those services will then be restarted.
 - The generated TLS certificate has an RSA modulus of 4096 bits, is signed with SHA-256, and is good for 10 years. The nanny at Apple has decided to restrict the kinds of certificates iOS users may choose to manually trust and so you may have issues with TLS on an Apple device for now.
 - Outbound UDP on port 53 is blocked. All DNS requests should be handled by the dnscrypt_proxy service and if any client, service, etc. tries to circumvent that it is blocked.
+- Unattended upgrades are set to automatically install operating system security updates.
 
 # Roadmap
 Many features and refinements are in the works at various stages including:
@@ -414,7 +461,7 @@ Many features and refinements are in the works at various stages including:
 
 Contact me at [steven@cyber5k.com](mailto:steven@cyber5k.com)
 
-# Support
+# Support Mistborn
 
 Please consider supporting the project via:
 - [Paypal.me](https://paypal.me/cyber5k)

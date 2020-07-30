@@ -13,8 +13,8 @@ EnvironmentFile=/opt/mistborn/.envs/.production/.jitsi
 # Shutdown container (if running) when unit is stopped
 ExecStartPre=/usr/local/bin/docker-compose -f /opt/mistborn/extra/jitsi-meet.yml down
 
-ExecStartPre=/sbin/iptables -I DOCKER-USER -i DIFACE -p udp --dport $JVB_PORT -j MISTBORN_LOG_DROP
-ExecStartPre=/sbin/iptables -I DOCKER-USER -i DIFACE -p tcp --dport $JVB_TCP_PORT -j MISTBORN_LOG_DROP
+ExecStartPre=/sbin/iptables -w -I DOCKER-USER -i DIFACE -p udp --dport $JVB_PORT -j MISTBORN_LOG_DROP
+ExecStartPre=/sbin/iptables -w -I DOCKER-USER -i DIFACE -p tcp --dport $JVB_TCP_PORT -j MISTBORN_LOG_DROP
 # Start container when unit is started
 ExecStart=/usr/local/bin/docker-compose -f /opt/mistborn/extra/jitsi-meet.yml up --build
 # Stop container when unit is stopped
