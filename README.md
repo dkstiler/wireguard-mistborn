@@ -50,6 +50,9 @@ Tested Operating Systems (in order of thoroughness):
 - Debian 10 (Buster)
 - Raspbian Buster
 
+Tested Browsers:
+- Firefox
+
 The default tests are run on DigitalOcean Droplets: 2GB RAM, 1 CPU, 50GB hard disk.
 
 The Mistborn docker images exist for these architectures:
@@ -265,6 +268,8 @@ These are the default credentials to use in the services you choose to use:
 | Cockpit | cockpit | {{default mistborn password}} |
 | Nextcloud | mistborn | {{default mistborn password}} |
 
+You can find the credentials sent to the Docker containers in: `/opt/mistborn/.envs/.production/`
+
 # Gateway Setup
 Mistborn will generate the Wireguard configuration script for the Gateway. From a base Ubuntu/Debian/Raspbian operating system the following packages are recommended to be installed beforehand:
 
@@ -456,6 +461,9 @@ Many features and refinements are in the works at various stages including:
 - Optional periodic backup of local Mistborn config files and credentials to Cyber5K
 - Internal network scan tool and feedback
 - Anomaly detection in network traffic
+
+# Follow
+You can find recent bugfixes, functional additions, some extra documentation and more at the Cyber5K Patreon page: [https://www.patreon.com/cyber5k](https://www.patreon.com/cyber5k)
 
 # Contact
 

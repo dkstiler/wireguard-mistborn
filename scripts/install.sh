@@ -209,8 +209,8 @@ cp ./compose/production/traefik/traefik.toml.template ./compose/production/traef
 
 # setup tls certs 
 source ./scripts/subinstallers/openssl.sh
-sudo rm -rf ../mistborn_volumes/base/tls
-sudo mv ./tls ../mistborn_volumes/base/
+#sudo rm -rf ../mistborn_volumes/base/tls
+#sudo mv ./tls ../mistborn_volumes/base/
 
 # enable and run setup to generate .env
 sudo systemctl enable Mistborn-setup.service
