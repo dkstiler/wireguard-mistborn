@@ -69,9 +69,9 @@ fi
 
 # Install Cockpit?
 if [ -z "${MISTBORN_INSTALL_COCKPIT}" ]; then
-    read -p "Install Cockpit (a somewhat resource-heavy system management graphical user interface)? [Y/n]: " MISTBORN_INSTALL_COCKPIT
+    read -p "Install Cockpit (a somewhat resource-heavy system management graphical user interface -- NOT RECOMMENDED on Raspberry Pi)? [y/N]: " MISTBORN_INSTALL_COCKPIT
     echo
-    MISTBORN_INSTALL_COCKPIT=${MISTBORN_INSTALL_COCKPIT:-Y}
+    MISTBORN_INSTALL_COCKPIT=${MISTBORN_INSTALL_COCKPIT:-N}
 fi
 
 # SSH keys
@@ -132,7 +132,7 @@ sudo -E apt-get install -y dnsutils fail2ban
 # Install kernel headers
 if [ "$DISTRO" == "ubuntu" ] || [ "$DISTRO" == "debian" ]; then
     sudo -E apt install -y linux-headers-$(uname -r)
-elif [ "$DISTRO" == "raspbian" ]; then
+elif [ "$DISTRO" == "raspbian" ] || [ "$DISTRO" == "raspios" ]; then
     sudo -E apt install -y raspberrypi-kernel-headers
 fi
 

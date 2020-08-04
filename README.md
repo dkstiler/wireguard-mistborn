@@ -48,7 +48,9 @@ Tested Operating Systems (in order of thoroughness):
 - Ubuntu 20.04 LTS
 - Ubuntu 18.04 LTS
 - Debian 10 (Buster)
-- Raspbian Buster
+- Raspberry Pi OS (formerly Raspbian) Buster
+
+**Note:** Install operating system updates and restart. Raspberry Pi OS particularly needs to be restarted after kernel updates (kernel modules for the currently running kernel may be missing).
 
 Tested Browsers:
 - Firefox
@@ -59,8 +61,8 @@ The Mistborn docker images exist for these architectures:
 
 | Mistborn Docker Images (hub.docker.com)        | Architectures       |
 |------------------------------------------------|---------------------|
-| mistborn (django, celery{worker,beat}, flower) | amd64, arm64, armv7 |
-| dnscrypt-proxy                                 | amd64, arm64, armv7 |
+| mistborn (django, celery{worker,beat}, flower) | amd64, arm64, arm/v7 |
+| dnscrypt-proxy                                 | amd64, arm64, arm/v7 |
 
 Recommended System Specifications:
 
@@ -132,8 +134,8 @@ Running `install.sh` will do the following:
 - install Docker
 - install OpenSSH
 - install Wireguard
-- install Cockpit
-- create a `cockpit` system user
+- install Cockpit (optional)
+- create a `cockpit` system user (if Cockpit is installed)
 - configure unattended-upgrades
 - generate a self-signed TLS certificate/key (WebRTC functionality requires TLS)
 - create and populate traefik.toml
@@ -317,7 +319,7 @@ But wait, there's more! You can:
 | Rocket.Chat    | [Rocket.Chat](https://play.google.com/store/apps/details?id=chat.rocket.android)                   | [Rocket.Chat](https://apps.apple.com/us/app/rocket-chat/id1148741252)              |
 
 ## TLS Certificate
-Some apps require TLS (HTTPS). All traffic to Mistborn domains already occurs over Wireguard but to keep apps running, a TLS certificate exists for Mistborn and can be imported into your device's trusted credentials in the security settings.
+Some apps require TLS (HTTPS). All traffic to Mistborn domains already occurs over Wireguard but to keep apps running, a TLS certificate exists for Mistborn and can be imported into your device's trusted credentials in the security settings. This certificate is checked every day and will be re-generated when expiration is less than 30 days away.
 
 The TLS certificate can be found here:
 ```
@@ -446,7 +448,7 @@ These are some notes regarding the technical design and implementations of Mistb
 ## Additonal Notes
 - Interface names are not hardcoded anywhere in Mistborn. Two commands that are used in different circumstances to determine the default network interface and the interface that would route a public IP address are: `ip -o -4 route show to default` and `ip -o -4 route get 1.1.1.1`.
 - The "Update" button will pull updated Docker images for mistborn, postgresql, redis, pihole, and dnscrypt. Those services will then be restarted.
-- The generated TLS certificate has an RSA modulus of 4096 bits, is signed with SHA-256, and is good for 10 years. The nanny at Apple has decided to restrict the kinds of certificates iOS users may choose to manually trust and so you may have issues with TLS on an Apple device for now.
+- The generated TLS certificate has an RSA modulus of 4096 bits, is signed with SHA-256, and is good for 397 days. The certificate is checked daily and will regenerate when expiration is within 30 days.
 - Outbound UDP on port 53 is blocked. All DNS requests should be handled by the dnscrypt_proxy service and if any client, service, etc. tries to circumvent that it is blocked.
 - Unattended upgrades are set to automatically install operating system security updates.
 
