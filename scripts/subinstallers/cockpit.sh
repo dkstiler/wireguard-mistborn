@@ -10,11 +10,8 @@ elif [ "$DISTRO" == "debian" ]; then
     && echo "buster-backports already in sources" \
     || echo 'deb http://deb.debian.org/debian buster-backports main' | sudo tee -a /etc/apt/sources.list.d/backports.list
     
-
-elif [ "$DISTRO" == "raspbian" ]; then
-    
+elif [ "$DISTRO" == "raspbian" ] || [ "$DISTRO" == "raspios" ]; then
     echo "Raspbian repos contain cockpit"
-
 fi
     
 sudo -E apt-get install -y cockpit
