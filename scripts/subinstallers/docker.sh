@@ -16,5 +16,5 @@ fi
 
 # set docker-compose path used in Mistborn
 if [ ! -f /usr/local/bin/docker-compose ]; then
-    sudo ln -s $(which docker-compose) /usr/local/bin/docker-compose
+    sudo -E ln -s $(which docker-compose) /usr/local/bin/docker-compose
 fi

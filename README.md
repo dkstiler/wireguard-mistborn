@@ -76,7 +76,7 @@ Recommended System Specifications:
 Starting from base installation
 ```
 git clone https://gitlab.com/cyber5k/mistborn.git
-sudo bash ./mistborn/scripts/install.sh
+sudo -E bash ./mistborn/scripts/install.sh
 ```
 
 Get default admin Wireguard profile
@@ -123,7 +123,7 @@ Mistborn is regularly tested on Ubuntu 18.04 LTS (DigitalOcean droplet with 2 GB
 Clone the git repository and run the install script:
 ```
 git clone https://gitlab.com/cyber5k/mistborn.git
-sudo bash ./mistborn/scripts/install.sh
+sudo -E bash ./mistborn/scripts/install.sh
 ```
 
 Running `install.sh` will do the following:
@@ -157,7 +157,7 @@ See the environment variables needed in `./scripts/noninteractive/.install_bareb
 This will perform a noninteractive install with the default environment variables set in `.install_barebones`.
 ```
 git clone https://gitlab.com/cyber5k/mistborn.git
-sudo bash -c "source ./mistborn/scripts/noninteractive/.install_barebones && ./mistborn/scripts/install.sh"
+sudo -E bash -c "source ./mistborn/scripts/noninteractive/.install_barebones && ./mistborn/scripts/install.sh"
 ```
 
 # Post-Installation
