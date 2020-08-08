@@ -11,7 +11,14 @@ services:
       - ../.envs/.production/.onlyoffice
     labels:
       - "traefik.enable=true"
-      - "traefik.port=80"
+      - "traefik.http.routers.onlyoffice-http.rule=Host(`onlyoffice.mistborn`)"
+      - "traefik.http.routers.onlyoffice-http.entrypoints=web"
+      - "traefik.http.routers.onlyoffice-http.middlewares=mistborn_auth@file"
+      - "traefik.http.routers.onlyoffice-https.rule=Host(`onlyoffice.mistborn`)"
+      - "traefik.http.routers.onlyoffice-https.entrypoints=websecure"
+      - "traefik.http.routers.onlyoffice-https.middlewares=mistborn_auth@file"
+      - "traefik.http.routers.onlyoffice-https.tls.certresolver=basic"
+      - "traefik.http.services.onlyoffice-service.loadbalancer.server.port=80"
     restart: unless-stopped 
 
 networks:

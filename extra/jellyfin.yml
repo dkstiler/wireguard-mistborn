@@ -14,7 +14,14 @@ services:
       - ../../mistborn_volumes/extra/nextcloud:/media:ro
     labels:
       - "traefik.enable=true"
-      - "traefik.port=8096"
+      - "traefik.http.routers.jellyfin-http.rule=Host(`jellyfin.mistborn`)"
+      - "traefik.http.routers.jellyfin-http.entrypoints=web"
+      - "traefik.http.routers.jellyfin-http.middlewares=mistborn_auth@file"
+      - "traefik.http.routers.jellyfin-https.rule=Host(`jellyfin.mistborn`)"
+      - "traefik.http.routers.jellyfin-https.entrypoints=websecure"
+      - "traefik.http.routers.jellyfin-https.middlewares=mistborn_auth@file"
+      - "traefik.http.routers.jellyfin-https.tls.certresolver=basic"
+      - "traefik.http.services.jellyfin-service.loadbalancer.server.port=8096"
     restart: unless-stopped
 
 networks:

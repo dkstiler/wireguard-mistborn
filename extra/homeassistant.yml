@@ -10,7 +10,14 @@ services:
       - TZ=America/New_York
     labels:
       - "traefik.enable=true"
-      - "traefik.port=8123"
+      - "traefik.http.routers.homeassistant-http.rule=Host(`homeassistant.mistborn`)"
+      - "traefik.http.routers.homeassistant-http.entrypoints=web"
+      - "traefik.http.routers.homeassistant-http.middlewares=mistborn_auth@file"
+      - "traefik.http.routers.homeassistant-https.rule=Host(`homeassistant.mistborn`)"
+      - "traefik.http.routers.homeassistant-https.entrypoints=websecure"
+      - "traefik.http.routers.homeassistant-https.middlewares=mistborn_auth@file"
+      - "traefik.http.routers.homeassistant-https.tls.certresolver=basic"
+      - "traefik.http.services.homeassistant-service.loadbalancer.server.port=8123"
     restart: unless-stopped 
 
 networks:
