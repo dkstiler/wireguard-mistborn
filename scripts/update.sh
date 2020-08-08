@@ -17,7 +17,7 @@ sudo find /etc/systemd/system/ -type f -name 'Mistborn*' | xargs sudo sed -i "s/
 sudo find /etc/systemd/system/ -type f -name 'Mistborn*' | xargs sudo sed -i "s/DIFACE/$iface/"
 
 # handle updates to traefik
-sudo cp /opt/mistborn/compose/production/traefik/traefik.toml.template /opt/mistborn/compose/production/traefik/traefik.toml
+#sudo cp /opt/mistborn/compose/production/traefik/traefik.toml.template /opt/mistborn/compose/production/traefik/traefik.toml
 
 sudo systemctl daemon-reload
 sudo systemctl enable Mistborn-setup.service

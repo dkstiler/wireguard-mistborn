@@ -205,7 +205,7 @@ sudo mkdir -p ../mistborn_volumes/base/pihole/etc-dnsmasqd
 sudo mkdir -p ../mistborn_volumes/extra
 
 # Traefik final setup (cockpit)
-cp ./compose/production/traefik/traefik.toml.template ./compose/production/traefik/traefik.toml
+#cp ./compose/production/traefik/traefikv2.toml.template ./compose/production/traefik/traefik.toml
 
 # setup tls certs 
 source ./scripts/subinstallers/openssl.sh
