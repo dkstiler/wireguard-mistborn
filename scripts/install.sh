@@ -134,6 +134,9 @@ if [ "$DISTRO" == "ubuntu" ] || [ "$DISTRO" == "debian" ]; then
     sudo -E apt install -y linux-headers-$(uname -r)
 elif [ "$DISTRO" == "raspbian" ] || [ "$DISTRO" == "raspios" ]; then
     sudo -E apt install -y raspberrypi-kernel-headers
+else
+    echo "Unsupported OS: $DISTRO"
+    exit 1
 fi
 
 # Wireugard
