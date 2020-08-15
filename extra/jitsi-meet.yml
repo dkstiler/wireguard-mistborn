@@ -9,7 +9,14 @@ services:
             #- '${HTTPS_PORT}:443'
         labels:
             - "traefik.enable=true"
-            - "traefik.port=${HTTP_PORT}"
+            - "traefik.http.routers.jitsi-http.rule=Host(`jitsi.mistborn`)"
+            - "traefik.http.routers.jitsi-http.entrypoints=web"
+            - "traefik.http.routers.jitsi-http.middlewares=mistborn_auth@file"
+            - "traefik.http.routers.jitsi-https.rule=Host(`jitsi.mistborn`)"
+            - "traefik.http.routers.jitsi-https.entrypoints=websecure"
+            - "traefik.http.routers.jitsi-https.middlewares=mistborn_auth@file"
+            - "traefik.http.routers.jitsi-https.tls.certresolver=basic"
+            - "traefik.http.services.jitsi-service.loadbalancer.server.port=${HTTP_PORT}"
         volumes:
             - ${CONFIG}/web:/config
             - ${CONFIG}/web/letsencrypt:/etc/letsencrypt

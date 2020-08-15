@@ -19,6 +19,5 @@ docker_build:
   script:
     - apk add docker-compose
     - scripts/subinstallers/gen_prod_env.sh "$MISTBORN_DEFAULT_PASSWORD"
-    - cp compose/production/traefik/traefik.toml.template compose/production/traefik/traefik.toml
     - docker-compose -f base.yml build
 

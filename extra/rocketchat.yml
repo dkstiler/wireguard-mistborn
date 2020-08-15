@@ -17,7 +17,14 @@ services:
       - Accounts_UseDNSDomainCheck=False
     labels:
       - "traefik.enable=true"
-      - "traefik.port=3000"
+      - "traefik.http.routers.chat-http.rule=Host(`chat.mistborn`)"
+      - "traefik.http.routers.chat-http.entrypoints=web"
+      - "traefik.http.routers.chat-http.middlewares=mistborn_auth@file"
+      - "traefik.http.routers.chat-https.rule=Host(`chat.mistborn`)"
+      - "traefik.http.routers.chat-https.entrypoints=websecure"
+      - "traefik.http.routers.chat-https.middlewares=mistborn_auth@file"
+      - "traefik.http.routers.chat-https.tls.certresolver=basic"
+      - "traefik.http.services.chat-service.loadbalancer.server.port=3000"
     depends_on:
       - mongo
     #ports:

@@ -69,9 +69,9 @@ fi
 
 # Install Cockpit?
 if [ -z "${MISTBORN_INSTALL_COCKPIT}" ]; then
-    read -p "Install Cockpit (a somewhat resource-heavy system management graphical user interface)? [Y/n]: " MISTBORN_INSTALL_COCKPIT
+    read -p "Install Cockpit (a somewhat resource-heavy system management graphical user interface -- NOT RECOMMENDED on Raspberry Pi)? [y/N]: " MISTBORN_INSTALL_COCKPIT
     echo
-    MISTBORN_INSTALL_COCKPIT=${MISTBORN_INSTALL_COCKPIT:-Y}
+    MISTBORN_INSTALL_COCKPIT=${MISTBORN_INSTALL_COCKPIT:-N}
 fi
 
 # SSH keys
@@ -132,8 +132,11 @@ sudo -E apt-get install -y dnsutils fail2ban
 # Install kernel headers
 if [ "$DISTRO" == "ubuntu" ] || [ "$DISTRO" == "debian" ]; then
     sudo -E apt install -y linux-headers-$(uname -r)
-elif [ "$DISTRO" == "raspbian" ]; then
+elif [ "$DISTRO" == "raspbian" ] || [ "$DISTRO" == "raspios" ]; then
     sudo -E apt install -y raspberrypi-kernel-headers
+else
+    echo "Unsupported OS: $DISTRO"
+    exit 1
 fi
 
 # Wireugard
@@ -205,7 +208,7 @@ sudo mkdir -p ../mistborn_volumes/base/pihole/etc-dnsmasqd
 sudo mkdir -p ../mistborn_volumes/extra
 
 # Traefik final setup (cockpit)
-cp ./compose/production/traefik/traefik.toml.template ./compose/production/traefik/traefik.toml
+#cp ./compose/production/traefik/traefikv2.toml.template ./compose/production/traefik/traefik.toml
 
 # setup tls certs 
 source ./scripts/subinstallers/openssl.sh

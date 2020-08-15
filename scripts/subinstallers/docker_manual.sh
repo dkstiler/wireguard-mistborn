@@ -15,7 +15,7 @@ if [ "$DISTRO" == "ubuntu" ]; then
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 elif [ "$DISTRO" == "debian" ]; then
     curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
-elif [ "$DISTRO" == "raspbian" ]; then
+elif [ "$DISTRO" == "raspbian" ] || [ "$DISTRO" == "raspios" ]; then
     curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | sudo apt-key add -
 fi
 
@@ -31,7 +31,7 @@ elif [ "$DISTRO" == "debian" ]; then
    "deb https://download.docker.com/linux/debian \
    $(lsb_release -cs) \
    stable"
-elif [ "$DISTRO" == "raspbian" ]; then
+elif [ "$DISTRO" == "raspbian" ] || [ "$DISTRO" == "raspios" ]; then
     echo "deb [arch=armhf] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
      $(lsb_release -cs) stable" | \
     sudo tee /etc/apt/sources.list.d/docker.list
@@ -43,7 +43,7 @@ sudo apt-get update
 
 if [ "$DISTRO" == "ubuntu" ] || [ "$DISTRO" == "debian" ]; then
     sudo -E apt-get install -y docker-ce docker-ce-cli containerd.io
-elif [ "$DISTRO" == "raspbian" ]; then
+elif [ "$DISTRO" == "raspbian" ] || [ "$DISTRO" == "raspios" ]; then
     sudo -E apt install -y --no-install-recommends \
     docker-ce \
     cgroupfs-mount
@@ -59,7 +59,7 @@ echo "Installing Docker Compose"
 #    sudo chmod +x /usr/local/bin/docker-compose
 #elif [ "$DISTRO" == "raspbian" ]; then
 # Install required packages
-sudo -E apt install -y python-backports.ssl-match-hostname
+#sudo -E apt install -y python-backports.ssl-match-hostname
 
 # Install Docker Compose from pip
 # This might take a while
