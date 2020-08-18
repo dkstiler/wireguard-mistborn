@@ -12,6 +12,8 @@ services:
     depends_on:
       - postgres
       - redis
+    ports:
+      - "10.2.3.1:5000:5000/tcp" # auth access
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.django-http.rule=Host(`home.mistborn`)"
