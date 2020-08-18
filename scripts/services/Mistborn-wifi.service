@@ -10,14 +10,19 @@ Group=docker
 PermissionsStartOnly=true
 # Shutdown container (if running) when unit is stopped
 EnvironmentFile=/opt/mistborn/.env
-ExecStartPre=/usr/local/bin/docker-compose -f /opt/mistborn/extra/wifi.yml down
 
+ExecStartPre=/usr/local/bin/docker-compose -f /opt/mistborn/extra/wifi.yml down
+ExecStartPre=/opt/mistborn/scripts/services/wifi/init.sh
 ExecStartPre=/usr/local/bin/docker-compose -f /opt/mistborn/extra/wifi.yml build
 # Start container when unit is started
 ExecStart=/usr/local/bin/docker-compose -f /opt/mistborn/extra/wifi.yml up
+
+ExecStartPost=/opt/mistborn/scripts/services/wifi/start.sh
+
 # Stop container when unit is stopped
 ExecStop=/usr/local/bin/docker-compose -f /opt/mistborn/extra/wifi.yml down
 # Post stop
+ExecStopPost=/opt/mistborn/scripts/services/wifi/stop.sh
 
 [Install]
 WantedBy=multi-user.target
