@@ -118,7 +118,7 @@ In Mistborn, Gateways are upstream from the VPN server so connections to third-p
 The Gateway adds an extra network hop. DNS is still resolved in Mistborn so pihole is still blocking ads.
 
 # Installation
-Mistborn is regularly tested on Ubuntu 18.04 LTS (DigitalOcean droplet with 2 GB RAM). It has also been successfully used on Debian Buster and Raspbian Buster systems (though not regularly tested). Additionally tested on Ubuntu 20.04 LTS.
+Mistborn is regularly tested on Ubuntu 20.04 LTS (DigitalOcean droplet with 2 GB RAM). It has also been successfully used on Debian Buster and Raspbian Buster systems (though not regularly tested). Make sure to install OS updates and restart before installing Mistborn (Wireguard installs differently on recent kernels).
 
 Clone the git repository and run the install script:
 ```

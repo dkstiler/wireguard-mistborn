@@ -22,7 +22,7 @@
 
 [http.middlewares]
   [http.middlewares.mistborn_auth.forwardAuth]
-    address = "https://home.mistborn/auth/"
+    address = "http://10.2.3.1:5000/auth/"
     trustForwardHeader = true
     [http.middlewares.mistborn_auth.forwardAuth.tls]
       insecureSkipVerify = true
