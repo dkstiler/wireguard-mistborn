@@ -4,6 +4,7 @@ Before=Mistborn-base.service
 
 [Service]
 Type=oneshot
+User=mistborn
 ExecStart=/opt/mistborn/scripts/env/setup.sh
 
 [Install]
