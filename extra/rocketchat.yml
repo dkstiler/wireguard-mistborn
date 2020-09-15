@@ -35,8 +35,8 @@ services:
     container_name: mistborn_production_rocketchat_mongo
     restart: unless-stopped
     volumes:
-     - ../volumes/extra/rocketchat/data/db:/data/db
-     - ../volumes/extra/rocketchat/data/dump:/dump
+     - ../../mistborn_volumes/extra/rocketchat/data/db:/data/db
+     - ../../mistborn_volumes/extra/rocketchat/data/dump:/dump
     command: mongod --smallfiles --oplogSize 128 --replSet rs0 --storageEngine=mmapv1
 
   # this container's job is just run the command to initialize the replica set.
@@ -61,7 +61,7 @@ services:
     depends_on:
       - rocketchat
     volumes:
-      - ../volumes/extra/rocketchat/hubot/scripts:/home/hubot/scripts
+      - ../../mistborn_volumes/extra/rocketchat/hubot/scripts:/home/hubot/scripts
   # this is used to expose the hubot port for notifications on the host on port 3001, e.g. for hubot-jenkins-notifier
     ports:
       - 3001:8080/tcp
