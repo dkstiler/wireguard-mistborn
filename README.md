@@ -68,10 +68,10 @@ Recommended System Specifications:
 
 | Use Case               | Description                                                                   | RAM   | Hard Disk |
 |------------------------|-------------------------------------------------------------------------------|-------|-----------|
-| Bare bones             | Wireguard, Pihole (no Cockpit, no extra services)                             | 1 GB  | 15 GB     |
-| Default                | Bare bones + Cockpit                                                          | 2 GB  | 15 GB     |
-| Low-resource services  | Default + Bitwarden, Tor, Syncthing                                           | 3 GB  | 20 GB     |
-| High-resource services | Default + Jitsi, Nextcloud, Jellyfin, Rocket.Chat, Home Assistant, OnlyOffice | 4 GB+ | 25 GB+    |
+| Bare bones             | Wireguard, Pihole (no Cockpit, no extra services)                             | 2 GB  | 15 GB     |
+| Default                | Bare bones + Cockpit                                                          | 2 GB+ | 15 GB     |
+| Low-resource services  | Default + Bitwarden, Tor, Syncthing                                           | 4 GB  | 20 GB     |
+| High-resource services | Default + Jitsi, Nextcloud, Jellyfin, Rocket.Chat, Home Assistant, OnlyOffice | 6 GB+ | 25 GB+    |
 
 Starting from base installation
 ```
@@ -111,7 +111,7 @@ We were getting frustrated at being forced to choose between being connected to 
 
 *Netflix blocking my connections that it sees coming from a DigitalOcean droplet*
 
-In Mistborn, Gateways are upstream from the VPN server so connections to third-party services (e.g. Netflix, Hulu, etc.) will appear to be coming from the public IP address of the Gateway. I setup a Gateway at home (Mistborn on DigitalOcean) then all Wireguard profiles created with this Gateway will appear to be coming from my house and are not blocked. No port-forwarding required (assuming Mistborn is publicly accessible).
+In Mistborn, Gateways are upstream from the VPN server so connections to third-party services (e.g. Netflix, Hulu, etc.) will appear to be coming from the public IP address of the Gateway. I setup a Gateway at home (Raspberry Pi with `wireguard` and `openresolv` installed) and with our Mistborn on DigitalOcean, all Wireguard profiles created with this Gateway will appear to be coming from my house and are not blocked. No port-forwarding required (assuming Mistborn is publicly accessible).
 
 ![Mistborn Gateway Diagram](https://gitlab.com/cyber5k/public/-/raw/master/graphics/gateway_network.png)
 
@@ -354,6 +354,22 @@ You can SSH using the Mistborn domain when connected by Wireguard:
 ```
 ssh user@home.mistborn
 ```
+
+## How do I change the upstream DNSCrypt servers?
+The upstream servers used by dnscrypt-proxy are set in:  
+
+`base.yml`:
+```
+services:
+...
+  dnscrypt-proxy:
+  ...
+    environment:
+    ...
+      - DNSCRYPT_SERVER_NAMES=[...]
+```
+
+The available options are here: https://download.dnscrypt.info/dnscrypt-resolvers/v2/public-resolvers.md
 
 # Troubleshooting
 
