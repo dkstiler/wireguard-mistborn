@@ -375,6 +375,21 @@ The available options are here: https://download.dnscrypt.info/dnscrypt-resolver
 
 Once you're connected to Wireguard you should see .mistborn domains and the internet should work as expected. Be sure to use http (http://home.mistborn). Wireguard is the encrypted channel so there's usually no need to bother with TLS certs (WebRTC functionality and some mobile apps require TLS so it is available). Here are some things to check if you have issues:
 
+Check if you can ping an external IP address:
+```
+ping 1.1.1.1
+```
+
+Check if you can resolve local DNS queries:
+```
+dig home.mistborn
+```
+
+Check if you can resolve external DNS queries:
+```
+dig cyber5k.com
+```
+
 See if any docker containers are stopped:
 ```
 sudo docker container ls -a
@@ -400,6 +415,9 @@ The `dev/` folder contains a script for completing a hard reset: destroying and 
 ```
 sudo ./dev/rebuild.sh
 ```
+
+## Troubleshooting Wireguard
+Ensure that your public IP address in your client profile (e.g. `Endpoint = <Mistborn public IP address>:<random port>`) is actually publicly available (not in 10.0.0.0/8, 172.16.0.0/12, or 192.168.0.0/16) if you are attempting to access Mistborn across the internet.
 
 ## Troubleshooting Extra Services
 Each extra service has its own systemd process which can be monitored:
