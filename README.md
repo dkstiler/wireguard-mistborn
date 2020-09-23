@@ -509,4 +509,5 @@ Contact me at [steven@cyber5k.com](mailto:steven@cyber5k.com)
 
 Please consider supporting the project via:
 - [Paypal.me](https://paypal.me/cyber5k)
+- [Buy me a drink](https://www.buymeacoffee.com/cyber5k)
 - [Patreon](https://www.patreon.com/cyber5k)
