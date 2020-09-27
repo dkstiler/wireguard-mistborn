@@ -4,7 +4,7 @@ services:
 
   db:
     build:
-      context: compose/production/mattermost/db
+      context: ../compose/production/mattermost/db
     read_only: true
     restart: unless-stopped
     volumes:
@@ -24,7 +24,7 @@ services:
 
   app:
     build:
-      context: compose/production/mattermost/app
+      context: ../compose/production/mattermost/app
       # uncomment following lines for team edition or change UID/GID
       args:
         - edition=team
@@ -59,7 +59,7 @@ services:
 
   web:
     build:
-      context: compose/production/mattermost/web
+      context: ../compose/production/mattermost/web
     #ports:
     #  - "80:80"
     #  - "443:443"
