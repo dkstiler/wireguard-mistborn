@@ -82,3 +82,8 @@ services:
       # This directory must have cert files if you want to enable SSL
       #- ./volumes/web/cert:/cert:ro
       - /etc/localtime:/etc/localtime:ro
+
+networks:
+  default:
+    external:
+      name: mistborn_default
