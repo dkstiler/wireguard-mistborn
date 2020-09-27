@@ -15,7 +15,7 @@ services:
       - ../.envs/.production/.mattermost
     networks:
       mattermost_net:
-        ipv4_address: 10.2.5.3
+        ipv4_address: 10.2.5.4
     #environment:
     #  - POSTGRES_USER=mmuser
     #  - POSTGRES_PASSWORD=mmuser_password
@@ -50,7 +50,7 @@ services:
       - ../.envs/.production/.mattermost
     networks:
       mattermost_net:
-        ipv4_address: 10.2.5.2
+        ipv4_address: 10.2.5.3
     #environment:
     #  # set same as db credentials and dbname
     #  #- MM_USERNAME=mmuser
@@ -91,7 +91,7 @@ services:
     networks:
       default:
       mattermost_net:
-        ipv4_address: 10.2.5.1
+        ipv4_address: 10.2.5.2
 
 networks:
   default:
