@@ -13,6 +13,9 @@ services:
       - /etc/localtime:/etc/localtime:ro
     env_file:
       - ../.envs/.production/.mattermost
+    networks:
+      mattermost_net:
+        ipv4_address: 10.2.0.3
     #environment:
     #  - POSTGRES_USER=mmuser
     #  - POSTGRES_PASSWORD=mmuser_password
@@ -45,6 +48,9 @@ services:
       # - <path_to_your_gitlab_pki>/pki_chain.pem:/etc/ssl/certs/pki_chain.pem:ro
     env_file:
       - ../.envs/.production/.mattermost
+    networks:
+      mattermost_net:
+        ipv4_address: 10.2.0.2
     #environment:
     #  # set same as db credentials and dbname
     #  #- MM_USERNAME=mmuser
@@ -82,8 +88,18 @@ services:
       # This directory must have cert files if you want to enable SSL
       #- ./volumes/web/cert:/cert:ro
       - /etc/localtime:/etc/localtime:ro
+    networks:
+      default:
+      mattermost_net:
+        ipv4_address: 10.2.0.1
 
 networks:
   default:
     external:
       name: mistborn_default
+  
+  mattermost_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.2.0.0/29
