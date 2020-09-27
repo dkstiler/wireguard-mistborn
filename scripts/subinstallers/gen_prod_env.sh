@@ -84,4 +84,4 @@ MATTERMOST_PROD_FILE="./.envs/.production/.mattermost"
 echo "MM_USERNAME=mmuser" > $MATTERMOST_PROD_FILE
 echo "MM_PASSWORD=$1" >> $MATTERMOST_PROD_FILE
 echo "MM_DBNAME=mattermost" >> $MATTERMOST_PROD_FILE
-
+echo "MM_SQLSETTINGS_DATASOURCE=postgres://${MM_USERNAME}:${MM_PASSWORD}@db:5432/${MM_DBNAME}?sslmode=disable&connect_timeout=10" >> $MATTERMOST_PROD_FILE

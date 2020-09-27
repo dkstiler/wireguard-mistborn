@@ -3,7 +3,8 @@ version: "3"
 services:
 
   db:
-    build: db
+    build:
+      context: compose/production/mattermost/db
     read_only: true
     restart: unless-stopped
     volumes:
@@ -23,7 +24,7 @@ services:
 
   app:
     build:
-      context: compose/production/mattermost #app
+      context: compose/production/mattermost/app
       # uncomment following lines for team edition or change UID/GID
       args:
         - edition=team
@@ -42,22 +43,23 @@ services:
       # - <path_to_your_gitlab_pki>/pki_chain.pem:/etc/ssl/certs/pki_chain.pem:ro
     env_file:
       - ../.envs/.production/.mattermost
-    environment:
-      # set same as db credentials and dbname
-      #- MM_USERNAME=mmuser
-      #- MM_PASSWORD=mmuser_password
-      #- MM_DBNAME=mattermost
+    #environment:
+    #  # set same as db credentials and dbname
+    #  #- MM_USERNAME=mmuser
+    #  #- MM_PASSWORD=mmuser_password
+    #  #- MM_DBNAME=mattermost
 
-      # use the credentials you've set above, in the format:
-      # MM_SQLSETTINGS_DATASOURCE=postgres://${MM_USERNAME}:${MM_PASSWORD}@db:5432/${MM_DBNAME}?sslmode=disable&connect_timeout=10
-      #- MM_SQLSETTINGS_DATASOURCE=postgres://mmuser:mmuser_password@db:5432/mattermost?sslmode=disable&connect_timeout=10
-      - MM_SQLSETTINGS_DATASOURCE=postgres://${MM_USERNAME}:${MM_PASSWORD}@db:5432/${MM_DBNAME}?sslmode=disable&connect_timeout=10
+    #  # use the credentials you've set above, in the format:
+    #  # MM_SQLSETTINGS_DATASOURCE=postgres://${MM_USERNAME}:${MM_PASSWORD}@db:5432/${MM_DBNAME}?sslmode=disable&connect_timeout=10
+    #  #- MM_SQLSETTINGS_DATASOURCE=postgres://mmuser:mmuser_password@db:5432/mattermost?sslmode=disable&connect_timeout=10
+    #  - MM_SQLSETTINGS_DATASOURCE=postgres://${MM_USERNAME}:${MM_PASSWORD}@db:5432/${MM_DBNAME}?sslmode=disable&connect_timeout=10
 
-      # in case your config is not in default location
-      #- MM_CONFIG=/mattermost/config/config.json
+    #  # in case your config is not in default location
+    #  #- MM_CONFIG=/mattermost/config/config.json
 
   web:
-    build: web
+    build:
+      context: compose/production/mattermost/web
     #ports:
     #  - "80:80"
     #  - "443:443"
