@@ -42,6 +42,8 @@ Within Mistborn is a panel to enable and manage these free extra services (off b
 - [Jellyfin](https://jellyfin.org): The Free Media Software System.
 - [Tor](https://www.torproject.org): The Onion Router. One tool in the arsenal of online security and privacy.
 - [Jitsi](https://jitsi.org): Multi-platform open-source video conferencing
+- [Mattermost](https://mattermost.com/): A flexible, open source messaging platform that enables secure team collaboration
+
 
 # Quickstart
 Tested Operating Systems (in order of thoroughness):
@@ -260,6 +262,7 @@ Mistborn uses the following domains (that can be reached by all Wireguard client
 | Syncthing | syncthing.mistborn | Off |
 | OnlyOffice | onlyoffice.mistborn | Off |
 | Jitsi | jitsi.mistborn | Off |
+| Mattermost | mattermost.mistborn | Off |
 
 # Default Credentials
 These are the default credentials to use in the services you choose to use:
@@ -317,6 +320,7 @@ But wait, there's more! You can:
 | Jellyfin       | [Jellyfin](https://play.google.com/store/apps/details?id=org.jellyfin.mobile)                      | [Jellyfin](https://apps.apple.com/us/app/jellyfin-mobile/id1480192618)             |
 | Home Assistant | [Home Assistant](https://play.google.com/store/apps/details?id=io.homeassistant.companion.android) |                                                                                    |
 | Rocket.Chat    | [Rocket.Chat](https://play.google.com/store/apps/details?id=chat.rocket.android)                   | [Rocket.Chat](https://apps.apple.com/us/app/rocket-chat/id1148741252)              |
+| Mattermost     | [Mattermost](https://play.google.com/store/apps/details?id=com.mattermost.rn)                      | [Mattermost](https://apps.apple.com/us/app/mattermost/id1257222717)                |
 
 ## TLS Certificate
 Some apps require TLS (HTTPS). All traffic to Mistborn domains already occurs over Wireguard but to keep apps running, a TLS certificate exists for Mistborn and can be imported into your device's trusted credentials in the security settings. This certificate is checked every day and will be re-generated when expiration is less than 30 days away.
