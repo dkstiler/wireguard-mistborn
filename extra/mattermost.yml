@@ -3,8 +3,9 @@ version: "3"
 services:
 
   db:
-    build:
-      context: ../compose/production/mattermost/db
+    #build:
+    #  context: ../compose/production/mattermost/db
+    image: mattermost/mattermost-prod-db
     read_only: true
     restart: unless-stopped
     volumes:
@@ -23,13 +24,14 @@ services:
     #  - AWS_REGION=us-east-1
 
   app:
-    build:
-      context: ../compose/production/mattermost/app
-      # uncomment following lines for team edition or change UID/GID
-      args:
-        - edition=team
-        - PUID=1000
-        - PGID=1000
+    #build:
+    #  context: ../compose/production/mattermost/app
+    #  # uncomment following lines for team edition or change UID/GID
+    #  args:
+    #    - edition=team
+    #    - PUID=1000
+    #    - PGID=1000
+    image: mattermost/mattermost-team-edition
     restart: unless-stopped
     volumes:
       - ../../mistborn_volumes/extra/mattermost/app/mattermost/config:/mattermost/config:rw
@@ -58,8 +60,9 @@ services:
     #  #- MM_CONFIG=/mattermost/config/config.json
 
   web:
-    build:
-      context: ../compose/production/mattermost/web
+    #build:
+    #  context: ../compose/production/mattermost/web
+    image: mattermost/mattermost-prod-web
     #ports:
     #  - "80:80"
     #  - "443:443"
