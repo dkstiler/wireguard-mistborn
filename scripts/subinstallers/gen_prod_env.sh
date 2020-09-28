@@ -84,6 +84,5 @@ MATTERMOST_PROD_FILE="./.envs/.production/.mattermost"
 echo "MM_USERNAME=mmuser" > $MATTERMOST_PROD_FILE
 echo "MM_PASSWORD=$1" >> $MATTERMOST_PROD_FILE
 echo "MM_DBNAME=mattermost" >> $MATTERMOST_PROD_FILE
-echo "MM_SQLSETTINGS_DATASOURCE=postgres://${MM_USERNAME}:${MM_PASSWORD}@db:5432/${MM_DBNAME}?sslmode=disable&connect_timeout=10" >> $MATTERMOST_PROD_FILE
 POSTGRES_PASSWORD=$(python3 -c "import secrets; import string; print(f''.join([secrets.choice(string.ascii_letters+string.digits) for x in range(32)]))")
 echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> $MATTERMOST_PROD_FILE

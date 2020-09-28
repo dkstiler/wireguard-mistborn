@@ -12,7 +12,7 @@ PermissionsStartOnly=true
 ExecStartPre=/usr/local/bin/docker-compose -f /opt/mistborn/extra/mattermost.yml down
 
 # Start container when unit is started
-ExecStart=/usr/local/bin/docker-compose -f /opt/mistborn/extra/mattermost.yml up --build
+ExecStart=/usr/local/bin/docker-compose --env-file /opt/mistborn/.envs/.production/.mattermost -f /opt/mistborn/extra/mattermost.yml up --build
 # Stop container when unit is stopped
 ExecStop=/usr/local/bin/docker-compose -f /opt/mistborn/extra/mattermost.yml down
 # Post stop
