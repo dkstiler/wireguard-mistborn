@@ -1,7 +1,9 @@
 [Unit]
 Description=Mistborn Base
 Requires=docker.service
+Requires=netfilter-persistent.service
 After=docker.service
+After=netfilter-persistent.service
 
 [Service]
 Restart=always
