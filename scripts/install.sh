@@ -216,6 +216,17 @@ sudo systemctl start Mistborn-setup.service
 sudo docker-compose -f base.yml pull || true
 sudo docker-compose -f base.yml build
 
+## disable systemd-resolved stub listener (creates symbolic link to /etc/resolv.conf)
+if [ -f /etc/systemd/resolved.conf ]; then
+    sudo sed -i 's/#DNSStubListener.*/DNSStubListener=no/' /etc/systemd/resolved.conf
+    sudo sed -i 's/DNSStubListener.*/DNSStubListener=no/' /etc/systemd/resolved.conf
+fi
+
+## delete symlink if exists
+if [ -L /etc/resolv.conf ]; then
+    sudo rm /etc/resolv.conf
+fi
+
 ## disable other DNS services
 sudo systemctl stop systemd-resolved 2>/dev/null || true
 sudo systemctl disable systemd-resolved 2>/dev/null || true
