@@ -1,6 +1,8 @@
 # Mistborn
 A secure platform for easily standing up and managing your own cloud services: including firewall, ad-blocking, and multi-factor Wireguard VPN access
 
+![Mistborn Wireguard](https://gitlab.com/cyber5k/public/-/raw/master/graphics/home.mistborn_wireguard_.png)*Wireguard Management in Mistborn*
+
 # Table of Contents
 [[_TOC_]]
 
@@ -116,6 +118,11 @@ In Mistborn, Gateways are upstream from the VPN server so connections to third-p
 ![Mistborn Gateway Diagram](https://gitlab.com/cyber5k/public/-/raw/master/graphics/gateway_network.png)
 
 The Gateway adds an extra network hop. DNS is still resolved in Mistborn so pihole is still blocking ads.
+
+# Client to client communication
+By default direct communication between network clients is blocked. Mistborn clients can all talk to Mistborn and communicate via shared services (Jitsi, Nextcloud, etc). Direct client to client communication can be enabled via the "client-to-client" toggle.
+
+![System Settings](https://gitlab.com/cyber5k/public/-/raw/master/graphics/system_settings_dropdown.png)
 
 # Installation
 Mistborn is regularly tested on Ubuntu 20.04 LTS (DigitalOcean droplet with 2 GB RAM). It has also been successfully used on Debian Buster and Raspbian Buster systems (though not regularly tested). Make sure to install OS updates and restart before installing Mistborn (Wireguard installs differently on recent kernels).
@@ -348,7 +355,7 @@ If Mistborn is installed via SSH then an iptables rule is added allowing externa
 
 SSH is permitted from any device connected to Mistborn by Wireguard.
 
-Password authentication in enabled. Mistborn disables password authentication for root. Fail2ban blocks IPs with excessive failed login attempts.
+Password authentication in enabled. Fail2ban blocks IPs with excessive failed login attempts.
 
 You can SSH using the Mistborn domain when connected by Wireguard:
 ```
@@ -475,7 +482,7 @@ These are some notes regarding the technical design and implementations of Mistb
 ## Firewall
 - **IPtables**: Iptables rules and chains are manipulated directly. If UFW is present it is disabled. IPtables-persistent is used to save a simple set of secure default rules (most importantly setting the INPUT and FORWARD policies to DROP and allowing ESTABLISHED and RELATED traffic) that will be effective immediately upon system startup. Additional rules and chains are created by Docker on startup. Mistborn also creates some iptables chains during installation that are saved in the persistent rules. Mistborn iptables chains and rules are designed to work with Docker's with logic that is easy to follow. A power cycle will always result in a working state.
 - **PostUp/PostDown**: Wireguard configuration files on Mistborn include PostUp and PostDown directives that set routes and iptables rules for each Wireguard client individually.
-- **Wireguard**: There is a one-to-one mapping between each Wireguard client and server instance listening on Mistborn. By design Wireguard clients cannot talk directly to each other but can use shared services and resources on Mistborn (e.g. Syncthing, Nextcloud, Jitisi, etc.)
+- **Wireguard**: There is a one-to-one mapping between each Wireguard client and server instance listening on Mistborn. By default Wireguard clients cannot talk directly to each other but can use shared services and resources on Mistborn (e.g. Syncthing, Nextcloud, Jitisi, etc). Toggling the "client-to-client" option will enable direct client-to-client communication.
 - **Metrics**: In addition to the iptables INPUT policy set to DROP, an iptables chain exists that logs the packet meta data before dropping it. Mistborn redirects packets that will be dropped to this chain instead. A summary of the data about these dropped packets (unsolicited network traffic) can be found on the Metrics page.
 - **Coppercloud**: Coppercloud works by populating ipsets with the ipset module in iptables to DROP (blacklist) or ACCEPT (whitelist) a given set of IP addresses. Upon system startup a celery task will compile the IP addresses, create the ipsets, and iptables rules.
 
