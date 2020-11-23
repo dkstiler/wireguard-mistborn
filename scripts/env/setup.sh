@@ -22,13 +22,25 @@ fi
 
 echo "MISTBORN_TAG=$MISTBORN_TAG" | sudo tee -a ${VAR_FILE}
 
-#### install and base services
-iface=$(ip -o -4 route show to default | egrep -o 'dev [^ ]*' | awk 'NR==1{print $2}')
-
-# default interface
+# copy current service files to systemd (overwriting as needed)
 sudo cp /opt/mistborn/scripts/services/Mistborn* /etc/systemd/system/
+
+# set script user and owner
 sudo find /etc/systemd/system/ -type f -name 'Mistborn*' | xargs sudo sed -i "s/User=root/User=$USER/"
 #sudo find /etc/systemd/system/ -type f -name 'Mistborn*' | xargs sudo sed -i "s/ root:root / $USER:$USER /"
+
+# reload in case the iface is not immediately set
+sudo systemctl daemon-reload
+
+#### install and base services
+iface=$(ip -o -4 route show to default | egrep -o 'dev [^ ]*' | awk 'NR==1{print $2}' | tr -d '[:space:]')
+## cannot be empty
+while [[ -z "$iface" ]]; do
+    sleep 2
+    iface=$(ip -o -4 route show to default | egrep -o 'dev [^ ]*' | awk 'NR==1{print $2}' | tr -d '[:space:]')
+done
+
+# default interface
 sudo find /etc/systemd/system/ -type f -name 'Mistborn*' | xargs sudo sed -i "s/DIFACE/$iface/"
 
 sudo systemctl daemon-reload
