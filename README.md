@@ -3,6 +3,10 @@ A secure platform for easily standing up and managing your own cloud services: i
 
 ![Mistborn Wireguard](https://gitlab.com/cyber5k/public/-/raw/master/graphics/home.mistborn_wireguard_.png)*Wireguard Management in Mistborn*
 
+As featured in [Linux Magazine](https://www.linux-magazine.com/Issues/2020/240/Mistborn/(language)/eng-US) (Linux Pro Magazine in North America) in November 2020
+
+![Mistborn Featured in Linux Magazine](https://gitlab.com/cyber5k/public/-/raw/master/graphics/linux-magazine-cover-nov-2020.jpg "Mistborn featured in Linux Magazine November 2020")
+
 # Table of Contents
 [[_TOC_]]
 
@@ -496,14 +500,16 @@ These are some notes regarding the technical design and implementations of Mistb
 # Roadmap
 Many features and refinements are in the works at various stages including:
 
-- Option to upload metrics information to Cyber5K to refine each Mistborn instance's firewall
-- Option to email default admin Wireguard config file
-- Adding more extra services (e.g. Gitlab, Game Servers, etc.)
-- Cyber5K marketplace to share Gateway access (to fixed IP addresses or domains, and for a fixed amount of time)
-- Mistborn managing wireless interfaces for local access points (stripped down RaspAP)
-- Optional periodic backup of local Mistborn config files and credentials to Cyber5K
+- Plugins for Extra Services (enabling third-party development)
+- Plugin repository
+- Integration with RaspAP to enable managing an Access Point for local network connections
 - Internal network scan tool and feedback
 - Anomaly detection in network traffic
+
+# Featured In
+
+- [Linux Magazine](https://www.linux-magazine.com/Issues/2020/240/Mistborn/(language)/eng-US) November 2020 (featuring Mistborn version from early May 2020)
+- [Awesome Open Source](https://www.youtube.com/watch?v=hekP0_crotw) July 2020 (featuring Mistborn version from early July 2020)
 
 # Follow
 You can find recent bugfixes, functional additions, some extra documentation and more at the Cyber5K Patreon page: [https://www.patreon.com/cyber5k](https://www.patreon.com/cyber5k)
