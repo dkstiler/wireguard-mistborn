@@ -18,7 +18,7 @@
     rule = "Host(`cockpit.mistborn`)"
     service = "cockpit"
     entrypoints = ["web", "websecure"]
-    #middlewares =
+    middlewares = ["mistborn_auth"]
 
 [http.middlewares]
   [http.middlewares.mistborn_auth.forwardAuth]
