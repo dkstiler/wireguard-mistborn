@@ -249,8 +249,8 @@ Internet access is blocked via iptables until authentication is completed for an
 
 ![Mistborn Multi Factor Authentication - Token Prompt](https://gitlab.com/cyber5k/public/-/raw/master/graphics/mfa_token_enter.png)*Mistborn Multi Factor Authentication - Token Prompt*
 
-### MFA Mistborn Service Access
-Mistborn service access is blocked via traefik until Mistborn authentication is complete. You will not be able to access the web pages for pihole, cockpit, or any extra services until authentication is complete for an MFA profile. Attempting to visit one of these pages will redirect you to [http://home.mistborn](http://home.mistborn) where you must complete the authentication process. Click "Sign Out" to re-block access until authentication completes again.
+### MFA Mistborn Service Access - Fixed on 4 December 2020
+Mistborn service access is blocked via traefik until Mistborn authentication is complete. You will not be able to access the web pages for pihole, cockpit, or any extra services until authentication is complete for an MFA profile. Attempting to visit one of these pages will produce a "Mistborn: Not authorized" HTTP 403. Click "Sign Out" to re-block access until authentication completes again.
 
 ### Notes
 - **Sessions**: Traefik checks the authenticated sessions on the server side to determine whether to allow access to the Mistborn service web pages. If an open session exists for your Mistborn IP address then access will be granted. You may close all sessions by clicking "Sign Out" on the Mistborn home page. Expired sessions are regularly cleaned by the Mistborn system (celery periodic task).
