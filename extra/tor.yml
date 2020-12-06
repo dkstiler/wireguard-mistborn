@@ -3,8 +3,8 @@ version: '3'
 services:
   tor-client:
     build:
-      context: ..
-      dockerfile: ./compose/production/tor/Dockerfile
+      context: ../compose/production/tor
+      dockerfile: ./Dockerfile
     image: mistborn_production_tor
     container_name: mistborn_production_tor
     ports:
