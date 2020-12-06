@@ -26,6 +26,8 @@ Ideal for teams who:
 - want to limit or stop data collecting services
 - want to prevent being detected/blocked for using a proxy or VPN service
 
+See the [Mistborn Network Security](https://gitlab.com/cyber5k/mistborn/-/wikis/Mistborn-Network-Security) wiki page to see the network scan results for Mistborn.
+
 Mistborn depends on these core open source technologies:
 - [Docker](https://www.docker.com/why-docker): containerization
 - [Wireguard](https://www.wireguard.com): secure VPN access
@@ -251,6 +253,8 @@ Internet access is blocked via iptables until authentication is completed for an
 
 ### MFA Mistborn Service Access - Fixed on 4 December 2020
 Mistborn service access is blocked via traefik until Mistborn authentication is complete. You will not be able to access the web pages for pihole, cockpit, or any extra services until authentication is complete for an MFA profile. Attempting to visit one of these pages will produce a "Mistborn: Not authorized" HTTP 403. Click "Sign Out" to re-block access until authentication completes again.
+
+![Mistborn Multi Factor Authentication - Not Authorized](https://gitlab.com/cyber5k/public/-/raw/master/graphics/mfa_not_authorized.png)*Mistborn Multi Factor Authentication - Not Authorized (Login Incomplete)*
 
 ### Notes
 - **Sessions**: Traefik checks the authenticated sessions on the server side to determine whether to allow access to the Mistborn service web pages. If an open session exists for your Mistborn IP address then access will be granted. You may close all sessions by clicking "Sign Out" on the Mistborn home page. Expired sessions are regularly cleaned by the Mistborn system (celery periodic task).
@@ -478,6 +482,9 @@ Run updates and restart before installing Mistborn (`sudo apt-get update && sudo
 These are some notes regarding the technical design and implementations of Mistborn. Feel free to contact me for additional details.
 
 ## Attack Surface
+
+See the [Mistborn Network Security](https://gitlab.com/cyber5k/mistborn/-/wikis/Mistborn-Network-Security) wiki entry.
+
 - **Wireguard**: Wireguard is the only way in to Mistborn. When new Wireguard profiles are generated they are attached to a random UDP port. Wireguard does not respond to unauthenticated traffic. External probes on the active Wireguard listening ports are not logged and do not appear on the Metrics page.
 - **SSH**: If Mistborn is installed over SSH (most common) then an iptables rule is added allowing future SSH connections from the same source IP address. All other external SSH is blocked. Internal SSH (over the Wireguard tunnels) is allowed. Password authentication is allowed. The SSH key for the `mistborn` user is only accepted from internal source IP addresses. Fail2ban is also installed.
 - **Traefik**: Iptables closes web ports (TCP 80 and 443) from external access and additonally all web interfaces are behind the Traefik reverse-proxy. All web requests (e.g. home.mistborn) must be resolved by Mistborn DNS (Pihole/dnsmasq) and originate from a Wireguard tunnel.
