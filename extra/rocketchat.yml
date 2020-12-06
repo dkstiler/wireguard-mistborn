@@ -64,7 +64,7 @@ services:
       - ../../mistborn_volumes/extra/rocketchat/hubot/scripts:/home/hubot/scripts
   # this is used to expose the hubot port for notifications on the host on port 3001, e.g. for hubot-jenkins-notifier
     ports:
-      - 3001:8080/tcp
+      - "${MISTBORN_BIND_IP}:3001:8080/tcp"
 
 networks:
   default:

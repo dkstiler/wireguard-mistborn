@@ -4,15 +4,28 @@
 
 VAR_FILE=/opt/mistborn/.env
 
+# load env variables
+
 source /opt/mistborn/scripts/subinstallers/platform.sh
+
+# setup env file
+echo "" | sudo tee ${VAR_FILE}
+sudo chown mistborn:mistborn ${VAR_FILE}
+
+# MISTBORN_DNS_BIND_IP
 
 MISTBORN_DNS_BIND_IP="10.2.3.1"
 #if [ "$DISTRO" == "ubuntu" ] && [ "$VERSION_ID" == "20.04" ]; then
 #    MISTBORN_DNS_BIND_IP="10.2.3.1"
 #fi
 
-echo "MISTBORN_DNS_BIND_IP=${MISTBORN_DNS_BIND_IP}" | sudo tee ${VAR_FILE}
-sudo chown mistborn:mistborn ${VAR_FILE}
+echo "MISTBORN_DNS_BIND_IP=${MISTBORN_DNS_BIND_IP}" | sudo tee -a ${VAR_FILE}
+
+# MISTBORN_BIND_IP
+
+echo "MISTBORN_BIND_IP=10.2.3.1" | sudo tee -a ${VAR_FILE}
+
+# MISTBORN_TAG
 
 GIT_BRANCH=$(git -C /opt/mistborn symbolic-ref --short HEAD || echo "master")
 MISTBORN_TAG="latest"
@@ -21,6 +34,8 @@ if [ "$GIT_BRANCH" != "master" ]; then
 fi
 
 echo "MISTBORN_TAG=$MISTBORN_TAG" | sudo tee -a ${VAR_FILE}
+
+#### SERVICE files
 
 # copy current service files to systemd (overwriting as needed)
 sudo cp /opt/mistborn/scripts/services/Mistborn* /etc/systemd/system/
