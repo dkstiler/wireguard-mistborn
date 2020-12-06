@@ -8,6 +8,7 @@ Restart=always
 User=root
 Group=docker
 PermissionsStartOnly=true
+EnvironmentFile=/opt/mistborn/.env
 # Shutdown container (if running) when unit is stopped
 ExecStartPre=/usr/local/bin/docker-compose -f /opt/mistborn/extra/rocketchat.yml down
 
