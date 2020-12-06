@@ -7,7 +7,7 @@ RUN apk update \
 
 EXPOSE 9150
 
-ADD ./compose/production/tor/torrc /etc/tor/torrc
+ADD ./torrc /etc/tor/torrc
 
 USER tor
 CMD /usr/bin/tor -f /etc/tor/torrc
