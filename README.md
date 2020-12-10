@@ -105,6 +105,8 @@ Mistborn protects your data in a variety of ways:
 - The Mistborn firewall blocks unsolicited incoming internet packets
 - Pi-hole running on Mistborn blocks outgoing internet requests to configurable blocked domains (ads, malicious/phishing domains, etc.) 
 
+See the [Mistborn Network Security](https://gitlab.com/cyber5k/mistborn/-/wikis/Mistborn-Network-Security) wiki page to see more network diagrams and the network scan results for Mistborn.
+
 # Coppercloud
 Pihole provides a way to block outgoing DNS requests for given lists of blocked domains. Coppercloud provides a way to block outgoing network calls of all types to given lists of IP addresses (IPv4 only for now). This is especially useful for blocking outgoing telemetry (data and state sharing) to owners of software running on all of your devices.
 
@@ -504,11 +506,12 @@ See the [Mistborn Network Security](https://gitlab.com/cyber5k/mistborn/-/wikis/
 - Outbound UDP on port 53 is blocked. All DNS requests should be handled by the dnscrypt_proxy service and if any client, service, etc. tries to circumvent that it is blocked.
 - Unattended upgrades are set to automatically install operating system security updates.
 
-# Roadmap
+# Roadmap (not necessarily in order)
 Many features and refinements are in the works at various stages including:
 
 - Plugins for Extra Services (enabling third-party development)
 - Plugin repository
+- IPv6 support
 - Integration with RaspAP to enable managing an Access Point for local network connections
 - Internal network scan tool and feedback
 - Anomaly detection in network traffic
