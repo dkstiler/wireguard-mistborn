@@ -18,6 +18,6 @@ docker_build:
   stage: test
   script:
     - apk add docker-compose
-    - bash scripts/subinstallers/gen_prod_env.sh "$MISTBORN_DEFAULT_PASSWORD"
+    - scripts/subinstallers/gen_prod_env.sh "$MISTBORN_DEFAULT_PASSWORD"
     - docker-compose -f base.yml build
 
