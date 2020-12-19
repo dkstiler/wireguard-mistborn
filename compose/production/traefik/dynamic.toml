@@ -8,6 +8,10 @@
   [tls.options.default]
     minVersion = "VersionTLS12"
 
+[providers.redis]
+  endpoints = ["127.0.0.1:6379"]
+  rootKey = "traefik"
+
 #[http.services]
 #  [http.services.cockpit.loadBalancer]
 #    [[http.services.cockpit.loadBalancer.servers]]

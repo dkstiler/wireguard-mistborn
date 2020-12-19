@@ -55,6 +55,7 @@ services:
     container_name: mistborn_production_traefik
     depends_on:
       - django
+      - redis
     volumes:
       #- production_traefik:/etc/traefik/acme
       - ./compose/production/traefik/dynamic.toml:/dynamic.toml:ro
