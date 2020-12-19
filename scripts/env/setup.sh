@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Version
+MISTBORN_MAJOR_VERSION="0"
+MISTBORN_MINOR_VERSION="1"
+MISTBORN_PATCH_NUMBER="1"
+
 #### ENV file
 
 VAR_FILE=/opt/mistborn/.env
@@ -11,6 +16,12 @@ source /opt/mistborn/scripts/subinstallers/platform.sh
 # setup env file
 echo "" | sudo tee ${VAR_FILE}
 sudo chown mistborn:mistborn ${VAR_FILE}
+
+# Version env variables
+echo "MISTBORN_VERSION=${MISTBORN_MAJOR_VERSION}.${MISTBORN_MINOR_VERSION}.${MISTBORN_PATCH_NUMBER}" | sudo tee -a ${VAR_FILE}
+echo "MISTBORN_MAJOR_VERSION=${MISTBORN_MAJOR_VERSION}" | sudo tee -a ${VAR_FILE}
+echo "MISTBORN_MINOR_VERSION=${MISTBORN_MINOR_VERSION}" | sudo tee -a ${VAR_FILE}
+echo "MISTBORN_PATCH_NUMBER=${MISTBORN_PATCH_NUMBER}" | sudo tee -a ${VAR_FILE}
 
 # MISTBORN_DNS_BIND_IP
 
@@ -28,9 +39,11 @@ echo "MISTBORN_BIND_IP=10.2.3.1" | sudo tee -a ${VAR_FILE}
 # MISTBORN_TAG
 
 GIT_BRANCH=$(git -C /opt/mistborn symbolic-ref --short HEAD || echo "master")
-MISTBORN_TAG="latest"
-if [ "$GIT_BRANCH" != "master" ]; then
-    MISTBORN_TAG="test"
+MISTBORN_TAG="${MISTBORN_MAJOR_VERSION}.${MISTBORN_MINOR_VERSION}"
+if [ ! -z "$MISTBORN_TEST_CONTAINER" ]; then
+    MISTBORN_TAG="test"	
+else if [ "$GIT_BRANCH" == "master" ]; then
+    MISTBORN_TAG="latest"
 fi
 
 echo "MISTBORN_TAG=$MISTBORN_TAG" | sudo tee -a ${VAR_FILE}
