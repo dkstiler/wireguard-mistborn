@@ -42,7 +42,7 @@ GIT_BRANCH=$(git -C /opt/mistborn symbolic-ref --short HEAD || echo "master")
 MISTBORN_TAG="${MISTBORN_MAJOR_VERSION}.${MISTBORN_MINOR_VERSION}"
 if [ ! -z "$MISTBORN_TEST_CONTAINER" ]; then
     MISTBORN_TAG="$MISTBORN_TEST_CONTAINER"
-else if [ "$GIT_BRANCH" == "master" ]; then
+elif [ "$GIT_BRANCH" == "master" ]; then
     MISTBORN_TAG="latest"
 fi
 
