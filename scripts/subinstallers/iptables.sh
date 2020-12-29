@@ -113,6 +113,7 @@ fi
 
 # IP forwarding
 sudo sed -i 's/.*net.ipv4.ip_forward.*/net.ipv4.ip_forward=1/' /etc/sysctl.conf
+sudo sed -i 's/.*vm.overcommit_memory.*/vm.overcommit_memory=1/' /etc/sysctl.conf
 sudo sysctl -p /etc/sysctl.conf
 
 # rsyslog to create /var/log/iptables.log

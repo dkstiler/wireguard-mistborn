@@ -20,7 +20,7 @@ ExecStartPre=/sbin/iptables -w -I DOCKER-USER -i DIFACE -p udp --dport 53 -j MIS
 ExecStartPre=/sbin/iptables -w -I DOCKER-USER -i DIFACE -p tcp --dport 53 -j MISTBORN_LOG_DROP
 ExecStartPre=/sbin/iptables -w -I DOCKER-USER -i DIFACE -p tcp --dport 80 -j MISTBORN_LOG_DROP
 ExecStartPre=/sbin/iptables -w -I DOCKER-USER -i DIFACE -p tcp --dport 443 -j MISTBORN_LOG_DROP
-ExecStartPre=/sbin/iptables -w -I DOCKER-USER -i DIFACE -p tcp --dport 5555 -j MISTBORN_LOG_DROP
+#ExecStartPre=/sbin/iptables -w -I DOCKER-USER -i DIFACE -p tcp --dport 5555 -j MISTBORN_LOG_DROP
 ExecStartPre=/sbin/iptables -w -A OUTPUT -o DIFACE -p udp --dport 53 -j MISTBORN_LOG_DROP
 ExecStartPre=/sbin/ip6tables -w -A OUTPUT -p udp --dport 53 -j MISTBORN_LOG_DROP
 ExecStartPre=/sbin/resolvconf -u
@@ -33,7 +33,7 @@ ExecStopPost=-/sbin/iptables -D DOCKER-USER -i DIFACE -p udp --dport 53 -j MISTB
 ExecStopPost=-/sbin/iptables -D DOCKER-USER -i DIFACE -p tcp --dport 53 -j MISTBORN_LOG_DROP
 ExecStopPost=-/sbin/iptables -D DOCKER-USER -i DIFACE -p tcp --dport 80 -j MISTBORN_LOG_DROP
 ExecStopPost=-/sbin/iptables -D DOCKER-USER -i DIFACE -p tcp --dport 443 -j MISTBORN_LOG_DROP
-ExecStopPost=-/sbin/iptables -D DOCKER-USER -i DIFACE -p tcp --dport 5555 -j MISTBORN_LOG_DROP
+#ExecStopPost=-/sbin/iptables -D DOCKER-USER -i DIFACE -p tcp --dport 5555 -j MISTBORN_LOG_DROP
 ExecStopPost=-/sbin/iptables -D OUTPUT -o DIFACE -p udp --dport 53 -j MISTBORN_LOG_DROP
 ExecStopPost=-/sbin/ip6tables -D OUTPUT -p udp --dport 53 -j MISTBORN_LOG_DROP
 
