@@ -53,9 +53,9 @@ echo "MISTBORN_TAG=$MISTBORN_TAG" | sudo tee -a ${VAR_FILE}
 # copy current service files to systemd (overwriting as needed)
 sudo cp /opt/mistborn/scripts/services/Mistborn* /etc/systemd/system/
 
-# set script user and owner
-sudo find /etc/systemd/system/ -type f -name 'Mistborn*' | xargs sudo sed -i "s/User=root/User=$USER/"
-#sudo find /etc/systemd/system/ -type f -name 'Mistborn*' | xargs sudo sed -i "s/ root:root / $USER:$USER /"
+## set script user and owner
+#sudo find /etc/systemd/system/ -type f -name 'Mistborn*' | xargs sudo sed -i "s/User=root/User=$USER/"
+##sudo find /etc/systemd/system/ -type f -name 'Mistborn*' | xargs sudo sed -i "s/ root:root / $USER:$USER /"
 
 # reload in case the iface is not immediately set
 sudo systemctl daemon-reload

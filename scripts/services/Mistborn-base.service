@@ -6,22 +6,23 @@ After=docker.service
 After=netfilter-persistent.service
 
 [Service]
+EnvironmentFile=/opt/mistborn/.envs/.production/.global
+EnvironmentFile=/opt/mistborn/.env
 Restart=always
-User=root
+User=mistborn
 Group=docker
 PermissionsStartOnly=true
 # Shutdown container (if running) when unit is stopped
-EnvironmentFile=/opt/mistborn/.env
 ExecStartPre=/usr/local/bin/docker-compose -f /opt/mistborn/base.yml down
 
 ExecStartPre=/usr/local/bin/docker-compose -f /opt/mistborn/base.yml build
-ExecStartPre=-/sbin/ip address add 10.2.3.1/30 dev DIFACE
-ExecStartPre=/sbin/iptables -w -I DOCKER-USER -i DIFACE -p udp --dport 53 -j MISTBORN_LOG_DROP
-ExecStartPre=/sbin/iptables -w -I DOCKER-USER -i DIFACE -p tcp --dport 53 -j MISTBORN_LOG_DROP
-ExecStartPre=/sbin/iptables -w -I DOCKER-USER -i DIFACE -p tcp --dport 80 -j MISTBORN_LOG_DROP
-ExecStartPre=/sbin/iptables -w -I DOCKER-USER -i DIFACE -p tcp --dport 443 -j MISTBORN_LOG_DROP
-#ExecStartPre=/sbin/iptables -w -I DOCKER-USER -i DIFACE -p tcp --dport 5555 -j MISTBORN_LOG_DROP
-ExecStartPre=/sbin/iptables -w -A OUTPUT -o DIFACE -p udp --dport 53 -j MISTBORN_LOG_DROP
+ExecStartPre=-/sbin/ip address add 10.2.3.1/30 dev $DIFACE
+ExecStartPre=/sbin/iptables -w -I DOCKER-USER -i $DIFACE -p udp --dport 53 -j MISTBORN_LOG_DROP
+ExecStartPre=/sbin/iptables -w -I DOCKER-USER -i $DIFACE -p tcp --dport 53 -j MISTBORN_LOG_DROP
+ExecStartPre=/sbin/iptables -w -I DOCKER-USER -i $DIFACE -p tcp --dport 80 -j MISTBORN_LOG_DROP
+ExecStartPre=/sbin/iptables -w -I DOCKER-USER -i $DIFACE -p tcp --dport 443 -j MISTBORN_LOG_DROP
+#ExecStartPre=/sbin/iptables -w -I DOCKER-USER -i $DIFACE -p tcp --dport 5555 -j MISTBORN_LOG_DROP
+ExecStartPre=/sbin/iptables -w -A OUTPUT -o $DIFACE -p udp --dport 53 -j MISTBORN_LOG_DROP
 ExecStartPre=/sbin/ip6tables -w -A OUTPUT -p udp --dport 53 -j MISTBORN_LOG_DROP
 ExecStartPre=/sbin/resolvconf -u
 # Start container when unit is started
@@ -29,12 +30,12 @@ ExecStart=/usr/local/bin/docker-compose -f /opt/mistborn/base.yml up
 # Stop container when unit is stopped
 ExecStop=/usr/local/bin/docker-compose -f /opt/mistborn/base.yml down
 # Post stop
-ExecStopPost=-/sbin/iptables -D DOCKER-USER -i DIFACE -p udp --dport 53 -j MISTBORN_LOG_DROP
-ExecStopPost=-/sbin/iptables -D DOCKER-USER -i DIFACE -p tcp --dport 53 -j MISTBORN_LOG_DROP
-ExecStopPost=-/sbin/iptables -D DOCKER-USER -i DIFACE -p tcp --dport 80 -j MISTBORN_LOG_DROP
-ExecStopPost=-/sbin/iptables -D DOCKER-USER -i DIFACE -p tcp --dport 443 -j MISTBORN_LOG_DROP
-#ExecStopPost=-/sbin/iptables -D DOCKER-USER -i DIFACE -p tcp --dport 5555 -j MISTBORN_LOG_DROP
-ExecStopPost=-/sbin/iptables -D OUTPUT -o DIFACE -p udp --dport 53 -j MISTBORN_LOG_DROP
+ExecStopPost=-/sbin/iptables -D DOCKER-USER -i $DIFACE -p udp --dport 53 -j MISTBORN_LOG_DROP
+ExecStopPost=-/sbin/iptables -D DOCKER-USER -i $DIFACE -p tcp --dport 53 -j MISTBORN_LOG_DROP
+ExecStopPost=-/sbin/iptables -D DOCKER-USER -i $DIFACE -p tcp --dport 80 -j MISTBORN_LOG_DROP
+ExecStopPost=-/sbin/iptables -D DOCKER-USER -i $DIFACE -p tcp --dport 443 -j MISTBORN_LOG_DROP
+#ExecStopPost=-/sbin/iptables -D DOCKER-USER -i $DIFACE -p tcp --dport 5555 -j MISTBORN_LOG_DROP
+ExecStopPost=-/sbin/iptables -D OUTPUT -o $DIFACE -p udp --dport 53 -j MISTBORN_LOG_DROP
 ExecStopPost=-/sbin/ip6tables -D OUTPUT -p udp --dport 53 -j MISTBORN_LOG_DROP
 
 [Install]
