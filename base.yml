@@ -146,16 +146,16 @@ services:
     restart: unless-stopped
     
 
-  flower:
-    image: "cyber5k/mistborn:${MISTBORN_TAG}"
-    container_name: mistborn_production_flower
-    env_file:
-      - ./.envs/.production/.django
-      - ./.envs/.production/.postgres
-    ports:
-      - "5555:5555/tcp"
-    command: /start-flower
-    restart: unless-stopped
+  # flower:
+  #   image: "cyber5k/mistborn:${MISTBORN_TAG}"
+  #   container_name: mistborn_production_flower
+  #   env_file:
+  #     - ./.envs/.production/.django
+  #     - ./.envs/.production/.postgres
+  #   ports:
+  #     - "5555:5555/tcp"
+  #   command: /start-flower
+  #   restart: unless-stopped
   
   pihole:
    container_name: mistborn_production_pihole
