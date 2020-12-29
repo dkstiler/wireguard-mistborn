@@ -68,7 +68,11 @@ while [[ -z "$iface" ]]; do
     iface=$(ip -o -4 route show to default | egrep -o 'dev [^ ]*' | awk 'NR==1{print $2}' | tr -d '[:space:]')
 done
 
+GLOBAL_ENV=/opt/mistborn/.envs/.production/.global
+install -Dv /dev/null $GLOBAL_ENV
+echo "DIFACE=$iface" >> $GLOBAL_ENV
+
 # default interface
-sudo find /etc/systemd/system/ -type f -name 'Mistborn*' | xargs sudo sed -i "s/DIFACE/$iface/"
+#sudo find /etc/systemd/system/ -type f -name 'Mistborn*' | xargs sudo sed -i "s/DIFACE/$iface/"
 
 sudo systemctl daemon-reload
