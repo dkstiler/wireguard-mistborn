@@ -2,6 +2,7 @@
 Description=Mistborn Jellyfin Service
 Requires=Mistborn-nextcloud.service
 After=Mistborn-nextcloud.service
+PartOf=Mistborn-base.service
 
 [Service]
 Restart=always
