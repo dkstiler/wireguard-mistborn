@@ -2,6 +2,7 @@
 Description=Mistborn Jitsi Service
 Requires=Mistborn-base.service
 After=Mistborn-base.service
+PartOf=Mistborn-base.service
 
 [Service]
 Restart=always
