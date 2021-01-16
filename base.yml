@@ -158,7 +158,7 @@ services:
   
   pihole:
    container_name: mistborn_production_pihole
-   image: pihole/pihole:latest
+   image: pihole/pihole:v5.3.4
    env_file:
      - /opt/mistborn_volumes/base/base.txt
    ports:
