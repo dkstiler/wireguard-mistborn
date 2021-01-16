@@ -71,6 +71,8 @@ done
 GLOBAL_ENV=/opt/mistborn/.envs/.production/.global
 install -Dv /dev/null $GLOBAL_ENV
 echo "DIFACE=$iface" >> $GLOBAL_ENV
+echo "MISTBORN_ENV_PATH=../../.envs/.production/" >> $GLOBAL_ENV
+echo "MISTBORN_VOL_PATH=../../../mistborn_volumes/extra/" >> $GLOBAL_ENV
 
 # default interface
 #sudo find /etc/systemd/system/ -type f -name 'Mistborn*' | xargs sudo sed -i "s/DIFACE/$iface/"
