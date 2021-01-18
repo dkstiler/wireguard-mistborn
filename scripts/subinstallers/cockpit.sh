@@ -16,9 +16,11 @@ fi
     
 sudo -E apt-get install -y cockpit
 
-if $(sudo apt-cache show cockpit-docker > /dev/null 2>&1) ; then
+if [ $(sudo apt-cache show cockpit-docker > /dev/null 2>&1) ]; then
     # no longer supported upstream in Ubuntu 20.04
     sudo -E apt-get install -y cockpit-docker
+elif [ $(sudo apt-cache show cockpit-podman > /dev/null 2>&1) ]; then
+    sudo -E apt-get install -y cockpit-podman
 fi
 
 sudo cp ./scripts/conf/cockpit.conf /etc/cockpit/cockpit.conf
