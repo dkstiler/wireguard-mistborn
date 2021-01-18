@@ -17,7 +17,7 @@ sudo -E mkdir -p $KEY_FOLDER
 sudo -E rm -f ${KEY_FOLDER}/*
 
 # generate crt and key
-sudo -E openssl req -x509 -sha256 -nodes -days 397 -newkey rsa:4096 -keyout $KEY_PATH -out $CRT_PATH -addext "subjectAltName = DNS:*.mistborn" -addext extendedKeyUsage=serverAuth -subj "/C=US/ST=New York/L=New York/O=cyber5k/OU=mistborn/CN=*.mistborn/emailAddress=mistborn@localhost"
+sudo -E openssl req -x509 -sha256 -nodes -days 397 -newkey rsa:4096 -keyout $KEY_PATH -out $CRT_PATH -addext "subjectAltName=DNS:*.mistborn,DNS:jitsi.mistborn,DNS:bitwarden.mistborn,DNS:chat.mistborn,DNS:homeassistant.mistborn,DNS:jellyfin.mistborn,DNS:syncthing.mistborn,DNS:nextcloud.mistborn,DNS:onlyoffice.mistborn" -addext extendedKeyUsage=serverAuth -subj "/C=US/ST=New York/L=New York/O=cyber5k/OU=mistborn/CN=*.mistborn/emailAddress=mistborn@localhost"
 
 # set permissions
 sudo -E chown -R mistborn:mistborn ${KEY_FOLDER}
