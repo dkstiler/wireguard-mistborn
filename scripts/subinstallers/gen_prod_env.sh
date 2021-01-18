@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 figlet "Mistborn: Container Credentials"
 

@@ -145,7 +145,6 @@ services:
     command: /start-celerybeat
     restart: unless-stopped
     
-
   # flower:
   #   image: "cyber5k/mistborn:${MISTBORN_TAG}"
   #   container_name: mistborn_production_flower
