@@ -29,7 +29,7 @@ sudo iptables -X MISTBORN_DOCKER_INPUT 2>/dev/null || true
 
 # iptables: log and drop chain
 sudo iptables -N MISTBORN_LOG_DROP
-sudo iptables -A MISTBORN_LOG_DROP -m limit --limit 6/min -j LOG --log-prefix "[IPTables-Dropped]: " --log-level 4
+sudo iptables -A MISTBORN_LOG_DROP -m limit --limit 6/min -j LOG --log-prefix "[Mistborn-IPTables-Dropped]: " --log-level 4
 sudo iptables -A MISTBORN_LOG_DROP -j DROP
 
 # wireguard rules chains
@@ -80,7 +80,7 @@ sudo ip6tables -X MISTBORN_LOG_DROP 2>/dev/null || true
 
 # ip6tables: log and drop chain
 sudo ip6tables -N MISTBORN_LOG_DROP
-sudo ip6tables -A MISTBORN_LOG_DROP -m limit --limit 6/min -j LOG --log-prefix "[IPTables-Dropped]: " --log-level 4
+sudo ip6tables -A MISTBORN_LOG_DROP -m limit --limit 6/min -j LOG --log-prefix "[Mistborn-IPTables-Dropped]: " --log-level 4
 sudo ip6tables -A MISTBORN_LOG_DROP -j DROP
 
 # ip6tables
