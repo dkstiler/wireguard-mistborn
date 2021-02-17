@@ -63,6 +63,7 @@ echo "Installing Docker Compose"
 
 # Install Docker Compose from pip
 # This might take a while
-sudo pip3 install docker-compose
+# cryptography >=3.4 requires rust to compile, and no rust compiler is readily available for ARM
+sudo pip3 install cryptography==3.3.2 docker-compose
 #fi
 
