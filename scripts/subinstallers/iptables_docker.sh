@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 source ./scripts/subinstallers/vars.sh
 
 sudo iptables -N DOCKER-USER || true

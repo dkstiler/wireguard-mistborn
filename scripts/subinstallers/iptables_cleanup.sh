@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -e
 
 # iptables-persistent
 if [ ! "$(dpkg-query -l iptables-persistent)" ]; then

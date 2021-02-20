@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -e
 
 # resetting ip6tables rules
 sudo ip6tables -F
