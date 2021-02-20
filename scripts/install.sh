@@ -103,6 +103,10 @@ echo "Setting up firewall (iptables)"
 if [ ! -f "/etc/iptables/rules.v4" ]; then
     echo "Setting iptables rules..."
     ./scripts/subinstallers/iptables.sh
+    ./scripts/subinstallers/ip6tables.sh
+    ./scripts/subinstallers/iptables_docker.sh
+    ./scripts/subinstallers/suricata.sh
+    ./scripts/subinstallers/iptables_cleanup.sh
 else
     echo "iptables rules exist. Leaving alone."
 fi
