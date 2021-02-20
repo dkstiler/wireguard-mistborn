@@ -34,6 +34,6 @@ else
 fi
 
 # iptables
-sudo iptables -I INPUT -j NFQUEUE
+sudo iptables -A INPUT -j NFQUEUE
 sudo iptables -I FORWARD -j NFQUEUE
-sudo iptables -I OUTPUT -j NFQUEUE
+#sudo iptables -I OUTPUT -j NFQUEUE
