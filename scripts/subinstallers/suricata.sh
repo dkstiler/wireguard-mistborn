@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # minimal dependencies
 sudo -E apt-get -y install libpcre3 libpcre3-dbg libpcre3-dev build-essential libpcap-dev   \
                 libyaml-0-2 libyaml-dev pkg-config zlib1g zlib1g-dev \
@@ -34,6 +36,6 @@ else
 fi
 
 # iptables
-sudo iptables -A INPUT -j NFQUEUE
-sudo iptables -I FORWARD -j NFQUEUE
+#sudo iptables -A INPUT -j NFQUEUE
+#sudo iptables -I FORWARD -j NFQUEUE
 #sudo iptables -I OUTPUT -j NFQUEUE
