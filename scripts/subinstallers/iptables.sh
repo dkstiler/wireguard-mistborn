@@ -17,16 +17,22 @@ fi
 sudo iptables -F
 sudo iptables -t nat -F
 sudo iptables -X MISTBORN_LOG_DROP 2>/dev/null || true
+sudo iptables -X MISTBORN_INT_LOG_DROP 2>/dev/null || true
 sudo iptables -X MISTBORN_WIREGUARD_INPUT 2>/dev/null || true
 sudo iptables -X MISTBORN_WIREGUARD_FORWARD 2>/dev/null || true
 sudo iptables -X MISTBORN_WIREGUARD_OUTPUT 2>/dev/null || true
 sudo iptables -X MISTBORN_DOCKER_OUTPUT 2>/dev/null || true
 sudo iptables -X MISTBORN_DOCKER_INPUT 2>/dev/null || true
 
-# iptables: log and drop chain
+# iptables: log and drop chain (external threats)
 sudo iptables -N MISTBORN_LOG_DROP
 sudo iptables -A MISTBORN_LOG_DROP -m limit --limit 6/min -j LOG --log-prefix "[Mistborn-IPTables-Dropped]: " --log-level 4
 sudo iptables -A MISTBORN_LOG_DROP -j DROP
+
+# iptables: log and drop chain (internal threats)
+sudo iptables -N MISTBORN_INT_LOG_DROP
+sudo iptables -A MISTBORN_INT_LOG_DROP -m limit --limit 6/min -j LOG --log-prefix "[Mistborn-IPTables-Internal-Dropped]: " --log-level 4
+sudo iptables -A MISTBORN_INT_LOG_DROP -j DROP
 
 # wireguard rules chains
 sudo iptables -N MISTBORN_WIREGUARD_INPUT
