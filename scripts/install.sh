@@ -102,11 +102,11 @@ source ./scripts/subinstallers/platform.sh
 echo "Setting up firewall (iptables)"
 if [ ! -f "/etc/iptables/rules.v4" ]; then
     echo "Setting iptables rules..."
-    ./scripts/subinstallers/suricata.sh
-    ./scripts/subinstallers/iptables.sh
-    ./scripts/subinstallers/ip6tables.sh
-    ./scripts/subinstallers/iptables_docker.sh
-    ./scripts/subinstallers/iptables_cleanup.sh
+    source ./scripts/subinstallers/suricata.sh
+    source ./scripts/subinstallers/iptables.sh
+    source ./scripts/subinstallers/ip6tables.sh
+    source ./scripts/subinstallers/iptables_docker.sh
+    source ./scripts/subinstallers/iptables_cleanup.sh
 else
     echo "iptables rules exist. Leaving alone."
 fi
