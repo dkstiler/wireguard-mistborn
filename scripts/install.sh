@@ -105,7 +105,7 @@ if [ ! -f "/etc/iptables/rules.v4" ]; then
     source ./scripts/subinstallers/suricata.sh
     source ./scripts/subinstallers/iptables.sh
     source ./scripts/subinstallers/ip6tables.sh
-    source ./scripts/subinstallers/iptables_docker.sh
+    #source ./scripts/subinstallers/iptables_docker.sh
     source ./scripts/subinstallers/iptables_cleanup.sh
 else
     echo "iptables rules exist. Leaving alone."
