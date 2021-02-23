@@ -36,6 +36,11 @@ else
 fi
 
 # iptables
-#sudo iptables -A INPUT -j NFQUEUE
-#sudo iptables -I FORWARD -j NFQUEUE
-#sudo iptables -I OUTPUT -j NFQUEUE
+sudo iptables -A INPUT -j NFQUEUE
+sudo iptables -I FORWARD -j NFQUEUE
+sudo iptables -I OUTPUT -j NFQUEUE
+
+# rsyslog to create /var/log/suricata.log
+sudo cp ./scripts/conf/20-suricata.conf /etc/rsyslog.d/
+sudo chown root:root /etc/rsyslog.d/20-suricata.conf
+sudo systemctl restart rsyslog
