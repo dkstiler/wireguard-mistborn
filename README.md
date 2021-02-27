@@ -50,6 +50,7 @@ Within Mistborn is a panel to enable and manage these free extra services (off b
 - [Jellyfin](https://jellyfin.org): The Free Media Software System.
 - [Tor](https://www.torproject.org): The Onion Router. One tool in the arsenal of online security and privacy.
 - [Jitsi](https://jitsi.org): Multi-platform open-source video conferencing
+- [Guacamole](https://guacamole.apache.org): A clientless remote desktop gateway that supports standard protocols like VNC, RDP, and SSH.
 
 # Quickstart
 Tested Operating Systems (in order of thoroughness):
@@ -69,7 +70,7 @@ The Mistborn docker images exist for these architectures:
 
 | Mistborn Docker Images (hub.docker.com)        | Architectures       |
 |------------------------------------------------|---------------------|
-| mistborn (django, celery{worker,beat}, flower) | amd64, arm64, arm/v7 |
+| mistborn (django, celery{worker,beat})         | amd64, arm64, arm/v7 |
 | dnscrypt-proxy                                 | amd64, arm64, arm/v7 |
 
 Recommended System Specifications:
@@ -277,6 +278,7 @@ Mistborn uses the following domains (that can be reached by all Wireguard client
 | Syncthing | syncthing.mistborn | Off |
 | OnlyOffice | onlyoffice.mistborn | Off |
 | Jitsi | jitsi.mistborn | Off |
+| Guacamole | guac.mistborn | Off |
 
 # Default Credentials
 These are the default credentials to use in the services you choose to use:
@@ -286,6 +288,7 @@ These are the default credentials to use in the services you choose to use:
 | Pihole |  | {{default mistborn password}} |
 | Cockpit | cockpit | {{default mistborn password}} |
 | Nextcloud | mistborn | {{default mistborn password}} |
+| Guacamole | mistborn | {{default mistborn password }} |
 
 You can find the credentials sent to the Docker containers in: `/opt/mistborn/.envs/.production/`
 
@@ -445,6 +448,7 @@ sudo journalctl -xfu Mistborn-syncthing
 sudo journalctl -xfu Mistborn-jellyfin
 sudo journalctl -xfu Mistborn-nextcloud
 sudo journalctl -xfu Mistborn-jitsi
+sudo journalctl -xfu Mistborn-guacamole
 sudo journalctl -xfu Mistborn-rocketchat
 sudo journalctl -xfu Mistborn-onlyoffice
 sudo journalctl -xfu Mistborn-tor
