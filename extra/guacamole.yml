@@ -37,11 +37,12 @@ services:
     - "traefik.enable=true"
     - "traefik.http.routers.guacamole-http.rule=Host(`guac.mistborn`)"
     - "traefik.http.routers.guacamole-http.entrypoints=web"
-    - "traefik.http.routers.guacamole-http.middlewares=mistborn_auth@file"
+    - "traefik.http.routers.guacamole-http.middlewares=mistborn_auth@file,add-guacamole"
     - "traefik.http.routers.guacamole-https.rule=Host(`guac.mistborn`)"
     - "traefik.http.routers.guacamole-https.entrypoints=websecure"
-    - "traefik.http.routers.guacamole-https.middlewares=mistborn_auth@file"
+    - "traefik.http.routers.guacamole-https.middlewares=mistborn_auth@file,add-guacamole"
     - "traefik.http.routers.guacamole-https.tls.certresolver=basic"
+    - "traefik.http.middlewares.add-guacamole.addPrefix.prefix=/guacamole"
     - "traefik.http.services.guacamole-service.loadbalancer.server.port=8080"
     depends_on:
     - guacd

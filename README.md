@@ -128,6 +128,15 @@ In Mistborn, Gateways are upstream from the VPN server so connections to third-p
 
 The Gateway adds an extra network hop. DNS is still resolved in Mistborn so pihole is still blocking ads.
 
+# Remote Desktop
+Remote desktops enable multiple users to share desktop resources and data. Remote desktops also enable groups to prevent sensitive data from ever entering an endpoint devices such as a smartphone. For reference, some United States Government regulations require controls to protect Controlled Unclassified Information (CUI) that are not feasible to implement on all endpoint devices and remote desktops prevent the data from entering the device (see NIST SP 800-171 3.1.19, CMMC AC.3.022).
+
+Mistborn enables remote desktop access via the Apache Guacamole extra service, which supports VNC, RDP, SSH, and other protocols. 
+
+![Guacamole Recent Connections](https://gitlab.com/cyber5k/public/-/raw/master/graphics/guacamole_connections.png)
+
+Guacamole implements its own users and groups access controls to manage access to individual desktops. All Mistborn users must be authenticated with Mistborn (via Wireguard only or MFA) to access the Guacamole interface.
+
 # Client to client communication
 By default direct communication between network clients is blocked. Mistborn clients can all talk to Mistborn and communicate via shared services (Jitsi, Nextcloud, etc). Direct client to client communication can be enabled via the "client-to-client" toggle.
 
