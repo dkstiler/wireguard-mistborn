@@ -160,7 +160,7 @@ services:
    container_name: mistborn_production_pihole
    image: pihole/pihole:v5.5.1
    env_file:
-     - /opt/mistborn_volumes/base/base.txt
+     - ./.envs/.production/.pihole
    ports:
      - "${MISTBORN_DNS_BIND_IP}:53:53/tcp"
      - "${MISTBORN_DNS_BIND_IP}:53:53/udp"
@@ -168,11 +168,12 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.pihole-http.rule=Host(`pihole.mistborn`)"
       - "traefik.http.routers.pihole-http.entrypoints=web"
-      - "traefik.http.routers.pihole-http.middlewares=mistborn_auth@file"
+      - "traefik.http.routers.pihole-http.middlewares=mistborn_auth@file,add-pihole-admin"
       - "traefik.http.routers.pihole-https.rule=Host(`pihole.mistborn`)"
       - "traefik.http.routers.pihole-https.entrypoints=websecure"
-      - "traefik.http.routers.pihole-https.middlewares=mistborn_auth@file"
+      - "traefik.http.routers.pihole-https.middlewares=mistborn_auth@file,add-pihole-admin"
       - "traefik.http.routers.pihole-https.tls.certresolver=basic"
+      - "traefik.http.middlewares.add-pihole-admin.addPrefix.prefix=/admin"
       - "traefik.http.services.pihole-service.loadbalancer.server.port=80"
    environment:
      - ServerIP=10.2.0.3
@@ -182,8 +183,6 @@ services:
      - DNSMASQ_LISTENING=all
    #  TZ: 'America/New York'
    # Volumes store your data between container upgrades
-   env_file:
-     - ./.envs/.production/.pihole
    volumes:
      - ../mistborn_volumes/base/pihole/etc-pihole:/etc/pihole/
      - ../mistborn_volumes/base/pihole/etc-dnsmasqd:/etc/dnsmasq.d/
