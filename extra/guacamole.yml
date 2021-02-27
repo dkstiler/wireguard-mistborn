@@ -1,0 +1,71 @@
+version: '3'
+
+# services
+services:
+  # guacd
+  guacd:
+    container_name: mistborn_production_guacd
+    image: guacamole/guacd
+    networks:
+      guacnetwork:
+    restart: unless-stopped
+    volumes:
+    - ../../mistborn_volumes/extra/guacamole/drive:/drive:rw
+    - ../../mistborn_volumes/extra/guacamole/record:/record:rw
+
+
+  # postgres
+  guac_postgres:
+    container_name: mistborn_production_guac_postgres
+    env_file:
+    - ../.envs/.production/.guacamole
+    environment:
+      PGDATA: /var/lib/postgresql/data/guacamole
+    image: postgres
+    networks:
+      guacnetwork:
+    restart: unless-stopped
+    volumes:
+    - ../../mistborn_volumes/extra/guacamole/init:/docker-entrypoint-initdb.d:ro
+    - ../../mistborn_volumes/extra/guacamole/data:/var/lib/postgresql/data:rw
+
+
+  # guacamole
+  guacamole:
+    container_name: mistborn_production_guacamole
+    labels:
+    - "traefik.enable=true"
+    - "traefik.http.routers.guacamole-http.rule=Host(`guac.mistborn`)"
+    - "traefik.http.routers.guacamole-http.entrypoints=web"
+    - "traefik.http.routers.guacamole-http.middlewares=mistborn_auth@file"
+    - "traefik.http.routers.guacamole-https.rule=Host(`guac.mistborn`)"
+    - "traefik.http.routers.guacamole-https.entrypoints=websecure"
+    - "traefik.http.routers.guacamole-https.middlewares=mistborn_auth@file"
+    - "traefik.http.routers.guacamole-https.tls.certresolver=basic"
+    - "traefik.http.services.guacamole-service.loadbalancer.server.port=8080"
+    depends_on:
+    - guacd
+    - guac_postgres
+    environment:
+      GUACD_HOSTNAME: guacd
+      GUACD_PORT: 4822
+      #GUACAMOLE_HOME: /config
+    env_file:
+    - ../.envs/.production/.guacamole
+    image: guacamole/guacamole
+    links:
+    - guacd
+    networks:
+      guacnetwork:
+    #ports:
+## enable next line if not using nginx
+##    - 8080:8080/tcp # Guacamole is on :8080/guacamole, not /.
+## enable next line when using nginx
+    #- 8080/tcp
+    restart: unless-stopped
+
+# networks
+# create a network 'guacnetwork' in mode 'bridged'
+networks:
+  guacnetwork:
+    driver: bridge
