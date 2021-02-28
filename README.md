@@ -344,7 +344,7 @@ But wait, there's more! You can:
 | Jitsi Meet     | [Jitsi Meet](https://play.google.com/store/apps/details?id=org.jitsi.meet)                         | [Jitsi Meet](https://apps.apple.com/us/app/jitsi-meet/id1165103905)                |
 | Bitwarden      | [Bitwarden](https://play.google.com/store/apps/details?id=com.x8bit.bitwarden)                     | [Bitwarden](https://apps.apple.com/us/app/bitwarden-password-manager/id1137397744) |
 | Jellyfin       | [Jellyfin](https://play.google.com/store/apps/details?id=org.jellyfin.mobile)                      | [Jellyfin](https://apps.apple.com/us/app/jellyfin-mobile/id1480192618)             |
-| Home Assistant | [Home Assistant](https://play.google.com/store/apps/details?id=io.homeassistant.companion.android) |                                                                                    |
+| Home Assistant | [Home Assistant](https://play.google.com/store/apps/details?id=io.homeassistant.companion.android) | [Home Assistant](https://apps.apple.com/us/app/home-assistant/id1099568401)                                                                                   |
 | Rocket.Chat    | [Rocket.Chat](https://play.google.com/store/apps/details?id=chat.rocket.android)                   | [Rocket.Chat](https://apps.apple.com/us/app/rocket-chat/id1148741252)              |
 
 ## TLS Certificate

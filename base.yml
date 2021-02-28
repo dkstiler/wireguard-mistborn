@@ -158,7 +158,7 @@ services:
   
   pihole:
    container_name: mistborn_production_pihole
-   image: pihole/pihole:v5.5.1
+   image: pihole/pihole:latest
    env_file:
      - ./.envs/.production/.pihole
    ports:
