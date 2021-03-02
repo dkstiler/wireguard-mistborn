@@ -2,6 +2,12 @@
 
 set -e
 
+# detect if suricata is installed
+if [[ ! $(dpkg-query -W -f='${Status}' suricata 2>/dev/null | grep -c "ok installed") ]]; then
+    echo "Installed"
+    exit 0
+else
+
 source /opt/mistborn/scripts/subinstallers/platform.sh
 
 # minimal dependencies
