@@ -6,7 +6,7 @@ set -e
 if [[ ! $(dpkg-query -W -f='${Status}' suricata 2>/dev/null | grep -c "ok installed") ]]; then
     echo "Installed"
     exit 0
-else
+fi
 
 source /opt/mistborn/scripts/subinstallers/platform.sh
 
