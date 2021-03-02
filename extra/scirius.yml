@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  scirius:
+    container_name: mistborn_production_scirius
+    image: "cyber5k/scirius:${MISTBORN_TAG}"
+    #environment:
+    #  - SECRET_KEY: <SECRET KEY>
+    volumes:
+      - ../../mistborn_volumes/extra/scirius/data:/data
+      - ../../mistborn_volumes/extra/scirius/logs:/logs
+      - ../../mistborn_volumes/extra/scirius/static:/static
+      - ../../mistborn_volumes/extra/scirius/rules:/rules
+      - /var/run/suricata-command.socket:/var/run/suricata-command.socket
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homeassistant-http.rule=Host(`suricata.mistborn`)"
+      - "traefik.http.routers.homeassistant-http.entrypoints=web"
+      - "traefik.http.routers.homeassistant-http.middlewares=mistborn_auth@file"
+      - "traefik.http.routers.homeassistant-https.rule=Host(`suricata.mistborn`)"
+      - "traefik.http.routers.homeassistant-https.entrypoints=websecure"
+      - "traefik.http.routers.homeassistant-https.middlewares=mistborn_auth@file"
+      - "traefik.http.routers.homeassistant-https.tls.certresolver=basic"
+      - "traefik.http.services.homeassistant-service.loadbalancer.server.port=8000"
+    restart: unless-stopped 
+
+networks:
+  default:
+    external:
+      name: mistborn_default
