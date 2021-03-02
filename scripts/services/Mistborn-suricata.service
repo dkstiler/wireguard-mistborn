@@ -9,7 +9,7 @@ Restart=always
 User=root
 Group=docker
 PermissionsStartOnly=true
-#EnvironmentFile=/opt/mistborn/.envs/.production/.scirius
+EnvironmentFile=/opt/mistborn/.env
 ExecStartPre=/opt/mistborn/scripts/env/suricata_init.sh
 # Shutdown container (if running) when unit is stopped
 ExecStartPre=/usr/local/bin/docker-compose -f /opt/mistborn/extra/scirius.yml down
