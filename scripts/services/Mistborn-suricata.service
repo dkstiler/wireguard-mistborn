@@ -9,15 +9,13 @@ Restart=always
 User=root
 Group=docker
 PermissionsStartOnly=true
-EnvironmentFile=/opt/mistborn/.env
-ExecStartPre=/opt/mistborn/scripts/env/suricata_init.sh
 # Shutdown container (if running) when unit is stopped
-ExecStartPre=/usr/local/bin/docker-compose -f /opt/mistborn/extra/scirius.yml down
+ExecStartPre=/opt/mistborn/scripts/wrappers/mistborn_docker.sh suricata docker-compose -f /opt/mistborn/extra/scirius.yml down
 
 # Start container when unit is started
-ExecStart=/usr/local/bin/docker-compose -f /opt/mistborn/extra/scirius.yml up --build
+ExecStart=/opt/mistborn/scripts/wrappers/mistborn_docker.sh suricata docker-compose -f /opt/mistborn/extra/scirius.yml up --build
 # Stop container when unit is stopped
-ExecStop=/usr/local/bin/docker-compose -f /opt/mistborn/extra/scirius.yml down
+ExecStop=/opt/mistborn/scripts/wrappers/mistborn_docker.sh suricata docker-compose -f /opt/mistborn/extra/scirius.yml down
 # Post stop
 
 [Install]

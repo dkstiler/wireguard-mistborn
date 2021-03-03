@@ -518,6 +518,7 @@ See the [Mistborn Network Security](https://gitlab.com/cyber5k/mistborn/-/wikis/
 - The generated TLS certificate has an RSA modulus of 4096 bits, is signed with SHA-256, and is good for 397 days. The certificate is checked daily and will regenerate when expiration is within 30 days.
 - Outbound UDP on port 53 is blocked. All DNS requests should be handled by the dnscrypt_proxy service and if any client, service, etc. tries to circumvent that it is blocked.
 - Unattended upgrades are set to automatically install operating system security updates.
+- Ownership of mistborn files is set to the system mistborn user and access to environment variables is disabled for users other than the owner.
 
 # Roadmap (not necessarily in order)
 Many features and refinements are in the works at various stages including:
