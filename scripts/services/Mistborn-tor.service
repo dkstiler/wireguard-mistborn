@@ -10,13 +10,13 @@ User=root
 Group=docker
 PermissionsStartOnly=true
 # Shutdown container (if running) when unit is stopped
-ExecStartPre=/usr/local/bin/docker-compose -f /opt/mistborn/extra/tor.yml down
+ExecStartPre=/opt/mistborn/scripts/wrappers/mistborn_docker.sh tor docker-compose -f /opt/mistborn/extra/tor.yml down
 
 ExecStartPre=/sbin/iptables -w -I DOCKER-USER -i DIFACE -p tcp --dport 9150 -j MISTBORN_LOG_DROP
 # Start container when unit is started
-ExecStart=/usr/local/bin/docker-compose -f /opt/mistborn/extra/tor.yml up --build
+ExecStart=/opt/mistborn/scripts/wrappers/mistborn_docker.sh tor docker-compose -f /opt/mistborn/extra/tor.yml up --build
 # Stop container when unit is stopped
-ExecStop=/usr/local/bin/docker-compose -f /opt/mistborn/extra/tor.yml down
+ExecStop=/opt/mistborn/scripts/wrappers/mistborn_docker.sh tor docker-compose -f /opt/mistborn/extra/tor.yml down
 # Post stop
 ExecStopPost=-/sbin/iptables -D DOCKER-USER -i DIFACE -p tcp --dport 9150 -j MISTBORN_LOG_DROP
 

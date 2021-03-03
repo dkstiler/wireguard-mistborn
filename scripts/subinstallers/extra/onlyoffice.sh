@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# generate onlyoffice .env files
+ONLYOFFICE_PROD_FILE="$1"
+JWT_SECRET="${MISTBORN_DEFAULT_PASSWORD}"
+echo "JWT_ENABLED=true" > $ONLYOFFICE_PROD_FILE
+echo "JWT_SECRET=$JWT_SECRET" >> $ONLYOFFICE_PROD_FILE

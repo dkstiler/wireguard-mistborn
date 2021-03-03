@@ -248,6 +248,7 @@ sudo resolvconf -u 1>/dev/null 2>&1
 
 echo "backup up original volumes folder"
 sudo mkdir -p ../mistborn_backup
+sudo chmod 700 ../mistborn_backup
 sudo tar -czf ../mistborn_backup/mistborn_volumes_backup.tar.gz ../mistborn_volumes 1>/dev/null 2>&1
 
 # clean docker

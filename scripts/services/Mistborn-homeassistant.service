@@ -10,12 +10,12 @@ User=root
 Group=docker
 PermissionsStartOnly=true
 # Shutdown container (if running) when unit is stopped
-ExecStartPre=/usr/local/bin/docker-compose -f /opt/mistborn/extra/homeassistant.yml down
+ExecStartPre=/opt/mistborn/scripts/wrappers/mistborn_docker.sh homeassistant docker-compose -f /opt/mistborn/extra/homeassistant.yml down
 
 # Start container when unit is started
-ExecStart=/usr/local/bin/docker-compose -f /opt/mistborn/extra/homeassistant.yml up --build
+ExecStart=/opt/mistborn/scripts/wrappers/mistborn_docker.sh homeassistant docker-compose -f /opt/mistborn/extra/homeassistant.yml up --build
 # Stop container when unit is stopped
-ExecStop=/usr/local/bin/docker-compose -f /opt/mistborn/extra/homeassistant.yml down
+ExecStop=/opt/mistborn/scripts/wrappers/mistborn_docker.sh homeassistant docker-compose -f /opt/mistborn/extra/homeassistant.yml down
 # Post stop
 
 [Install]
