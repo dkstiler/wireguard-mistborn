@@ -7,7 +7,7 @@ services:
     #environment:
     #  - SECRET_KEY: <SECRET KEY>
     env_file:
-      - ../.envs/.production/.scirius
+      - ../.envs/.production/.suricata
     volumes:
       - ../../mistborn_volumes/extra/scirius/data:/data
       - ../../mistborn_volumes/extra/scirius/logs:/logs
