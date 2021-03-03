@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [[ -f "/opt/mistborn_volumes/extra/guacamole/init/initdb.sql" ]]; then
+    echo "initdb.sql exists. Proceeding."
+    exit 0
+fi
+
 mkdir -p /opt/mistborn_volumes/extra/guacamole/init/ >/dev/null 2>&1
 chmod -R +x /opt/mistborn_volumes/extra/guacamole/init/
 docker run --rm guacamole/guacamole /opt/guacamole/bin/initdb.sh --postgres > /opt/mistborn_volumes/extra/guacamole/init/initdb.sql

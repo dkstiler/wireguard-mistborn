@@ -9,15 +9,13 @@ Restart=always
 User=root
 Group=docker
 PermissionsStartOnly=true
-EnvironmentFile=/opt/mistborn/.envs/.production/.guacamole
-ExecStartPre=/opt/mistborn/scripts/env/guacamole_init.sh
 # Shutdown container (if running) when unit is stopped
-ExecStartPre=/usr/local/bin/docker-compose -f /opt/mistborn/extra/guacamole.yml down
+ExecStartPre=/opt/mistborn/scripts/wrappers/mistborn_docker.sh guacamole docker-compose -f /opt/mistborn/extra/guacamole.yml down
 
 # Start container when unit is started
-ExecStart=/usr/local/bin/docker-compose -f /opt/mistborn/extra/guacamole.yml up --build
+ExecStart=/opt/mistborn/scripts/wrappers/mistborn_docker.sh guacamole docker-compose -f /opt/mistborn/extra/guacamole.yml up --build
 # Stop container when unit is stopped
-ExecStop=/usr/local/bin/docker-compose -f /opt/mistborn/extra/guacamole.yml down
+ExecStop=/opt/mistborn/scripts/wrappers/mistborn_docker.sh guacamole docker-compose -f /opt/mistborn/extra/guacamole.yml down
 # Post stop
 
 [Install]

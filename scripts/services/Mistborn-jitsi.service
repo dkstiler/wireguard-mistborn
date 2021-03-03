@@ -9,20 +9,18 @@ Restart=always
 User=root
 Group=docker
 PermissionsStartOnly=true
-EnvironmentFile=/opt/mistborn/.envs/.production/.jitsi
 
 # Shutdown container (if running) when unit is stopped
-ExecStartPre=/usr/local/bin/docker-compose -f /opt/mistborn/extra/jitsi-meet.yml down
+ExecStartPre=/opt/mistborn/scripts/wrappers/mistborn_docker.sh jitsi docker-compose -f /opt/mistborn/extra/jitsi-meet.yml down
+ExecStartPre=/opt/mistborn/scripts/wrappers/mistborn_docker.sh jitsi /opt/mistborn/scripts/services/jitsi/iptables_up.sh
 
-ExecStartPre=/sbin/iptables -w -I DOCKER-USER -i DIFACE -p udp --dport $JVB_PORT -j MISTBORN_LOG_DROP
-ExecStartPre=/sbin/iptables -w -I DOCKER-USER -i DIFACE -p tcp --dport $JVB_TCP_PORT -j MISTBORN_LOG_DROP
 # Start container when unit is started
-ExecStart=/usr/local/bin/docker-compose -f /opt/mistborn/extra/jitsi-meet.yml up --build
+ExecStart=/opt/mistborn/scripts/wrappers/mistborn_docker.sh jitsi docker-compose -f /opt/mistborn/extra/jitsi-meet.yml up --build
+
 # Stop container when unit is stopped
-ExecStop=/usr/local/bin/docker-compose -f /opt/mistborn/extra/jitsi-meet.yml down
+ExecStop=/opt/mistborn/scripts/wrappers/mistborn_docker.sh jitsi docker-compose -f /opt/mistborn/extra/jitsi-meet.yml down
 # Post stop
-ExecStopPost=-/sbin/iptables -D DOCKER-USER -i DIFACE -p udp --dport $JVB_PORT -j MISTBORN_LOG_DROP
-ExecStopPost=-/sbin/iptables -D DOCKER-USER -i DIFACE -p tcp --dport $JVB_TCP_PORT -j MISTBORN_LOG_DROP
+ExecStopPost=-/opt/mistborn/scripts/wrappers/mistborn_docker.sh jitsi /opt/mistborn/scripts/services/jitsi/iptables_down.sh
 
 [Install]
 WantedBy=multi-user.target
