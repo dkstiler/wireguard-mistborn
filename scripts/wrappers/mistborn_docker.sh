@@ -25,16 +25,16 @@ fi
 set +a
 
 # call traefik-extra
-if [[ ! -z "MISTBORN_SERVICE_NAME" ]] && \
-   [[ ! -z "MISTBORN_SERVICE_DOMAIN" ]] && \
-   [[ ! -z "MISTBORN_SERVICE_PORT" ]]; then
+if [[ ! -z "${MISTBORN_SERVICE_NAME}" ]] && \
+   [[ ! -z "${MISTBORN_SERVICE_DOMAIN}" ]] && \
+   [[ ! -z "${MISTBORN_SERVICE_PORT}" ]]; then
 
     echo "Populating traefik routes"
 
     mistborn-cli traefik-extra \
-        --domain-name $MISTBORN_SERVICE_DOMAIN \
-        --service-name $MISTBORN_SERVICE_NAME \
-        --web-port $MISTBORN_SERVICE_PORT
+        --domain-name ${MISTBORN_SERVICE_DOMAIN} \
+        --service-name ${MISTBORN_SERVICE_NAME} \
+        --web-port ${MISTBORN_SERVICE_PORT}
 else
     echo "Not populating traefik routes"
 fi
