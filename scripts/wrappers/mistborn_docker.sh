@@ -32,4 +32,15 @@ else
     echo "No init script. Proceeding."
 fi
 
+# ensure base is up and listening
+echo "Waiting for Mistborn-base to finish starting up..."
+
+while ! nc -z 10.2.3.1 5000; do
+    WAIT_TIME=$((5 + $RANDOM % 15))
+    echo "Waiting ${WAIT_TIME} seconds for Mistborn-base..."
+    sleep ${WAIT_TIME}
+done
+
+echo "Mistborn-base is running"
+
 exec "$@"

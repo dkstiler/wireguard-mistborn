@@ -18,3 +18,6 @@ fi
 if [ ! -f /usr/local/bin/docker-compose ]; then
     sudo -E ln -s $(which docker-compose) /usr/local/bin/docker-compose
 fi
+
+# daemon.json
+#source ./scripts/subinstallers/docker_daemon.sh
