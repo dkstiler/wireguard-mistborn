@@ -2,12 +2,9 @@ version: '3'
 
 services:
   raspap:
-    build:
-      context: ..
-      dockerfile: ./compose/production/raspap/Dockerfile
-    #user: root
-    image: mistborn_production_raspap
+    image: "cyber5k/raspap:${MISTBORN_TAG}"
     container_name: mistborn_production_raspap
+    #network_mode: host
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.raspap-http.rule=Host(`raspap.mistborn`)"
@@ -19,10 +16,16 @@ services:
       - "traefik.http.routers.raspap-https.tls.certresolver=basic"
       - "traefik.http.services.raspap-service.loadbalancer.server.port=80"
     env_file:
-      - ../.envs/.production/.pihole
-    command: /start
+      - ../.envs/.production/.raspap
+    cap_add:
+      #- NET_ADMIN
+      - SYS_ADMIN
+      #- CAP_FOWNER
+    privileged: true
     volumes:
-      - ../../mistborn_volumes/extra/raspap/etc-raspap:/etc/raspap
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    #command: /start
+    restart: unless-stopped
 
 networks:
   default:
