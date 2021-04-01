@@ -51,7 +51,7 @@ Within Mistborn is a panel to enable and manage these free extra services (off b
 - [Tor](https://www.torproject.org): The Onion Router. One tool in the arsenal of online security and privacy.
 - [Jitsi](https://jitsi.org): Multi-platform open-source video conferencing
 - [Guacamole](https://guacamole.apache.org): A clientless remote desktop gateway that supports standard protocols like VNC, RDP, and SSH.
-- [RaspAP](https://raspap.com/): The easiest, full-featured wireless router setup for Debian-based devices. Period. (Mistborn integration in alpha testing).
+- [RaspAP](https://raspap.com/): The easiest, full-featured wireless router setup for Debian-based devices. Period. (Mistborn integration in alpha testing.)
 
 # Quickstart
 Tested Operating Systems (in order of thoroughness):
