@@ -59,13 +59,18 @@ echo -e "| |  | | \__ \ |_| |_) | (_) | |  | | | |"
 echo -e "|_|  |_|_|___/\__|_.__/ \___/|_|  |_| |_|"
 echo -e ""
 
-# INPUT default admin password
-if [ -z "${MISTBORN_DEFAULT_PASSWORD}" ]; then
-    read -p "(Mistborn) Set default admin password: " -s MISTBORN_DEFAULT_PASSWORD
-    echo
-else
-    echo "MISTBORN_DEFAULT_PASSWORD is already set"
-fi
+sudo rm -rf /opt/mistborn 2>/dev/null || true
+
+# clone to /opt and change directory
+echo "Cloning $GIT_BRANCH branch from mistborn repo"
+sudo git clone https://gitlab.com/cyber5k/mistborn.git -b $GIT_BRANCH /opt/mistborn
+sudo chown -R $USER:$USER /opt/mistborn
+pushd .
+cd /opt/mistborn
+git submodule update --init --recursive
+
+# MISTBORN_DEFAULT_PASSWORD
+source ./scripts/subinstallers/passwd.sh
 
 # Install Cockpit?
 if [ -z "${MISTBORN_INSTALL_COCKPIT}" ]; then
@@ -84,16 +89,6 @@ if [ ! -f ~/.ssh/id_rsa ]; then
 else
     echo "SSH key exists for $USER"
 fi
-
-sudo rm -rf /opt/mistborn 2>/dev/null || true
-
-# clone to /opt and change directory
-echo "Cloning $GIT_BRANCH branch from mistborn repo"
-sudo git clone https://gitlab.com/cyber5k/mistborn.git -b $GIT_BRANCH /opt/mistborn
-sudo chown -R $USER:$USER /opt/mistborn
-pushd .
-cd /opt/mistborn
-git submodule update --init --recursive
 
 # initial load update package list
 sudo apt-get update

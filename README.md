@@ -51,6 +51,7 @@ Within Mistborn is a panel to enable and manage these free extra services (off b
 - [Tor](https://www.torproject.org): The Onion Router. One tool in the arsenal of online security and privacy.
 - [Jitsi](https://jitsi.org): Multi-platform open-source video conferencing
 - [Guacamole](https://guacamole.apache.org): A clientless remote desktop gateway that supports standard protocols like VNC, RDP, and SSH.
+- [RaspAP](https://raspap.com/): The easiest, full-featured wireless router setup for Debian-based devices. Period. (Mistborn integration in alpha testing).
 
 # Quickstart
 Tested Operating Systems (in order of thoroughness):
@@ -288,6 +289,7 @@ Mistborn uses the following domains (that can be reached by all Wireguard client
 | OnlyOffice | onlyoffice.mistborn | Off |
 | Jitsi | jitsi.mistborn | Off |
 | Guacamole | guac.mistborn | Off |
+| RaspAP | raspap.mistborn | Off |
 
 # Default Credentials
 These are the default credentials to use in the services you choose to use:
@@ -298,6 +300,7 @@ These are the default credentials to use in the services you choose to use:
 | Cockpit | cockpit | {{default mistborn password}} |
 | Nextcloud | mistborn | {{default mistborn password}} |
 | Guacamole | mistborn | {{default mistborn password }} |
+| RaspAP | mistborn | {{default mistborn password}} |
 
 You can find the credentials sent to the Docker containers in: `/opt/mistborn/.envs/.production/`
 
