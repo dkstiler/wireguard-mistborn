@@ -6,6 +6,7 @@ PartOf=Mistborn-base.service
 
 [Service]
 Restart=always
+RestartSec=15
 User=root
 Group=docker
 PermissionsStartOnly=true
