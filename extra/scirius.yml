@@ -13,7 +13,7 @@ services:
       - ../../mistborn_volumes/extra/scirius/logs:/logs
       - ../../mistborn_volumes/extra/scirius/static:/static
       - ../../mistborn_volumes/extra/scirius/rules:/rules
-      - /var/run/suricata-command.socket:/var/run/suricata-command.socket
+      - /var/run/suricata/suricata-command.socket:/var/run/suricata/suricata-command.socket
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.scirius-http.rule=Host(`scirius.mistborn`)"
