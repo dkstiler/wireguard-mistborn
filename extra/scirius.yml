@@ -7,7 +7,7 @@ services:
     #environment:
     #  - SECRET_KEY: <SECRET KEY>
     env_file:
-      - ../.envs/.production/.suricata
+      - ../.envs/.production/.scirius
     volumes:
       - ../../mistborn_volumes/extra/scirius/data:/data
       - ../../mistborn_volumes/extra/scirius/logs:/logs
@@ -16,10 +16,10 @@ services:
       - /var/run/suricata-command.socket:/var/run/suricata-command.socket
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.scirius-http.rule=Host(`suricata.mistborn`)"
+      - "traefik.http.routers.scirius-http.rule=Host(`scirius.mistborn`)"
       - "traefik.http.routers.scirius-http.entrypoints=web"
       - "traefik.http.routers.scirius-http.middlewares=mistborn_auth@file"
-      - "traefik.http.routers.scirius-https.rule=Host(`suricata.mistborn`)"
+      - "traefik.http.routers.scirius-https.rule=Host(`scirius.mistborn`)"
       - "traefik.http.routers.scirius-https.entrypoints=websecure"
       - "traefik.http.routers.scirius-https.middlewares=mistborn_auth@file"
       - "traefik.http.routers.scirius-https.tls.certresolver=basic"
