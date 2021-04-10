@@ -9,10 +9,10 @@ services:
     env_file:
       - ../.envs/.production/.scirius
     volumes:
-      - ../../mistborn_volumes/extra/scirius/data:/data
-      - ../../mistborn_volumes/extra/scirius/logs:/logs
+      - /var/log/suricata:/logs
+      - /etc/suricata/rules:/rules
       - ../../mistborn_volumes/extra/scirius/static:/static
-      - ../../mistborn_volumes/extra/scirius/rules:/rules
+      - ../../mistborn_volumes/extra/scirius/data:/data
       - /var/run/suricata/suricata-command.socket:/var/run/suricata/suricata-command.socket
     labels:
       - "traefik.enable=true"
