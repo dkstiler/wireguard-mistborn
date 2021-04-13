@@ -1,0 +1,101 @@
+# Wazuh App Copyright (C) 2021 Wazuh Inc. (License GPLv2)
+version: '3.7'
+
+services:
+  wazuh:
+    image: wazuh/wazuh-odfe:4.1.4
+    hostname: wazuh-manager
+    restart: unless-stopped
+    ports:
+      - "${MISTBORN_BIND_IP}:1514:1514"
+      - "${MISTBORN_BIND_IP}:1515:1515"
+      - "${MISTBORN_BIND_IP}:514:514/udp"
+      - "${MISTBORN_BIND_IP}:55000:55000"
+    environment:
+      - ELASTICSEARCH_URL=https://wazuhes.mistborn
+      - FILEBEAT_SSL_VERIFICATION_MODE=none
+    env_file:
+      - ../.envs/.production/.wazuh
+    volumes:
+      - ossec_api_configuration:/var/ossec/api/configuration
+      - ossec_etc:/var/ossec/etc
+      - ossec_logs:/var/ossec/logs
+      - ossec_queue:/var/ossec/queue
+      - ossec_var_multigroups:/var/ossec/var/multigroups
+      - ossec_integrations:/var/ossec/integrations
+      - ossec_active_response:/var/ossec/active-response/bin
+      - ossec_agentless:/var/ossec/agentless
+      - ossec_wodles:/var/ossec/wodles
+      - filebeat_etc:/etc/filebeat
+      - filebeat_var:/var/lib/filebeat
+
+  wazuh-elasticsearch:
+    image: amazon/opendistro-for-elasticsearch:1.12.0
+    hostname: wazuh-elasticsearch
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wazuhes-http.rule=Host(`wazuhes.mistborn`)"
+      - "traefik.http.routers.wazuhes-http.entrypoints=web"
+      - "traefik.http.routers.wazuhes-http.middlewares=mistborn_auth@file"
+      - "traefik.http.routers.wazuhes-https.rule=Host(`wazuhes.mistborn`)"
+      - "traefik.http.routers.wazuhes-https.entrypoints=websecure"
+      - "traefik.http.routers.wazuhes-https.middlewares=mistborn_auth@file"
+      - "traefik.http.routers.wazuhes-https.tls.certresolver=basic"
+      - "traefik.http.services.wazuhes-service.loadbalancer.server.port=9200"
+    #ports:
+    #  - "${MISTBORN_BIND_IP}:9200:9200"
+    environment:
+      - discovery.type=single-node
+      - cluster.name=wazuh-cluster
+      - network.host=0.0.0.0
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - bootstrap.memory_lock=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+
+  wazuh-kibana:
+    image: wazuh/wazuh-kibana-odfe:4.1.4
+    hostname: wazuh-kibana
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wazuhk-http.rule=Host(`wazuhk.mistborn`)"
+      - "traefik.http.routers.wazuhk-http.entrypoints=web"
+      - "traefik.http.routers.wazuhk-http.middlewares=mistborn_auth@file"
+      - "traefik.http.routers.wazuhk-https.rule=Host(`wazuhk.mistborn`)"
+      - "traefik.http.routers.wazuhk-https.entrypoints=websecure"
+      - "traefik.http.routers.wazuhk-https.middlewares=mistborn_auth@file"
+      - "traefik.http.routers.wazuhk-https.tls.certresolver=basic"
+      - "traefik.http.services.wazuhk-service.loadbalancer.server.port=5601"
+    #ports:
+    #  - "${MISTBORN_BIND_IP}:5601:5601"
+    environment:
+      - SERVER_SSL_ENABLED=false
+      - SERVER_SSL_CERTIFICATE=/usr/share/kibana/config/opendistroforelasticsearch.example.org.cert
+      - SERVER_SSL_KEY=/usr/share/kibana/config/opendistroforelasticsearch.example.org.key
+    env_file:
+      - ../.envs/.production/.wazuh
+    depends_on:
+      - wazuh-elasticsearch
+    links:
+      - wazuh-elasticsearch:wazuh-elasticsearch
+      - wazuh:wazuh
+
+volumes:
+  ossec_api_configuration:
+  ossec_etc:
+  ossec_logs:
+  ossec_queue:
+  ossec_var_multigroups:
+  ossec_integrations:
+  ossec_active_response:
+  ossec_agentless:
+  ossec_wodles:
+  filebeat_etc:
+  filebeat_var:
