@@ -10,9 +10,10 @@ services:
       - ../.envs/.production/.scirius
     volumes:
       - /var/log/suricata:/logs
-      - /etc/suricata/rules:/rules
+      - /etc/suricata/rules:/etc/suricata/rules
       - ../../mistborn_volumes/extra/scirius/static:/static
       - ../../mistborn_volumes/extra/scirius/data:/data
+      - /var/run:/var/run
       - /var/run/suricata/suricata-command.socket:/var/run/suricata/suricata-command.socket
     labels:
       - "traefik.enable=true"
