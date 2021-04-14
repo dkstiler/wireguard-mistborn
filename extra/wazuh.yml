@@ -3,7 +3,7 @@ version: '3.7'
 
 services:
   wazuh:
-    image: wazuh/wazuh-odfe:4.1.4
+    image: wazuh/wazuh-odfe:4.1.2
     hostname: wazuh-manager
     restart: unless-stopped
     ports:
@@ -12,7 +12,7 @@ services:
       - "${MISTBORN_BIND_IP}:514:514/udp"
       - "${MISTBORN_BIND_IP}:55000:55000"
     environment:
-      - ELASTICSEARCH_URL=https://wazuhes.mistborn
+      - ELASTICSEARCH_URL=https://wazuh-elasticsearch:9200
       - FILEBEAT_SSL_VERIFICATION_MODE=none
     env_file:
       - ../.envs/.production/.wazuh
@@ -33,18 +33,8 @@ services:
     image: amazon/opendistro-for-elasticsearch:1.12.0
     hostname: wazuh-elasticsearch
     restart: unless-stopped
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.wazuhes-http.rule=Host(`wazuhes.mistborn`)"
-      - "traefik.http.routers.wazuhes-http.entrypoints=web"
-      - "traefik.http.routers.wazuhes-http.middlewares=mistborn_auth@file"
-      - "traefik.http.routers.wazuhes-https.rule=Host(`wazuhes.mistborn`)"
-      - "traefik.http.routers.wazuhes-https.entrypoints=websecure"
-      - "traefik.http.routers.wazuhes-https.middlewares=mistborn_auth@file"
-      - "traefik.http.routers.wazuhes-https.tls.certresolver=basic"
-      - "traefik.http.services.wazuhes-service.loadbalancer.server.port=9200"
-    #ports:
-    #  - "${MISTBORN_BIND_IP}:9200:9200"
+    ports:
+      - "${MISTBORN_BIND_IP}:9200:9200"
     environment:
       - discovery.type=single-node
       - cluster.name=wazuh-cluster
@@ -60,7 +50,7 @@ services:
         hard: 65536
 
   wazuh-kibana:
-    image: wazuh/wazuh-kibana-odfe:4.1.4
+    image: wazuh/wazuh-kibana-odfe:4.1.2
     hostname: wazuh-kibana
     restart: unless-stopped
     labels:
@@ -84,7 +74,7 @@ services:
     depends_on:
       - wazuh-elasticsearch
     links:
-      - wazuh-elasticsearch:wazuh-elasticsearch
+      - wazuh-elasticsearch:elasticsearch
       - wazuh:wazuh
 
 volumes:
