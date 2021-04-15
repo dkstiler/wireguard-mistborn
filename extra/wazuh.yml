@@ -57,10 +57,10 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.wazuhk-http.rule=Host(`wazuhk.mistborn`)"
+      - "traefik.http.routers.wazuhk-http.rule=Host(`wazuh.mistborn`)"
       - "traefik.http.routers.wazuhk-http.entrypoints=web"
       - "traefik.http.routers.wazuhk-http.middlewares=mistborn_auth@file"
-      - "traefik.http.routers.wazuhk-https.rule=Host(`wazuhk.mistborn`)"
+      - "traefik.http.routers.wazuhk-https.rule=Host(`wazuh.mistborn`)"
       - "traefik.http.routers.wazuhk-https.entrypoints=websecure"
       - "traefik.http.routers.wazuhk-https.middlewares=mistborn_auth@file"
       - "traefik.http.routers.wazuhk-https.tls.certresolver=basic"
