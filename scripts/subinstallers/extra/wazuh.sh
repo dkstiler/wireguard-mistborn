@@ -13,6 +13,10 @@ echo "ELASTICSEARCH_PASSWORD=$MISTBORN_DEFAULT_PASSWORD" >> $WAZUH_PROD_FILE
 # https://wazuh
 echo "WAZUH_API_URL=https://10.2.3.1" >> $WAZUH_PROD_FILE
 echo "API_PORT=55000" >> $WAZUH_PROD_FILE
+echo "API_USERNAME=wazuh-wui" >> $WAZUH_PROD_FILE
+
+API_PASSWORD=$(python3 -c "import secrets; import string; print(f''.join([secrets.choice(string.ascii_letters+string.digits) for x in range(32)]))")
+echo "API_PASSWORD=${API_PASSWORD}" >> $WAZUH_PROD_FILE
 
 # kibana-odfe/config/entrypoint.sh:
 # https://elasticsearch:9200
