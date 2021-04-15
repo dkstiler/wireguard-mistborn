@@ -10,11 +10,13 @@ echo "ELASTICSEARCH_PASSWORD=$MISTBORN_DEFAULT_PASSWORD" >> $WAZUH_PROD_FILE
 
 # kibana odfe
 # kibana-odfe/config/wazuh_app_config.sh
-#WAZUH_API_URL="https://wazuh"
-#API_PORT="55000"
+# https://wazuh
+echo "WAZUH_API_URL=https://home.mistborn" >> $WAZUH_PROD_FILE
+echo "API_PORT=55000" >> $WAZUH_PROD_FILE
 
 # kibana-odfe/config/entrypoint.sh:
-#ELASTICSEARCH_URL="https://elasticsearch:9200"
+# https://elasticsearch:9200
+echo "ELASTICSEARCH_URL=https://home.mistborn:9200" >> $WAZUH_PROD_FILE
 
 echo "MISTBORN_DEFAULT_PASSWORD=$MISTBORN_DEFAULT_PASSWORD" >> $WAZUH_PROD_FILE
 

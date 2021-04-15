@@ -75,9 +75,9 @@ services:
       - ../.envs/.production/.wazuh
     depends_on:
       - wazuh-elasticsearch
-    links:
-      - wazuh-elasticsearch:elasticsearch
-      - wazuh:wazuh
+    #links:
+    #  - wazuh-elasticsearch:elasticsearch
+    #  - wazuh:wazuh
 
 volumes:
   ossec_api_configuration:
