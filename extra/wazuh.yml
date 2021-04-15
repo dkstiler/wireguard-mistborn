@@ -41,6 +41,8 @@ services:
       - network.host=0.0.0.0
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - bootstrap.memory_lock=true
+    volumes:
+      - ../../mistborn_volumes/extra/wazuh/init/internal_users.yml:/usr/share/elasticsearch/plugins/opendistro_security/securityconfig/internal_users.yml
     ulimits:
       memlock:
         soft: -1
@@ -73,9 +75,9 @@ services:
       - ../.envs/.production/.wazuh
     depends_on:
       - wazuh-elasticsearch
-    links:
-      - wazuh-elasticsearch:elasticsearch
-      - wazuh:wazuh
+    #links:
+    #  - wazuh-elasticsearch:elasticsearch
+    #  - wazuh:wazuh
 
 volumes:
   ossec_api_configuration:
