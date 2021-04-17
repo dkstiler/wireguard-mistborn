@@ -11,7 +11,6 @@ User=root
 Group=docker
 PermissionsStartOnly=true
 # Shutdown container (if running) when unit is stopped
-ExecStartPre=/usr/sbin/sysctl -w vm.max_map_count=262144
 ExecStartPre=/opt/mistborn/scripts/wrappers/mistborn_docker.sh wazuh docker-compose -f /opt/mistborn/extra/wazuh.yml down
 # Start container when unit is started
 ExecStart=/opt/mistborn/scripts/wrappers/mistborn_docker.sh wazuh docker-compose -f /opt/mistborn/extra/wazuh.yml up --build

@@ -73,11 +73,6 @@ services:
       - SERVER_SSL_KEY=/usr/share/kibana/config/opendistroforelasticsearch.example.org.key
     env_file:
       - ../.envs/.production/.wazuh
-    depends_on:
-      - wazuh-elasticsearch
-    #links:
-    #  - wazuh-elasticsearch:elasticsearch
-    #  - wazuh:wazuh
 
 volumes:
   ossec_api_configuration:
