@@ -12,7 +12,6 @@ services:
       - "${MISTBORN_BIND_IP}:514:514/udp"
       - "${MISTBORN_BIND_IP}:55000:55000"
     environment:
-      - ELASTICSEARCH_URL=https://wazuh-elasticsearch:9200
       - FILEBEAT_SSL_VERIFICATION_MODE=none
     env_file:
       - ../.envs/.production/.wazuh
@@ -28,28 +27,6 @@ services:
       - ossec_wodles:/var/ossec/wodles
       - filebeat_etc:/etc/filebeat
       - filebeat_var:/var/lib/filebeat
-
-  wazuh-elasticsearch:
-    image: amazon/opendistro-for-elasticsearch:1.12.0
-    hostname: wazuh-elasticsearch
-    restart: unless-stopped
-    ports:
-      - "${MISTBORN_BIND_IP}:9200:9200"
-    environment:
-      - discovery.type=single-node
-      - cluster.name=wazuh-cluster
-      - network.host=0.0.0.0
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - bootstrap.memory_lock=true
-    volumes:
-      - ../../mistborn_volumes/extra/wazuh/init/internal_users.yml:/usr/share/elasticsearch/plugins/opendistro_security/securityconfig/internal_users.yml
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-      nofile:
-        soft: 65536
-        hard: 65536
 
   wazuh-kibana:
     image: wazuh/wazuh-kibana-odfe:4.1.2
