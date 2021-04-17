@@ -63,3 +63,8 @@ volumes:
   ossec_wodles:
   filebeat_etc:
   filebeat_var:
+
+networks:
+  default:
+    external:
+      name: mistborn_default
