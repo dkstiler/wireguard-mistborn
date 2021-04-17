@@ -20,6 +20,7 @@ echo "API_USERNAME=wazuh-wui" >> $WAZUH_PROD_FILE
 API_PASSWORD_PYTHON=$(cat << EOF
 
 import secrets
+import random
 import string
 
 random_pass = ([secrets.choice("@$!%*?&-_"),
@@ -32,13 +33,14 @@ random_pass = ([secrets.choice("@$!%*?&-_"),
                                            + "@$!%*?&-_"
                                            + string.digits) for i in range(12)])
 
-secrets.shuffle(random_pass)
+random.shuffle(random_pass)
 random_pass = ''.join(random_pass)
 print(random_pass)
 
-EOF)
+EOF
+)
 
-API_PASSWORD=$(python -c "${API_PASSWORD_PYTHON})
+API_PASSWORD=$(python3 -c "${API_PASSWORD_PYTHON}")
 
 echo "API_PASSWORD=${API_PASSWORD}" >> $WAZUH_PROD_FILE
 
