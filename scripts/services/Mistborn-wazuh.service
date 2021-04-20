@@ -16,8 +16,11 @@ ExecStartPre=/opt/mistborn/scripts/wrappers/mistborn_docker.sh wazuh docker-comp
 ExecStart=/opt/mistborn/scripts/wrappers/mistborn_docker.sh wazuh docker-compose -f /opt/mistborn/extra/wazuh.yml up --build
 # Agent install
 ExecStartPost=/opt/mistborn/scripts/wrappers/mistborn_docker.sh wazuh /opt/mistborn/scripts/services/wazuh/agent.sh
+ExecStartPost=-/opt/mistborn/scripts/wrappers/mistborn_docker.sh wazuh /opt/mistborn/scripts/services/wazuh/agent_start.sh
 # Stop container when unit is stopped
+ExecStopPre=-/opt/mistborn/scripts/wrappers/mistborn_docker.sh wazuh /opt/mistborn/scripts/services/wazuh/agent_stop.sh
 ExecStop=/opt/mistborn/scripts/wrappers/mistborn_docker.sh wazuh docker-compose -f /opt/mistborn/extra/wazuh.yml down
+
 
 [Install]
 WantedBy=multi-user.target
