@@ -1,0 +1,55 @@
+version: '3.7'
+
+services:
+
+  wazuh-elasticsearch:
+    image: amazon/opendistro-for-elasticsearch:1.12.0
+    hostname: elasticsearch
+    restart: unless-stopped
+    ports:
+      - "${MISTBORN_BIND_IP}:9200:9200"
+    environment:
+      - discovery.type=single-node
+      - cluster.name=wazuh-cluster
+      - network.host=0.0.0.0
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - bootstrap.memory_lock=true
+    volumes:
+      - ../../mistborn_volumes/extra/elasticsearch/init/internal_users.yml:/usr/share/elasticsearch/plugins/opendistro_security/securityconfig/internal_users.yml
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+  
+  wazuh-kibana:
+    image: wazuh/wazuh-kibana-odfe:4.1.2
+    hostname: wazuh-kibana
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wazuhk-http.rule=Host(`wazuh.mistborn`)"
+      - "traefik.http.routers.wazuhk-http.entrypoints=web"
+      - "traefik.http.routers.wazuhk-http.middlewares=mistborn_auth@file"
+      - "traefik.http.routers.wazuhk-https.rule=Host(`wazuh.mistborn`)"
+      - "traefik.http.routers.wazuhk-https.entrypoints=websecure"
+      - "traefik.http.routers.wazuhk-https.middlewares=mistborn_auth@file"
+      - "traefik.http.routers.wazuhk-https.tls.certresolver=basic"
+      - "traefik.http.services.wazuhk-service.loadbalancer.server.port=5601"
+    #ports:
+    #  - "${MISTBORN_BIND_IP}:5601:5601"
+    depends_on:
+      - wazuh-elasticsearch
+    environment:
+      - SERVER_SSL_ENABLED=false
+      - SERVER_SSL_CERTIFICATE=/usr/share/kibana/config/opendistroforelasticsearch.example.org.cert
+      - SERVER_SSL_KEY=/usr/share/kibana/config/opendistroforelasticsearch.example.org.key
+    env_file:
+      - ../.envs/.production/.wazuh
+
+networks:
+  default:
+    external:
+      name: mistborn_default

@@ -28,29 +28,6 @@ services:
       - filebeat_etc:/etc/filebeat
       - filebeat_var:/var/lib/filebeat
 
-  wazuh-kibana:
-    image: wazuh/wazuh-kibana-odfe:4.1.2
-    hostname: wazuh-kibana
-    restart: unless-stopped
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.wazuhk-http.rule=Host(`wazuh.mistborn`)"
-      - "traefik.http.routers.wazuhk-http.entrypoints=web"
-      - "traefik.http.routers.wazuhk-http.middlewares=mistborn_auth@file"
-      - "traefik.http.routers.wazuhk-https.rule=Host(`wazuh.mistborn`)"
-      - "traefik.http.routers.wazuhk-https.entrypoints=websecure"
-      - "traefik.http.routers.wazuhk-https.middlewares=mistborn_auth@file"
-      - "traefik.http.routers.wazuhk-https.tls.certresolver=basic"
-      - "traefik.http.services.wazuhk-service.loadbalancer.server.port=5601"
-    #ports:
-    #  - "${MISTBORN_BIND_IP}:5601:5601"
-    environment:
-      - SERVER_SSL_ENABLED=false
-      - SERVER_SSL_CERTIFICATE=/usr/share/kibana/config/opendistroforelasticsearch.example.org.cert
-      - SERVER_SSL_KEY=/usr/share/kibana/config/opendistroforelasticsearch.example.org.key
-    env_file:
-      - ../.envs/.production/.wazuh
-
 volumes:
   ossec_api_configuration:
   ossec_etc:
