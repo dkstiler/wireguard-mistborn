@@ -9,7 +9,7 @@ fi
 
 mkdir -p /opt/mistborn_volumes/extra/elasticsearch/init/ >/dev/null 2>&1
 chmod -R +x /opt/mistborn_volumes/extra/elasticsearch/init/
-cp /opt/mistborn-internal/security_center/services/elasticsearch/files/internal_users.yml /opt/mistborn_volumes/extra/elasticsearch/init/
+cp /opt/mistborn/scripts/services/elasticsearch/files/internal_users.yml /opt/mistborn_volumes/extra/elasticsearch/init/
 
 ELASTICSEARCH_MISTBORN_HASHED=$(docker run --rm amazon/opendistro-for-elasticsearch:1.12.0 bash /usr/share/elasticsearch/plugins/opendistro_security/tools/hash.sh -p ${MISTBORN_DEFAULT_PASSWORD} | tr -d '\n')
 
