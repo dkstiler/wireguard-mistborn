@@ -24,5 +24,3 @@ done
 echo "Installing Wazuh agent"
 WAZUH_MANAGER="10.2.3.1" apt-get install wazuh-agent
 
-systemctl enable wazuh-agent
-systemctl start wazuh-agent

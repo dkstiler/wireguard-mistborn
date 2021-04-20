@@ -1,3 +1,4 @@
 #!/bin/bash
 
-systemctl start wazuh-agent
+systemctl stop wazuh-agent
+systemctl disable wazuh-agent

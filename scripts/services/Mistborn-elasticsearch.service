@@ -12,11 +12,11 @@ Group=docker
 PermissionsStartOnly=true
 # Shutdown container (if running) when unit is stopped
 ExecStartPre=/usr/sbin/sysctl -w vm.max_map_count=262144
-ExecStartPre=/opt/mistborn/scripts/wrappers/mistborn_docker.sh elasticsearch,wazuh docker-compose -f /opt/mistborn/extra/elasticsearch.yml down
+ExecStartPre=/opt/mistborn/scripts/wrappers/mistborn_docker.sh elasticsearch docker-compose -f /opt/mistborn/extra/elasticsearch.yml down
 # Start container when unit is started
-ExecStart=/opt/mistborn/scripts/wrappers/mistborn_docker.sh elasticsearch,wazuh docker-compose -f /opt/mistborn/extra/elasticsearch.yml up --build
+ExecStart=/opt/mistborn/scripts/wrappers/mistborn_docker.sh elasticsearch docker-compose -f /opt/mistborn/extra/elasticsearch.yml up --build
 # Stop container when unit is stopped
-ExecStop=/opt/mistborn/scripts/wrappers/mistborn_docker.sh elasticsearch,wazuh docker-compose -f /opt/mistborn/extra/elasticsearch.yml down
+ExecStop=/opt/mistborn/scripts/wrappers/mistborn_docker.sh elasticsearch docker-compose -f /opt/mistborn/extra/elasticsearch.yml down
 
 [Install]
 WantedBy=multi-user.target
