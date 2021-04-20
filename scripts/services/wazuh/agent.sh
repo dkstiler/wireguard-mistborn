@@ -22,4 +22,4 @@ done
 
 # install
 echo "Installing Wazuh agent"
-WAZUH_MANAGER="10.2.3.1" WAZUH_AGENT_NAME="mistborn" apt-get install wazuh-agent
+WAZUH_MANAGER="10.2.3.1" apt-get install wazuh-agent
