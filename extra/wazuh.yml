@@ -44,8 +44,6 @@ services:
       - "traefik.http.services.wazuhk-service.loadbalancer.server.port=5601"
     #ports:
     #  - "${MISTBORN_BIND_IP}:5601:5601"
-    depends_on:
-      - wazuh-elasticsearch
     environment:
       - SERVER_SSL_ENABLED=false
       - SERVER_SSL_CERTIFICATE=/usr/share/kibana/config/opendistroforelasticsearch.example.org.cert
